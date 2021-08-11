@@ -41,3 +41,5 @@ DMG - Assembly code
 ISO - Object files assembled from Assembly Code
 
 BAT - Main batch file 
+
+CHR - 2BPP GFX 
