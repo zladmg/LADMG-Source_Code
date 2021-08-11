@@ -1,0 +1,1933 @@
+	PUBALL
+;
+BANK0	GROUP	0
+
+	LIB	ZRAM		; RAM ＥＱＵＡＴＥ ファイル
+	LIB	ZBN		; BG unit no file !
+	LIB	ZROM ;NINTENDO	; 登録 データ ファイル
+;-------------------------------------------------------------------
+	EXTERN	IDJMP,DMASET,CONT,LCDC_OFF,V_RAMC,RAMCLR,PLAY ;,TITLCHST
+	EXTERN	MSOMCL,FDIN,FDOUT,V_RAMB,DJBKST,GRBKST,DMAPSUB,BANKTR,DIMAPS,DIMAP2
+	EXTERN	GMAPBKST,DIMAP3,DIMAP4,ODEMOSUB,SVOPEN,GOVBKST
+	EXTERN	GMAPCHST,V_RAMD,GAKKIST,RMCLSB,PEACHBKST,PEACHDT
+	EXTERN	SOUNDSB,SOUNDST,SOUNDIT,SOUNDCL,TITLX,OKWARPST,WAVDT
+	EXTERN	LOVEBKST,LOVEDT,DSPINT,ENDWAVE,KAB1BKST  ;ODMBKST,
+	EXTERN	KABABKST,KABADT
+;
+	EXTERN	PSLCTBG,WINDBG,BANKST,BANKS2,BANKS3,RMBGST,VRAMTR,VRAMTR1,VRAMTR2
+	EXTERN	MSVRSV,MSSCR2S,MSSCR3S,PLCSET,PLCHTR,DATA_MOV,PSLCTBG2,NSLCTBG,NCLERBG
+	EXTERN	GMAPBG,GOVERBG,GMAPCLB,NCOPYBG,NAMESET,OPBKST
+	EXTERN	TSAVEBG,GPLAY,GPMA,OPENBG,OPENBG2,OPENBG3,OPBKS2   ;,SPTEST,TITLBG,
+	EXTERN	LOGODT,ONOFSUB,BKTRBD,CLCHDB,CLCHDB2,CLCHDO,CLCHDO2  ;ODEMOBG,
+	EXTERN	WINDBG2,MAMUUBG,KABEDT1,TOUBGDT,TOUBGCH
+	EXTERN	OAMCLR
+;
+	EXTERN	MSSC2,MSSC3,OPING,OPA,PSLCT,NMCPY
+	EXTERN	TLX,LOVED,ENDG
+;----Ending---Chr.Tr.--
+	EXTERN	ENDCHA,ENDCHB2,ENDCHC,ENDCHB,ENDCHD,ENDCHE,ENDCHF,ENDCHG
+	EXTERN	ENDCHA1,ENDCHYM,ENDCHA2
+;----Ending---BG data--
+	EXTERN	ENDYMBG,ENDBS,EWAKUBG,EWAKUBG2,ENDBGA1,ENDBGA2,ENDBGA3,ENDBGA4,ENDBGA5
+	EXTERN	ENDBGA,ENDBGB2,ENDBGC,ENDBGB,ENDBGD,ENDBGE,ENDBGF,ENDBGG
+;-------------------------------------------------------------------
+	KANJI
+;************************************************
+;*	割り込み ＪＵＭＰ ＴＡＢＬＥ		*
+;************************************************
+
+	ORG	$00
+	JP	IDJMP		; ＲＳＴ ０
+;
+HIMITSU
+	DB	$00
+HIMITSU2
+	DB	$00
+;------- Ｖ－ＢＬＡＮＫ 割り込み -------
+
+	ORG	$40
+	JP	V_BLANK
+;
+;------- ＬＣＤＣ ステータス 割り込み -------
+
+	ORG	$48
+;
+;	NOP
+;	NOP
+;	NOP
+;	NOP
+	JP	LCDCI	; Part scroll !!
+;	RETI
+;
+;------- ＴＩＭＥＲ 割り込み -------
+
+	ORG	$50
+	RETI
+;
+;------- ＳＩＯ 割り込み -------
+
+	ORG	$58
+	RETI
+;
+;------- ＫＥＹ入力 割り込み -------
+
+	ORG	$60
+	RETI
+	ORG	$62
+;==================================
+HARTCH1
+	LD	HL,CHRDAT+$2900	; キャラクタ データ
+	LD	DE,CHRRAM+$09A0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	JR	HRTC00
+;==================================
+HARTCH2
+	LD	HL,CHRDAT+$2930	; キャラクタ データ
+	LD	DE,CHRRAM+$09D0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	JR	HRTC00
+;==================================
+HARTCH3
+	LD	HL,CHRDAT+$09D0	; キャラクタ データ
+	LD	DE,CHRRAM+$09D0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	JR	HRTC00
+;==================================
+HARTCH4
+	LD	HL,CHRDAT+$09A0	; キャラクタ データ
+	LD	DE,CHRRAM+$09A0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;
+HRTC00
+	LD	BC,$0030	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	XOR	A
+	LD	(BKCHFG),A
+	LD	(BKCHCT),A
+BKCHG10
+	LD	A,$0C
+	LD	($2100),A
+	RET
+;-------------------------------------
+;************************************************
+;*	プログラム スタート			*
+;************************************************
+
+	ORG	$150
+
+RESET
+	CALL	LCDC_OFF	; ＬＣＤＣ ストップ
+;
+	LD	SP,STACK	; スタック ロケーション 変更
+;
+	XOR	A
+	LD	(BGP),A
+	LD	(OBP0),A
+	LD	(OBP1),A
+;
+	LD	HL,CHRRAM
+	LD	BC,$1800
+	CALL	RMCLSB		; Character All clear !!
+;
+	CALL	V_RAMC		; Ｖ－ＲＡＭ クリア
+;
+	CALL	RAMCLR		; RAM clear !
+;
+	LD	A,$01
+	LD	($2100),A
+	CALL	DMASET		; ＤＭＡ プログラムをＲＡＭに展開
+	CALL	DMASUB
+;
+;	LD	HL,SAVEDT
+;	LD	BC,$2000
+;;
+;;;	LD	A,$0A
+;;;	LD	($0000),A	;(SV)
+;	CALL	SVOPEN	;(SV)
+;;
+;SVC010
+;	XOR	A
+;	LD	(HLI),A
+;	DEC	BC
+;	LD	A,C
+;	OR	B
+;	JR	NZ,SVC010
+;
+;;	LD	DE,BG_DATA	; Ｖ－ＲＡＭ セット
+;;	CALL	VRAMTR
+;
+;;	LD	A,1
+;;	LD	(W_SEQ),A
+;
+;	LD	A,$01
+;	LD	($2100),A
+	CALL	DSPINT
+;	LD	A,%11000111	; ＯＢＪ ＢＧ ＯＮ ＬＣＤＣ スタート
+;	LD	(LCDC),A
+;	LD	(LCDCB),A
+;	LD	A,$07
+;	LD	(WDX),A
+;	LD	A,$80
+;	LD	(WNDYPS),A	; Window y pos set !
+;	LD	(WDY),A
+;	LD	A,$07
+;	LD	(SLEVEL),A	; sound level 1 MAX set !
+;	LD	A,$70
+;	LD	(SLEVEL2),A	; sound level 2 MAX set !
+;;;
+;;	XOR	A
+;;	LD	(VRAMD),A
+;;	LD	(VRAMD+1),A
+;;	LD	A,$01
+;;	LD	A,$80
+;;	LD	(VRFLG),A
+;
+;;	LD	A,BKCHG
+;;	LD	(BLNKFG),A
+	CALL	BANKST		; Chr bank set
+;
+	LD	A,%01000100
+	LD	(STAT),A
+	LD	A,$4F
+	LD	(LYC),A		; Part scroll line set !
+	LD	A,$01
+	LD	(PBANK),A
+;- - - - Play initial - - -
+;;	LD	A,$98
+;;	LD	(WORKF),A
+;;	DB	0,0,0,0,0
+;
+;;	XOR	A
+;;	LD	(IF),A
+	LD	A,%00000001	; V BLANK only (& LCDC)  割り込み 許可
+	LD	(IE),A
+;
+	LD	A,$01
+	LD	($2100),A
+	CALL	NAMESET	
+;
+	LD	A,$1F
+	LD	($2100),A
+	CALL	SOUNDIT
+;
+	LD	A,$18
+	LD	(OPKYTM),A	; Opening Logo display wait !
+;
+	EI			; 割り込み イネーブル
+;
+	JP	MAIN00
+;****************************************
+;*       ＭＡＩＮ ＰＲＯＧＲＡＭ        *
+;****************************************
+MAIN
+	LD	A,$1
+	LD	(NMIFG),A
+;---- Normal game ---
+;
+;;	LD	A,(HIMITSU2)
+	LD	A,(MAMUUFG)
+	AND	A
+	JR	Z,HMIT108	;秘密実験！
+;
+	LD	A,(GMMODE)
+	CP	GPLAY
+	JR	NZ,HMIT108
+;
+	LD	A,(FRCNT)
+	RRCA
+	AND	%10000000
+	JR	HMIT10A	;秘密実験！
+;
+;	AND	$01
+;	JR	Z,HMIT100
+;;
+;	LD	HL,LCDCB
+;	SET	3,(HL)
+;;
+;	LD	A,(PLYPSL)
+;	SUB	$48
+;	CPL
+;	INC	A
+;	LD	(SCY),A
+;	LD	A,(PLXPSL)
+;	SUB	$50
+;	CPL
+;	INC	A
+;	LD	(SCX),A
+;	JR	HMIT110
+;;
+;HMIT100
+;	LD	HL,LCDCB
+;	RES	3,(HL)
+;
+HMIT108
+	LD	HL,TILTYD	; SCROLL COUNT SET !
+	LD	A,(SCCV)
+	ADD	A,(HL)
+HMIT10A
+	LD	(SCY),A
+;
+HMIT10C
+	LD	A,(SCCH)
+	LD	HL,TILTXD
+	ADD	A,(HL)
+	LD	HL,SCXAD
+	ADD	A,(HL)
+	LD	(SCX),A
+HMIT110
+	LD	A,(BLNKFG)
+	AND	A
+	JR	NZ,MA0F0
+;
+	LD	A,(VRFLG)
+	CP	0
+	JR	Z,MA000
+;
+MA0F0
+	LD	A,(GMMODE)
+;;	CP	ENDG
+;;	JR	Z,MA0EE
+	CP	LOVED
+	JR	Z,MA0EE
+	CP	NMCPY+1
+	JR	C,MA0EE
+	CP	GPLAY
+	JR	NZ,MA0DE
+;
+	LD	A,(ITMODE)
+	CP	GPMA
+	JR	NC,MA0DE	
+;				
+MA0EE
+	CALL	SOUND		; Sound
+	CALL	SOUND		; Sound
+MA0DE
+	DI
+	CALL	VRAMST
+	EI
+;
+	CALL	SOUND		; Sound
+	CALL	SOUND		; Sound
+;
+	JP	MAIN00
+;-------------------------------
+MA000	
+	LD	A,(LCDCB)
+	AND	$7F
+	LD	E,A
+;
+	LD	A,(LCDC)
+	AND	%10000000
+	OR	E
+	LD	(LCDC),A
+;
+	LD	HL,FRCNT
+	INC	(HL)
+;
+	LD	A,(GMMODE)
+	CP	$00
+	JR	NZ,MA0011
+;
+	LD	A,(ITMODE)
+	CP	TLX-1
+;;	CP	$08
+	JR	C,MA0011
+;
+	LD	A,$1
+	LD	($2100),A
+;
+;;	CALL	ODEMOSUB
+	CALL	TITLX
+;
+MA0011
+;-----------------------------------------
+;	LD	A,(PLXPSL)
+;	SRL	A
+;	SRL	A
+;	SRL	A
+;	LD	HL,SCCH
+;	ADD	A,(HL)
+;	LD	(SCX),A
+;---- Normal game ---
+;L	LD	HL,TILTXD
+;L	LD	A,(SCCH)	; SCROLL COUNT SET !
+;L	ADD	A,(HL)
+;L	LD	(SCX),A
+;;L
+;L	LD	HL,TILTYD
+;L	LD	A,(SCCV)
+;L	ADD	A,(HL)
+;L	LD	(SCY),A
+;
+;;;	JP	MA00001
+;- - - - - - - - - - - - - - - -
+	LD	A,(WAVFLG)
+	AND	A
+	JP	Z,MA00001
+;
+	INC	A	;FF ?
+	JR	NZ,WAV100	;Ending wave ?
+;
+WAV080
+	LD	A,$17		; YES !
+	LD	($2100),A
+;
+	CALL	ENDWAVE
+	JP	MA00001		
+;;	JP	MAIN00B		
+;
+WAV100
+	INC	A	;FE?
+	JR	Z,WAV080
+;
+;	LD	A,(WAVFLG)
+;	CP	$01
+;	JR	Z,OKWV050
+;;
+;	LD	A,(FRCNT)
+;	LD	E,$75
+;	AND	$20
+;	JR	Z,OKWV030
+;	INC	E
+;OKWV030
+;	LD	A,E
+;	LD	(PLCHPT),A
+;OKWV050
+	LD	A,$14		; YES !
+;;	LD	A,$01		; YES !
+	LD	($2100),A
+;
+	LD	A,(WAVTIM)
+	INC	A
+	LD	(WAVTIM),A
+	CP	$C0  ;00
+	JR	NZ,RURUR
+;
+	LD	A,(WAVFLG)
+	CP	$2
+	JR	NZ,WVS100	;オカリナワープ？
+;		
+	CALL	OKWARPST	;NXGOTO!
+WVS100
+	XOR	A
+	LD	(WAVFLG),A
+	LD	(WAVCNT4),A
+	JP	MA00001
+RURUR
+	CP	$60
+;;	CP	$80
+	JR	C,WAV0100
+;
+	PUSH	AF
+;
+	AND	$07
+	JR	NZ,WAV0068
+;;	JR	NZ,WAV0080
+;
+	LD	A,(WAVCNT4)
+	CP	$0C
+	JR	Z,WAV0080
+	INC	A
+	LD	(WAVCNT4),A
+;
+WAV0068
+	LD	A,(WAVCNT4)
+	LD	E,A
+	LD	A,(FRCNT)
+	AND	$03
+	ADD	A,E
+	LD	E,A
+	LD	D,$0
+;
+;	LD	A,(SBHR)
+;	CP	$04
+;	JR	Z,WAV0080
+;;
+	LD	A,(WAVFLG)
+;;	CP	$02
+;;	JR	NZ,WAV0078
+	CP	$03
+	JR	Z,WAV0078
+;
+;	LD	A,(FRCNT)
+;	AND	$03
+;	ADD	A,E
+;	LD	E,A
+;	LD	D,$00
+	LD	HL,CLCHDB
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(BGPFG),A
+	LD	(OBP1FG),A
+	LD	HL,CLCHDO
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(OBP0FG),A
+;;;	CALL	FDOUT
+	JR	WAV0080
+WAV0078
+;	LD	A,(FRCNT)
+;	AND	$03
+;	ADD	A,E
+;	LD	E,A
+;	LD	D,$00
+	LD	HL,CLCHDB2
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(BGPFG),A
+	LD	(OBP1FG),A
+	LD	HL,CLCHDO2
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(OBP0FG),A
+;;;	CALL	FDIN
+WAV0080
+	POP	AF
+WAV0100
+;;;	LD	A,(FRCNT)
+	SRL	A
+	SRL	A
+	LD	(WORK0),A
+	LD	A,(WAVTIM)
+;;	SLA	A
+	NOP
+	AND	%11100000
+	LD	E,A
+	LD	A,(WAVFLG)
+	CP	$03
+	JR	NZ,WAV1001
+;
+	LD	A,E
+	XOR	%11100000
+	LD	E,A
+WAV1001
+	LD	A,E
+	LD	(WORK1),A
+;
+	LD	HL,WAVCNT
+	XOR	A
+	LD	(HLI),A
+	LD	(HLI),A
+	LD	(HLI),A
+;
+MA001
+	LD	A,(STAT)
+	AND	%00000011
+	JR	NZ,MA001
+;
+	LD	D,$0
+MA002
+	LD	A,(WAVCNT3)
+	INC	A
+	LD	(WAVCNT3),A
+	AND	$01
+	JR	NZ,MA002	; Wait !
+;
+	LD	A,(WAVCNT)
+	ADD	A,$1
+	LD	(WAVCNT),A
+	LD	A,(WAVCNT2)
+	ADC	A,$0
+	LD	(WAVCNT2),A
+;;	CP	$00
+;;	JR	NZ,MAA01
+	LD	A,(WAVCNT)
+	CP	$58  ;68
+	JP	Z,MAIN00B
+MAA01
+	LD	C,$0
+;
+	LD	A,(WAVFLG)
+	CP	$01
+	JR	Z,MAAA10
+;
+	INC	C
+MAAA10
+	LD	HL,WAVCNT
+	LD	A,(WORK0)
+	ADD	A,(HL)
+	AND	$1F
+	LD	HL,WORK1
+	OR	(HL)
+	LD	E,A
+	LD	HL,WAVDT
+	ADD	HL,DE
+	LD	A,(WAVTIM)
+	AND	C ;%0
+	LD	A,(HL)
+	JR	Z,MASS0
+	CPL	
+	INC	A
+MASS0
+	PUSH	AF
+	LD	HL,SCCH
+	ADD	A,(HL)
+	LD	(SCX),A
+	POP	AF
+	LD	HL,SCCV
+	ADD	A,(HL)
+	LD	(SCY),A
+;
+	JP	MA001
+MAIN00B
+	CALL	SOUND		; Sound
+;
+	LD	A,(BGPFG)	; color set !!
+	LD	(BGP),A
+	LD	A,(OBP0FG)
+	LD	(OBP0),A
+	LD	A,(OBP1FG)
+	LD	(OBP1),A
+;
+	JR	MAIN00
+;-------------------------------
+MA00001
+	LD	A,(WNDYPS)	; Window y pos set !
+	LD	(WDY),A
+;
+	LD	A,(BGPFG)	; color set !!
+	LD	(BGP),A
+	LD	A,(OBP0FG)
+	LD	(OBP0),A
+	LD	A,(OBP1FG)
+	LD	(OBP1),A
+;
+	CALL	SOUND		; Sound
+;
+	CALL	CONT		; キー 入力
+;
+;
+;	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;	DB	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;
+;
+;	XOR	A
+;	LD	(SCX),A
+;	XOR	A
+;	LD	(SCY),A
+;
+	LD	A,(BKCHFG)
+	LD	HL,BKCHF2
+	OR	(HL)
+	LD	HL,BKCHF3
+	OR	(HL)
+	JR	NZ,PSCK10
+;
+;	LD	A,(KEYA2)
+;	AND	%00010000
+;	JR	NZ,PSCK08
+;;
+;	LD	A,(KEYA2)
+;	AND	%01000000
+;	LD	HL,PAUSFG
+;	XOR	(HL)
+;	LD	(PAUSFG),A
+;	JR	NZ,PSCK10
+;PSCK08
+;
+;	LD	A,(WTBGCT)	; Water BG chenge count set
+;	ADD	A,$1
+;	DAA
+;	LD	(WTBGCT),A
+;-----------------------------------------------------------------
+	LD	A,(HIMITSU)
+	AND	A
+	JR	Z,PSCK0A
+;
+	LD	A,(PAUSFG)
+	AND	A
+	JR	NZ,PSCK08
+;
+	LD	A,(KEYA1)
+	AND	$0F
+	JR	Z,PSCK09
+;
+PSCK08
+	LD	A,(KEYA2)
+	AND	%01000000
+	JR	Z,PSCK09
+;
+	LD	A,(PAUSFG)
+	XOR	$01
+	LD	(PAUSFG),A
+;
+	JR	NZ,PSCK10
+;
+	LD	A,(BGCKOF)
+	XOR	$10
+	LD	(BGCKOF),A
+;
+	JR	PSCK10
+PSCK09
+	LD	A,(PAUSFG)
+	AND	A
+	JR	NZ,PSCK10
+;
+PSCK0A
+	LD	A,$01
+	CALL	PBSET
+	CALL	OAMCLR
+;
+	CALL	PLAY		; GAME SUB!
+;
+;;	LD	A,$0C
+;;	LD	($2100),A
+;
+;	LD	A,(WNDYPS)
+;	AND	A
+;	JR	Z,PSCK10	; Item Window off ?
+;;				; yes !
+;	LD	A,(MSGEFG)
+;	AND	A
+;	JR	Z,PSCK10	; On mesege window ?
+;			; yes !
+	LD	A,$01
+	LD	($2100),A
+	CALL	MSOMCL		; In mesege window oam clear !
+PSCK10
+;-----------------------------------------------------------------
+MAIN00
+	LD	A,$1F
+	LD	($2100),A
+	CALL	SOUNDST
+	LD	A,$0C
+	LD	($2100),A
+;
+	XOR	A
+	LD	(NMIFG),A
+;
+	HALT			; システム クロック 停止 電力節約
+;
+MAIN10
+	LD	A,(VBLANK_F)	; Ｖ－ＢＬＡＮＫ 待ち
+	AND	A
+	JR	Z,MAIN10
+;-----------------------------------------------------------------
+	XOR	A
+	LD	(VBLANK_F),A
+;
+	JP	MAIN
+;-----------------------------------
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%    オープニング 部分スクロール	     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LYCDT
+	DB	$20,$30,$40,$60
+	DB	$00
+LYCDT2
+	DB	$30,$56,$68,$00
+;- - - - - - - - - - - - - -
+LCDCI
+	DI
+;
+	PUSH	AF
+;
+	PUSH	HL
+	PUSH	DE
+;
+;	LD	A,$01
+;	LD	(LIFLG),A
+;
+;	LD	HL,IE
+;	RES	0,(HL)
+;;
+;	LD	A,(NMIFG)
+;	AND	A
+;	JR	Z,LII020
+;
+;	LD	A,(FADEON)
+;	AND	A
+;	JR	Z,LII001
+;;
+;	LD	A,%11100100
+;	LD	(BGP),A
+;	LD	(OBP1),A
+;	LD	A,%00011100
+;	LD	(OBP0),A
+;	JP	LII020
+;;
+;LII001
+	LD	A,(GMMODE)
+	CP	ENDG
+	JR	NZ,LII002
+;
+	LD	A,(ITMODE)
+	CP	ENDBS ;;$05
+	JR	NZ,LII0ED
+;
+	LD	A,(EDWRK0)
+	JR	LII0ED2
+;
+LII0ED
+	LD	A,(SCCV)
+LII0ED2
+	LD	(SCY),A
+	JP	LII020
+;---------------------------------
+LII002
+	CP	OPING
+	JR	NZ,LII010
+;
+	LD	A,(OPSCCT)
+	LD	E,A
+	LD	D,$00
+;
+	LD	HL,SCCH1
+	ADD	HL,DE	
+	LD	A,(HL)
+	LD	HL,SCCH
+	ADD	A,(HL)
+	LD	(SCX),A
+;
+	LD	A,(ITMODE)
+	CP	OPA
+	JR	C,OPENSUB
+;
+	LD	HL,LYCDT2
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(LYC),A
+;
+	LD	A,E
+	INC	A
+	AND	$03
+	LD	(OPSCCT),A
+;
+	JR	LII020
+;
+;- - - - - - - - - - - -
+OPENSUB
+;;	LD	A,(OPSCCT)
+;;	LD	E,A
+;;	LD	D,$00
+;;;
+;;	LD	HL,SCCH1
+;;	ADD	HL,DE	
+;;	LD	A,(HL)
+;;	LD	HL,SCCH
+;;	ADD	A,(HL)
+;;	LD	(SCX),A
+;
+	LD	HL,LYCDT
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(LYC),A
+;
+	LD	A,E
+	INC	A
+	CP	$05
+	JR	NZ,OPS009
+	XOR	A
+OPS009
+	LD	(OPSCCT),A
+;
+	NOP
+	CP	$04
+	JR	NZ,OPS010
+;
+	LD	A,(SCCV1)
+	LD	(SCY),A
+	CPL
+	INC	A
+	ADD	A,$60
+	LD	(LYC),A
+OPS010
+	JR	LII020
+LII010
+;
+	XOR	A
+	LD	(SCX),A
+LII020
+;	LD	HL,IE
+;	SET	0,(HL)
+;;
+;
+;	XOR	A
+;	LD	(LIFLG),A
+;
+	POP	DE
+	POP	HL
+	POP	AF
+;
+	EI
+;
+	RETI
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+VRDATA
+	DEFW	00   ;VRAMD+1
+	DEFW	ENDYMBG	;エンディング山遠景  BG;00 ;TITLBG
+	DEFW	WINDBG
+	DEFW	PSLCTBG
+	DEFW	PSLCTBG2
+	DEFW	NSLCTBG
+	DEFW	NCLERBG
+	DEFW	VRAMD2+1
+	DEFW	GMAPBG
+	DEFW	GMAPCLB
+	DEFW	GOVERBG
+	DEFW	WINDBG2  ;ODEMOBG
+	DEFW	NCOPYBG
+	DEFW	TSAVEBG ;強制セーブ
+	DEFW	OPENBG ; Opening BG !
+	DEFW	OPENBG2 ; Opening BG 2!
+	DEFW	OPENBG3 ; Opening BG 3!
+	DEFW	LOGODT	;無理矢理タイトルロゴ！
+	DEFW	PEACHDT	;ピーチ写真！
+	DEFW	LOVEDT	;海岸デモ！
+	DEFW	MAMUUBG	;マムー部屋ベタ！
+	DEFW	KABEDT1	;壁画１
+;----------------------------------------------
+	DEFW	ENDBGA	;エンディング A BG
+	DEFW	ENDBGB2	;エンディング B2 BG
+	DEFW	ENDBGC 	;エンディング C BG
+	DEFW	ENDBGB 	;エンディング B BG
+	DEFW	ENDBGD 	;エンディング D BG
+	DEFW	ENDBGE 	;エンディング E BG
+	DEFW	ENDBGF 	;エンディング F BG
+	DEFW	ENDBGG 	;エンディング G BG
+;- - - - - - - - - - - - - - - - - - - - - - -
+	DW	ENDBGA1
+	DW	ENDBGA2
+	DW	ENDBGA3
+	DW	ENDBGA4
+	DW	ENDBGA5
+;
+	DW	KABADT ;カバの絵！
+	DW	TOUBGDT	;７塔デモ！
+;;	DEFW	EWAKUBG	;エンディング マップ枠 BG
+;;	DEFW	EWAKUBG2 ;エンディング マップ枠 BG2
+;- - - - - - - - - - - - - - - 
+;- VRFLG table - -
+;;TITLBGS	EQU	1
+EBGY	EQU	1
+;
+WINDBGS	EQU	2
+PSLBGS	EQU	3
+PSLBG2	EQU	4
+NSLBGS	EQU	5
+NCLBGS	EQU	6
+BLVRDS	EQU	7
+GMAPBGS	EQU	8	; G. map waku BG 
+GMAPCL	EQU	9
+GOVBG	EQU	$A
+;;ODMBG	EQU	$B
+WINDBGS2 EQU	$B
+NCPBGS	EQU	$C
+TSVBG	EQU	$D
+OPBGS	EQU	$E
+OPBG2	EQU	$F
+OPBG3	EQU	$10
+LOGOS	EQU	$11
+PECBG	EQU	$12
+LOVBG	EQU	$13
+MMBG	EQU	$14
+KB1BG	EQU	$15
+;- - - - - - - - - - - -
+EBGA	EQU	$16
+EBGB2	EQU	$17
+EBGC 	EQU	$18
+EBGB 	EQU	$19
+EBGD 	EQU	$1A
+EBGE 	EQU	$1B
+EBGF 	EQU	$1C
+EBGG 	EQU	$1D
+EBGA1	EQU	$1E
+EBGA2	EQU	$1F
+EBGA3	EQU	$20
+EBGA4	EQU	$21
+EBGA5	EQU	$22
+;
+KABBG	EQU	$23
+TOUBG	EQU	$24
+;
+EWAKU 	EQU	$1E	;未使用！
+EWAKU2 	EQU	$1F	;  "
+;-----------------------------------
+; BLNKFG table - -
+RBGST	EQU	1
+VRMCL	EQU	2
+BKCHG	EQU	3
+BKCH2	EQU	4
+BKCH3	EQU	5
+DJBST	EQU	6
+GRBST	EQU	7	; Ground map bank set
+VRMBT	EQU	8
+BNKTR	EQU	$9 ; Game Room all bank set !
+TLCHG	EQU	$A ; Title bank
+GMBST	EQU	$B ; Ground map bank
+ODCHG	EQU	$0C	; Title demo bank 
+GVCHG	EQU	$0D	; Game over bank 
+GRCST	EQU	$0E	; Ground map unit BG set
+VRMB2	EQU	$0F	; 
+OPBST	EQU	$10	; Opening BANK 1 (Sea & Mt.)Set !
+OPBS2	EQU	$11	; Opening BANK 2 (ZELDA)Set !
+;
+PECCD	EQU	$12	;ピーチ写真！
+LOVCD	EQU	$13	;海岸デモ！
+KB1CD	EQU	$14
+;------Ending-------- 
+ECHA	EQU	$15	;エンディング A CHR.Tr. 
+ECHB2	EQU	$16	;エンディング B2 CHR.Tr. 
+ECHC	EQU	$17	;エンディング C CHR.Tr. 
+ECHB	EQU	$18	;エンディング B CHR.Tr. 
+ECHD	EQU	$19	;エンディング D CHR.Tr. 
+ECHE	EQU	$1A	;エンディング E CHR.Tr. 
+ECHF	EQU	$1B	;エンディング F CHR.Tr. 
+ECHG	EQU	$1C	;エンディング G CHR.Tr. 
+;- - - - -
+ECHA1	EQU	$1D	;エンディング A (地上） CHR.Tr.
+ECHYM	EQU	$1E	;エンディング A (卵山全景） CHR.Tr.
+ECHA2	EQU	$1F	;エンディング A2 (LINK OBJ） CHR.Tr.
+;-----------------------------------
+KABCD	EQU	$20
+TOUCD	EQU	$21
+;-----------------------------------
+;
+SPTST	EQU	$14	; TEST TEST shibahara big test !
+;-----------------------------------
+;-----------------------------------
+;-----------------------------------
+;-----------------------------------
+;-----------------------------------
+;-----------------------------------
+;BKCHFG2 	1: OBJ room bank chenge
+;- - - - - - - -
+;BKCHFG	Table	1: BG room bank chenge
+DMPCH	EQU	2
+HRTC1	EQU	3 ; Mesege heart chr set 1
+HRTC2	EQU	4 ; Mesege heart         2
+HRTC3	EQU	5 ; Mesege heart revise  1
+HRTC4	EQU	6 ; Mesege heart         2
+GAKCH	EQU	7	; Ground gakki set !
+FUEC1	EQU	8 ; Window fue select chr set 1
+FUEC2	EQU	9 ;		"	      2
+FUEC3	EQU	$A;		 revise       3
+FUEC4	EQU	$B ; 	        "             1
+FUEC5	EQU	$C ; 	        "             2
+FUEC6	EQU	$D ; 	        "             3
+;;----------------------------------------------
+;BANKCHG		; ALL character tr
+;	CALL	LCDC_OFF
+;	CALL	BANKST
+;	JP	VRST90
+;;----------------------------------------------
+;BANKTRS		; Use character tr
+;	CALL	LCDC_OFF
+;	CALL	BANKTR
+;	JP	VRST90
+;;----------------------------------------------
+;BANKCH2		; For name select
+;	CALL	LCDC_OFF
+;	CALL	BANKS2
+;	JP	VRST90
+;;----------------------------------------------
+;BANKCH3		; For game
+;	CALL	LCDC_OFF
+;	CALL	BANKS3
+;	JR	VRST90
+;;----------------------------------------------
+;VRST20
+;	CALL	LCDC_OFF
+;	CALL	V_RAMC
+;	JR	VRST90
+;;----------------------------------------------
+;VRST22
+;	CALL	LCDC_OFF
+;	CALL	V_RAMB
+;	JR	VRST90
+;;----------------------------------------------
+;TITLCHG
+;	CALL	LCDC_OFF
+;	CALL	TITLCHST
+;	JR	VRST90
+;;----------------------------------------------
+;GMBKST
+;	CALL	LCDC_OFF
+;	CALL	GMAPBKST
+;	JR	VRST90
+;;===================================
+;GRBKCG
+;	CALL	LCDC_OFF
+;	CALL	GRBKST	; Danjyon BG bank set !
+;	JR	VRST90
+;;===================================
+;DJBKCG
+;	CALL	LCDC_OFF
+;	CALL	DJBKST	; Danjyon BG bank set !
+;	JR	VRST90
+;;===================================
+;;VRSTDM
+;;	CALL	LCDC_OFF
+;;	LD	A,$1
+;;	LD	($2100),A
+;;	CALL	DMAPSUB 	; Danjyon MAP BG  set !
+;;	JR	VRST90
+;;===================================
+VRAMST
+;--- VRAM many TR. ---
+	LD	A,(BLNKFG)
+	AND	A
+	JR	Z,VRST80
+;
+	PUSH	AF
+	CALL	LCDC_OFF
+	POP	AF
+	CALL	BLNKSUB
+	JR	VRST90
+;
+BLNKSUB
+	DEC	A
+	RST	0
+	DW	RMBGST
+	DW	V_RAMC
+	DW	BANKST
+	DW	BANKS2
+	DW	BANKS3
+	DW	DJBKST	; Danjyon BG bank set !
+	DW	GRBKST	; Danjyon BG bank set !
+	DW	V_RAMB
+	DW	BANKTR
+;;	DW	TITLCHST
+	DW	VRRET
+	DW	GMAPBKST
+	DW	VRRET ;ODMBKST
+	DW	GOVBKST
+	DW	GMAPCHST
+	DW	V_RAMD
+	DW	OPBKST	; Opening bank(Sea & Mt.) set !
+	DW	OPBKS2	; Opening bank(ZELDA) set !
+	DW	PEACHBKST	;ピーチ写真！
+	DW	LOVEBKST	;海岸デモ！
+	DW	KAB1BKST	;へきが！
+;--- Ending - -
+	DW	ENDCHA	;エンディング A CHR.TR
+	DW	ENDCHB2	;エンディング B2 CHR.TR
+	DW	ENDCHC	;エンディング C  CHR.TR
+	DW	ENDCHB	;エンディング B  CHR.TR
+	DW	ENDCHD	;エンディング D  CHR.TR
+	DW	ENDCHE	;エンディング E  CHR.TR
+	DW	ENDCHF	;エンディング F  CHR.TR
+	DW	ENDCHG	;エンディング G  CHR.TR
+;
+	DW	ENDCHA1	;エンディング A(地上）  CHR.TR
+	DW	ENDCHYM	;エンディング A(山遠景）  CHR.TR
+	DW	ENDCHA2	;エンディング A2(LINK OBJ) CHR.TR
+;- - - -
+	DW	KABABKST ;カバの絵！
+	DW	TOUBGCH	;７塔デモ！
+;
+;
+;;	DW	SPTEST
+;
+;
+;M	CP	DJBST
+;M	JR	Z,DJBKCG
+;M	CP	GRBST
+;M	JR	Z,GRBKCG
+;M	CP	BKCHG
+;M	JR	Z,BANKCHG
+;M	CP	BKCH2
+;M	JR	Z,BANKCH2
+;M	CP	BKCH3
+;M	JR	Z,BANKCH3
+;M	CP	BNKTR
+;M	JR	Z,BANKTRS
+;M	CP	TLCHG
+;M	JR	Z,TITLCHG
+;M	CP	GMBST
+;M	JR	Z,GMBKST
+;;M
+;M	CP	VRMCL
+;M	JR	Z,VRST20	; VRAM all clear set ?
+;;;M	CP	DMPST
+;;;M	JR	Z,VRSTDM	; Danjyon map set ?
+;M	CP	VRMBT
+;M	JR	Z,VRST22	; VRAM all beta set ?
+;M	CP	RBGST
+;M	JR	NZ,VRST80	; Room BG initial set ?
+;;M				; yes !
+;M	CALL	LCDC_OFF
+;M	CALL	RMBGST
+;M	JR	VRST90
+VRST80
+	CALL	LCDC_OFF
+;
+	LD	HL,VRDATA
+	LD	B,$0
+	LD	A,(VRFLG)
+	SLA	A
+	LD	C,A
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	E,A
+	INC	HL
+	LD	A,(HL)
+	LD	D,A
+;
+	LD	A,$08
+	LD	($2100),A
+	CALL	VRAMTR1
+	LD	A,$0C
+	LD	($2100),A
+;
+VRST90
+	XOR	A
+	LD	(VRFLG),A
+;;	LD	(VRAMD+0),A
+;;	LD	(VRAMD+1),A
+	LD	(BLNKFG),A
+;
+	LD	A,(LCDCB)	; ＯＢＪ ＢＧ ＯＮ ＬＣＤＣ スタート
+	LD	(LCDC),A
+VRRET
+	RET
+;****************************************
+;*       Ｖ－ＢＬＡＮＫ 割り込み        *
+;****************************************
+ONHELPAD
+	DB	$07,$09
+V_BLANK
+	PUSH	AF
+	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+;
+	DI
+;
+;	LD	A,(IE)
+;	LD	(LIFLG),A
+;	AND	$01
+;	LD	(IE),A
+;
+;;	LD	A,$FF
+;;	LD	(BGP),A
+;
+;;	LD	HL,LIFLG
+	LD	A,(NMIFG)
+;;	OR	(HL)
+	AND	A
+	JP	NZ,VBL018
+;
+	LD	A,(MSGEFG)
+	AND	%01111111
+	JR	Z,VBL002
+	CP	$01
+	JR	Z,VBL002
+;
+	CP	$04+1
+	JR	NC,VBL0022
+;
+	CALL	MSVRSV	; 葛原 maked
+;
+	LD	HL,MSGEFG
+	INC	(HL)
+;
+	JR	VBL018
+VBL0022
+	CP	MSSC2
+	JR	NZ,VBL023
+;
+	CALL	MSSCR2S
+	JR	VBL018
+VBL023
+	CP	MSSC3
+	JR	NZ,VBL033
+;
+	LD	A,(MJSTTM)
+	AND	A
+	JR	Z,VBL025
+;
+	DEC	A
+	LD	(MJSTTM),A
+	JR	VBL033
+VBL025
+	CALL	MSSCR3S
+	JR	VBL018
+VBL033
+;---------------------------------------------
+VBL002
+	LD	A,(BLNKFG)
+	AND	A
+	JR	NZ,VBL018	; BG set a little ?
+;				; yes ! in V blank set ok !
+	LD	A,(BKCHFG)
+	LD	(ENHELP),A
+	LD	HL,BKCHF2
+	OR	(HL)  ;AND	A
+	LD	HL,BKCHF3
+	OR	(HL)  ;AND	A
+	JR	Z,VBL012	; Bank chenge ?
+;				; yes !
+	CALL	BANKCH
+;
+	LD	A,(ENHELP)
+	CP	FUEC1
+	JR	NC,VBL003
+;
+VBL0118
+	CALL	PLCSET
+VBL003
+	CALL	DMASUB		; ＯＡＭ　ＤＭＡ 転送
+	JR	VBL018
+;-------------------------------------------------
+VBL012
+	LD	A,(ONOFHELP)
+	AND	A
+	JR	Z,BCH2000
+;
+	DEC	A
+	LD	(ONOFHELP),A
+;
+	LD	E,A
+	LD	D,$00
+	LD	HL,ONHELPAD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(ONOFTM),A
+	CALL	ONOFSUB
+	JR	VBL0118
+;;	RET
+BCH2000
+	CALL	PLCHTR		; Player character TR. & OAM set 
+;
+	LD	DE,VRAMD+1	; VRAMD TR.
+	CALL	VRAMTR
+;
+	XOR	A
+	LD	(VRAMD),A
+	LD	(VRAMD+1),A
+;
+	CALL	DMASUB		; ＯＡＭ　ＤＭＡ 転送
+VBL018
+;	LD	A,(LIFLG)
+;	LD	(IE),A
+;
+	EI
+;VBL020
+;-----------------------------------------------------------------
+;;	LD	A,(PBANK)
+;;	LD	($2100),A
+;
+;
+;;	LD	A,$03
+	POP	HL
+	POP	DE
+	POP	BC
+;
+	LD	A,1		; Ｖ－ＢＬＡＮＫ終了 フラグ セット
+	LD	(VBLANK_F),A
+;
+	POP	AF
+;
+	RETI
+;==== Character bank chenge ====
+BANKCH
+	LD	A,(BKCHFG)
+	AND	A
+	JP	Z,BKCH20
+;
+	CP	GAKCH	; ガッキセット
+	JP	Z,GAKKICH
+	CP	HRTC1
+	JP	Z,HARTCH1
+	CP	HRTC2
+	JP	Z,HARTCH2
+	CP	HRTC3
+	JP	Z,HARTCH3
+	CP	HRTC4
+	JP	Z,HARTCH4
+	CP	FUEC1
+	JP	NC,FUECHG
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,BCH010
+;
+;	LD	A,$0D
+;	LD	($2100),A
+;
+	LD	A,(BKCHFG)
+	CP	DMPCH  ;$02
+	JP	Z,DMAPCS	; Danjyon map use character tr.
+;
+	LD	A,$0D
+	LD	($2100),A
+;
+	LD	A,(BKCHCT)
+	LD	C,A
+	LD	B,$00
+;
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	LD	HL,CHRRAM+$1000	; キャラクタ ＲＡＭ 
+	ADD	HL,BC
+	PUSH	HL
+	POP	DE
+;
+	LD	HL,CHRDAT+$1000	; ＢＧキャラクタ入れ換え データ
+;
+	LD	A,(BKCHNO)
+	ADD	A,$50
+	LD	H,A
+	ADD	HL,BC
+;
+	LD	A,(ONOFHELP)
+	AND	A
+	JR	Z,ONHL100	;凹凸ブロック？
+;
+	LD	A,(BKCHCT)
+	DEC	A
+	CP	$02
+	JR	C,ONHL110	;そのまま！
+;
+ONHL100
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+ONHL110
+	LD	A,(BKCHCT)
+	INC	A
+	LD	(BKCHCT),A
+	CP	$04
+	JR	NZ,BCH008
+;
+	XOR	A
+	LD	(BKCHFG),A
+	LD	(BKCHCT),A
+BCH008
+	RET
+;-------------------------------------
+BCH010
+	LD	HL,$2100
+	LD	(HL),$0F
+;
+	LD	A,(BKCHCT)
+;
+	LD	C,A
+	LD	B,$00
+;
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	LD	HL,CHRRAM+$1000	; キャラクタ ＲＡＭ 
+	ADD	HL,BC
+	PUSH	HL
+	POP	DE
+;
+;;;	LD	HL,CHRDAT+$3000	; ＢＧキャラクタ入れ換え データ
+;
+	LD	A,(BKCHNO)
+	ADD	A,$40	 ;"4": CHRDAT/100H
+	LD	H,A
+	LD	L,$00
+;
+;
+;
+;	CP	$10
+;	JR	C,GBCH00	; Ground anather area ?
+;;				; yes !
+;	LD	HL,$2100
+;	LD	(HL),$0D
+;GBCH00
+;;	OR	$70
+;;	LD	H,A
+;;	LD	L,$00
+	ADD	HL,BC
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,(BKCHCT)
+	INC	A
+	LD	(BKCHCT),A
+	CP	$08
+	JR	NZ,BKCH15
+;
+	XOR	A
+	LD	(BKCHFG),A
+	LD	(BKCHCT),A
+BKCH15
+	RET
+;---------------------------------
+BKCH20
+	LD	A,(BKCHF2)
+	AND	A
+	JR	Z,BKC120	; Enemy bank set ?
+;
+	LD	A,(EBCHFG)
+	LD	E,A
+	LD	D,$0
+	LD	HL,EBANK0
+	ADD	HL,DE
+;	AND	A
+;	JR	NZ,MRCH10	;バンクA ?
+;;
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	NZ,MRCH10				;YES !
+;;
+;	LD	A,(MARINFG)
+;	AND	A
+;	JR	Z,MRCH10	;マリンオプション？
+;;				;YES !
+;	LD	A,$8F
+;	JR	MRCH11
+;MRCH10
+	LD	A,(HL)
+MRCH11
+;	CP	$80
+;	JR	C,EBCH21
+;	SUB	$40
+;EBCH21
+	PUSH	AF
+;
+	AND	$3F
+	LD	D,A
+;;	LD	D,(HL)
+	LD	E,$00
+;
+	POP	AF
+;
+	SWAP	A
+	RRA
+	RRA
+	AND	$03
+	LD	C,A
+	LD	B,00
+	LD	HL,BKTRBD
+	ADD	HL,BC
+	LD	A,(HL)
+;;	LD	A,(HL)
+;;	AND	%10000000
+;;	LD	A,$0E	;z3
+;;	JR	NZ,EBCH22	; BANK 11 ?
+;;;				; Yes !
+;;	LD	A,$11	;z6
+;;EBCH22
+	LD	($2100),A
+;
+	LD	A,(BKCHC2)
+	LD	C,A
+;
+	LD	B,$00
+;
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+;;	LD	HL,$0000
+	LD	HL,CHRDAT+$0000
+	ADD	HL,BC
+	ADD	HL,DE
+	PUSH	HL
+;
+	LD	A,(EBCHFG)
+	LD	D,A
+	LD	HL,CHRRAM+$0400	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	ADD	HL,BC
+	ADD	HL,DE
+	PUSH	HL
+	POP	DE
+;
+	POP	HL
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,(BKCHC2)
+	INC	A
+	LD	(BKCHC2),A
+	CP	$04
+	JR	NZ,BKCH30
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	XOR	A
+	LD	(BKCHF2),A
+	LD	(BKCHC2),A
+BKCH30
+	RET
+;---------------------------------
+BKC120
+	LD	A,(EBCHF2)
+	LD	E,A
+	LD	D,$0
+	LD	HL,EBANK0
+	ADD	HL,DE
+;	AND	A
+;	JR	NZ,MRCH20
+;;
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	NZ,MRCH20				;YES !
+;;
+;	LD	A,(MARINFG)
+;	AND	A
+;	JR	Z,MRCH20
+;;
+;	LD	A,$8F
+;	JR	MRCH21
+;MRCH20
+	LD	A,(HL)
+;MRCH21
+	PUSH	AF
+;
+	AND	$3F
+	LD	D,A
+	LD	E,$00
+;
+	POP	AF
+;
+	SWAP	A
+	RRA
+	RRA
+	AND	$03
+	LD	C,A
+	LD	B,00
+	LD	HL,BKTRBD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	($2100),A
+;
+	LD	A,(BKCHC3)
+	LD	C,A
+;
+	LD	B,$00
+;
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+;;	LD	HL,$0000
+	LD	HL,CHRDAT+$0000
+	ADD	HL,BC
+	ADD	HL,DE
+	PUSH	HL
+;
+	LD	A,(EBCHF2)
+	LD	D,A
+	LD	HL,CHRRAM+$0400	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	ADD	HL,BC
+	ADD	HL,DE
+	PUSH	HL
+	POP	DE
+;
+	POP	HL
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,(BKCHC3)
+	INC	A
+	LD	(BKCHC3),A
+	CP	$04
+	JR	NZ,BKC130
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	XOR	A
+	LD	(BKCHF3),A
+	LD	(BKCHC3),A
+BKC130
+	RET
+;==================================
+GAKKICH
+	LD	A,$01
+	LD	($2100),A
+	CALL	GAKKIST		; 楽器セット
+	JP	BKCHG10
+;==================================
+;FUECHG
+;	JR	Z,FUECH1
+;	CP	FUEC2
+;	JR	Z,FUECH2
+;	CP	FUEC3
+;	JR	Z,FUECH3
+;FUECH4
+;	LD	HL,CHRDAT+$0250	
+;	JR	FUES1
+;;---------------------------------------
+;FUECH1
+;	LD	HL,CHRDAT+$2960	
+;	JR	FUES2
+;;---------------------------------------
+;FUECH2
+;	LD	HL,CHRDAT+$29A0	
+;	JR	FUES2
+;;---------------------------------------
+;FUECH3
+;	LD	HL,CHRDAT+$29A0	
+;	JR	FUES2
+;;---------------------------------------
+;FUES1
+;	LD	DE,CHRRAM+$0250
+;	JR	FUECHSB
+;;---------------------------------------
+;FUECH3
+;	LD	HL,CHRDAT+$0200	
+;;---------------------------------------
+;FUES2
+;	LD	DE,CHRRAM+$0200
+;; - - - - - - - - - - - - - - - -
+FUEAD1
+	DW	CHRDAT+$2960
+	DW	CHRDAT+$29A0
+	DW	CHRDAT+$29C0
+	DW	CHRDAT+$0200
+	DW	CHRDAT+$0240
+	DW	CHRDAT+$0260
+FUEAD2
+	DW	CHRRAM+$0200
+	DW	CHRRAM+$0240
+	DW	CHRRAM+$0260
+	DW	CHRRAM+$0200
+	DW	CHRRAM+$0240
+	DW	CHRRAM+$0260
+;
+FUECHG
+	SUB	FUEC1
+	SLA	A
+	LD	E,A
+	LD	D,$00
+	LD	HL,FUEAD1
+	ADD	HL,DE
+	PUSH	HL	
+	LD	HL,FUEAD2
+	ADD	HL,DE
+	LD	E,(HL)
+	INC	HL
+	LD	D,(HL)
+;
+	POP	HL
+	LD	A,(HLI)
+	LD	H,(HL)
+	LD	L,A
+;
+	LD	A,$0C
+	LD	($2100),A
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,(BKCHFG)
+	CP	FUEC3
+	JR	Z,FUCS10
+	CP	FUEC6
+	JR	Z,FUCS10
+;
+	LD	A,(BKCHFG)
+	INC	A
+	LD	(BKCHFG),A
+	RET
+FUCS10
+	XOR	A
+	LD	(BKCHFG),A
+	RET
+;======================================
+PBSET
+	LD	($2100),A
+	LD	(PBANK),A
+	RET
+;======================================
+PBRETN
+	PUSH	AF
+	LD	A,(PBANK)
+	LD	($2100),A
+	POP	AF
+	RET
+;
+;========================================
+DMAPCS
+	LD	A,$12
+	LD	($2100),A
+;
+	LD	A,(BKCHCT)
+	CP	$08
+	JR	C,DMCS00
+	JR	NZ,DMS030
+;
+	LD	A,$2
+	LD	($2100),A
+	CALL	DIMAPS
+;
+	LD	HL,BKCHCT
+	INC	(HL)
+	RET
+DMS030
+	CP	$09
+	JR	NZ,DMS038
+;
+	LD	A,$2
+	LD	($2100),A
+	CALL	DIMAP2
+;
+	LD	HL,BKCHCT
+	INC	(HL)
+	RET
+;
+DMS038
+	CP	$0A
+	JR	NZ,DMS039
+;
+	LD	A,$2
+	LD	($2100),A
+	CALL	DIMAP3
+;
+	LD	HL,BKCHCT
+	INC	(HL)
+	RET
+DMS039
+	LD	A,$2
+	LD	($2100),A
+	CALL	DIMAP4
+;
+	XOR	A
+	LD	(BKCHFG),A
+	LD	(BKCHCT),A
+	RET
+;
+DMCS00
+;;	LD	A,(BKCHCT)
+	LD	C,A
+	LD	B,$00
+;
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	LD	HL,CHRRAM+$0D00	; キャラクタ ＲＡＭ 
+	ADD	HL,BC
+	PUSH	HL
+	POP	DE
+;
+;J	LD	A,(BKCHCT)
+;J	CP	$4
+;J	JR	NZ,SSS
+;J;;	JR	C,SSS
+;J;;	CP	$6
+;J;;	JR	NC,SSS
+;J;
+;J	LD	A,$0C
+;J	LD	($2100),A
+;J;
+;J	LD	HL,SPDMAPL	; GAKKI CHR DATA ADRESS !!
+;J	LD	A,(HLI)
+;J	LD	H,(HL)
+;J	DEC	H
+;J	LD	L,A
+;J	JR	WWE
+;J;
+;JSSS
+	LD	HL,CHRDAT+$3E00	; 普通部屋キャラクタ転送
+;;	LD	HL,CHRDAT+$2100	; 普通部屋キャラクタ転送
+;JWWE
+	ADD	HL,BC
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,(BKCHCT)
+	INC	A
+	LD	(BKCHCT),A
+;
+;	CP	$08   ;10
+;	JR	NZ,DCH008
+;;
+;	XOR	A
+;	LD	(BKCHFG),A
+;	LD	(BKCHCT),A
+DCH008
+	RET
+;======================================
+SOUND
+	LD	A,$1F
+	LD	($2100),A
+;
+	CALL	SOUNDSB	; SE
+;
+	LD	A,(SOUND2)
+	AND	A
+	JR	NZ,SDS12	;???
+;
+	LD	A,(SNDSPD)
+	AND	A
+	JR	Z,SOUND101
+;
+	CP	$02
+	JR	NZ,SOUND100
+;
+	LD	A,(FRCNT)
+	AND	$01
+	JR	NZ,SDS12
+;
+	JR	BGMSUB
+SOUND100
+	CALL	BGMSUB	; BGM
+SOUND101
+;===================================
+BGMSUB
+	LD	A,$1B
+	LD	($2100),A
+	CALL	SOUNDSB
+;;	NOP
+;;	NOP
+;;	NOP
+;
+	LD	A,$1E
+	LD	($2100),A
+	CALL  	SOUNDSB
+;
+;	LD	A,($D3BD)
+;	AND	A
+;	JR	Z,SDS12
+;;
+;	XOR	A
+;	LD	($D3BD),A	
+SDS12
+	RET
+;- - - - - - - - - - - - 
+	END
+;
+

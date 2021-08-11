@@ -1,0 +1,13038 @@
+	PUBALL
+;
+BANK6	GROUP	06
+;
+	LIB	ZRAM
+	LIB	ZBN
+;
+	EXTERN	RNDSUB,PLPSRV,MSGCHK,MSGCHK2,DUSHCL,OBJBG,KNCSET,KNFLSH,ISIBRKL
+	EXTERN	PLSHST,MVCALC,FLASHST,DJRMRD,EXIDSH,SPUNDT,NXGOTO,CRENENL,PLDMST0
+	EXTERN	ENMOVE,ENBGCKL,ENBGCK2L,LDTIM0,ENPTST,STATINC,ENIDSHL,ENIDSH2L,BSSDCK
+	EXTERN	CREPKEL,CRENPLL,CRENPL2L,EN2CST,EN1CST,PSERCHL,PSERCH2L,CRKNENL,ENFEND
+	EXTERN	CRENPSL,ENPSSV,ENSDCL,NXOMSBL,EFLSST,PLBGCKL,ENALCL,HNSMST,ENOMST
+	EXTERN	PLXCLC,PBSET,ENHNCL,ENSZST,BBSDST,SADWSTL,MSGCH2,BHFIR,BGMSET,YOSSISET
+	EXTERN	SHRVSE,SOUNDCLR,ITEMGETS,ENBITON,NAZOCLR,ENMDSTL,NOSDST,NXGOTO3
+	EXTERN	LDTIM1,LDTIM3,MSGCH3,DUSHCL2,FKMSCK,HABATAKI
+;
+	EXTERN	CARITMD,GRBGCR,DJBGCR,PTOBI,WTUP,PBULE,POVER,SMK1,PINDR1,HARTB
+	EXTERN	EFAIL,EFOLE,EFIRE,EINIT,EMOVE,ESTOP,ECACH,ESHOT,R7BEM,RENO7,BGKAO
+	EXTERN	RZNZ,FLSH,PMOVE,FUCKS,UFOCH,TERSA,FISHG,SBOMB,BOMBR,NINTM,HAYAB
+	EXTERN	PFOLE,KTOBJ,BSLIM,SLIMB,TBOSS,BSNAK,GORMA,BSKEL,BFIRE,BFZN,BBIRD,SWBLK2
+	EXTERN	BFISH,SWTRP,PTATE,PMGIC,POKAR,NIWAT,KODOMA,PAPA0,KAMEI,RANEM,PANEL
+	EXTERN	BHANA,SHANA,HEIS0,MORI1,OCTA1,FDIN,KODOMB,IZUMI,SONIC,KEYSM,DSZN
+	EXTERN	MIZUB,SLOT,HART1,RUPY1,OCHAN,KAKIN,SLIMS,PSWIM,OZWAN
+	EXTERN	ENONBT,HINO0,ENDG,NOMOS
+	EXTERN	GMAP
+;------------------------------------------------
+	KANJI
+	PAGE
+;
+	LIST
+	ORG	$4000
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	鍵５教え リチャード		  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RICHDCD
+	DB	$50,$00,$52,$00
+	DB	$54,$00,$56,$00
+;
+	DB	$50,$00,$52,$00
+	DB	$54,$00,$56,$00
+;
+	DB	$58,$00,$5A,$00
+	DB	$5C,$00,$5E,$00
+;
+	DB	$5A,$20,$58,$20
+	DB	$5E,$20,$5C,$20
+;
+;- - - - - - - - - - - - - - - - - - - - -
+RICHDMV
+	LD	A,$21
+	LD	(ENDSYP),A
+;
+	LD	DE,RICHDCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	LD	A,(FRCNT)
+	AND	%00011111
+	JR	NZ,RHD020
+;
+	CALL	E4XYCK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+RHD020
+	CALL	M4PTST
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,RHD030
+;
+	CALL	M4CROS
+RHD030
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	RHD0000
+	DW	RHD1000
+	DW	RHD2000
+	DW	RHD3000
+	DW	RHD4000
+;=========================================
+RHD0000
+	CALL	STATINC
+;
+	LD	A,(GRKEY5)
+	CP	$06
+	RET	C
+;
+	LD	(HL),$04
+;
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	(HL),$58
+	RET
+;=========================================
+RHD1000
+	CALL	E4MSCK
+	JR	NC,RHD1090
+;
+	LD	A,(WANFLG)
+	AND	A
+	JR	Z,RHD1002
+;
+	LD	E,$2D
+	JP	RHD1080
+;
+RHD1002
+	LD	A,(DJSVBF)
+	AND	%00010000
+	JR	Z,RHD1010
+;
+	LD	A,(GRKEY5)
+	AND	A
+	JR	NZ,RHD1020
+;
+RHD1010
+	LD	A,(DJSVBF)
+	OR	%00010000
+	LD	(DJSVBF),A
+	LD	(DJRMSV+$1C7),A
+;
+	LD	A,$3A
+	CALL	MSGCH2
+;
+	LD	A,(URURIFG)
+	CP	$02
+	JR	NC,RHD1018
+;
+	LD	A,$02
+	LD	(URURIFG),A
+RHD1018
+	JP  	STATINC
+RHD1020
+;	LD	E,$3E
+;	CP	$06
+;	JR	Z,RHD1080
+;;	CP	$FF
+;;	JR	Z,RHD1080
+	LD	E,$3F
+	CP	$05
+	JR	C,RHD1080
+;
+	CALL	STATINC
+	LD	(HL),$03
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),$01
+;
+	LD	A,$FF
+	LD	(GRKEY5),A	
+;
+	LD	A,$09
+	LD	(CHTRF2),A	;鍵転送！
+;
+	LD	E,$3D
+RHD1080
+	LD	A,E
+	CALL	MSGCH2
+RHD1090
+	RET
+;=========================================
+RHD2000
+	LD	A,(MSANSR)
+	AND	A
+	LD	A,$3B
+	JR	Z,RHD2010
+	LD	A,$3C
+RHD2010
+	CALL	MSGCH2
+;
+	CALL	STATINC
+	LD	(HL),$01
+	RET
+;=========================================
+RHD3000
+	CALL	LDTIM0
+	JR	NZ,RHD3010
+;
+	CALL	STATINC
+RHD3010
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),$F8
+	CALL	E4XCLC
+	RET
+;=========================================
+RHD4000
+	CALL	E4MSCK
+	JR	NC,RHD4090
+;
+	LD	A,(GRKEY5)
+	CP	$06
+	LD	A,$3E
+	JR	Z,RHD4010
+	LD	A,$3D
+RHD4010
+	CALL	MSGCH2
+RHD4090
+	LD	A,(PLXPSL)
+	SUB	$78
+	ADD	A,$02
+	CP	$04
+	JR	NC,RHD40A0	;Kaidan cros check !
+;
+	LD	A,(PLYPSL)
+	SUB	$20
+	ADD	A,$05
+	CP	$0A
+	JR	NC,RHD40A0
+;
+	LD	HL,NXRMMD
+;
+	LD	A,DNJ
+	LD	(HLI),A
+	LD	A,$11
+	LD	(HLI),A
+	LD	A,$D8
+	LD	(HLI),A
+	LD	A,$88
+	LD	(HLI),A
+	LD	A,$70
+	LD	(HLI),A
+;
+	CALL	E4CLER
+	JP	NXGOTO
+RHD40A0
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	穴兵士				  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+HEISMCD
+	DB	$FF,$00,$FF,$20
+;
+	DB	$70,$00,$70,$20
+	DB	$72,$00,$72,$20
+	DB	$74,$00,$76,$00
+	DB	$76,$20,$74,$20
+;
+HEISMXD
+	DB	$28,$38,$58,$58,$78,$88
+	DB	$28,$88
+HEISMYD
+	DB	$40,$70,$20,$50,$70,$40
+	DB	$40,$40
+;
+HEISMMV
+	LD	A,(DJSVBF)
+	AND	%00010000
+	JP	NZ,E4CLER
+;
+	LD	HL,ENITMF
+	ADD	HL,BC
+	LD	(HL),KAKIN	;はっぱ
+;
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	LD	DE,HEISMCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	HSM0000
+	DW	HSM1000
+	DW	HSM2000
+	DW	HSM3000
+	DW	HSM4000
+;====================================
+HSM0000
+	CALL	LDTIM0
+	LD	(HL),$40
+	JP	STATINC
+;====================================
+HSM1000
+	CALL	LDTIM0
+	JR	NZ,HSM10A0
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	D,B
+	LD	HL,HEISMXD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,HEISMYD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	E4XCHK
+	ADD	A,$20
+	CP	$40
+	JR	NC,HSM1090
+;
+	CALL	E4YCHK
+	ADD	A,$20
+	CP	$40
+	JR	C,HSM10A0
+HSM1090
+	CALL	LDTIM0
+	LD	(HL),$18
+;
+	CALL	STATINC
+HSM10A0
+	RET
+;====================================
+HSM2000
+	CALL	LDTIM0
+	JR	NZ,HSM2020
+;
+	LD	(HL),$30
+	JP	STATINC
+HSM2020
+	CP	$0C
+	LD	A,$01
+	JR	NC,HSM2030
+	INC	A
+HSM2030
+	CALL	ENPTST
+	RET
+;====================================
+HSM3000
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,HSM3020
+;
+	LD	(HL),$10
+	CALL	STATINC
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,HSM3010
+;
+	LD	A,BOMBR
+	CALL	ENIDSHL
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),$04
+;
+E4BOSET
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$18
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+	LD	(HL),$40
+;
+	LD	HL,ENWRK3
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	PUSH	BC
+	PUSH	DE
+	POP	BC
+;
+	LD	A,$10
+	CALL	PSERCHL
+	POP	BC
+;
+	LD	A,$08
+	LD	(SOUND1),A	;(S)
+;
+HSM3010
+	RET
+HSM3020
+	AND	$20
+	LD	A,$03
+	JR	NZ,HSM3030
+	INC	A
+HSM3030
+	CALL	ENPTST
+	RET
+	
+;====================================
+HSM4000
+	CALL	LDTIM0
+	JR	NZ,HSM4020
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	LD	A,$FF
+	CALL	ENPTST
+	RET
+HSM4020
+	CP	$08
+	LD	A,$01
+	JR	C,HSM4030
+	INC	A
+HSM4030
+	CALL	ENPTST
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	カービイ			  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+KARBYMV
+	CALL	KARBYCS
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,KBY0010
+;
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+KBY0010
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	KBY1000	;移動１
+	DW	KBY2000	;    ２
+	DW	KBY3000	;すいこみ
+	DW	KBY4000	;ため
+	DW	KBY5000	;はきだし
+;--------------------------------------
+KBY1000
+	CALL	LDTIM0
+	JR	NZ,KBY1090
+;
+	CALL	ENSDCL
+;
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM3
+	JR	NZ,KBY1010
+;
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	CP	E
+	JR	NZ,KBY1010
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	CALL	LDTIM0
+	LD	(HL),$FF
+;
+	LD	A,$3B
+	LD	(SOUND3),A	;(S)
+	RET
+;
+KBY1010
+	CALL	LDTIM0
+;
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$10
+	LD	(HL),A
+;
+	CALL	STATINC
+KBY1090
+KBMVSB
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,KBY10A0
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$10
+KBY10A0
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	RLA
+	AND	%00000110
+	CALL	ENPTST
+;
+	CALL	CREPKEL
+	RET
+;--------------------------------------
+KBYXSD
+	DB	$08,$F8,$08,$F8
+KBYYSD
+	DB	$F8,$F8,$08,$08
+;
+KBY2000
+	CALL	LDTIM0
+	JR	NZ,KBY2090
+;
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$20
+	LD	(HL),A
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	CALL	RNDSUB
+	BIT	2,A
+	JR	Z,KBY2020	
+;
+	AND	$03
+	JR	KBY2030	
+KBY2020
+	CALL	E4XCHK
+	PUSH	DE
+	CALL	E4YCHK
+	LD	A,E
+	AND	%00000011
+	DEC	A
+	DEC	A
+	SLA	A
+	POP	DE
+	OR	E
+KBY2030
+	LD	E,A
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+;
+	LD	D,B
+	LD	HL,KBYXSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,KBYYSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+KBY2090
+	JP	KBMVSB
+;---------------------------------------------
+KBY3000
+	CALL	CRKNENL
+;
+	CALL	LDTIM0
+	JR	NZ,KBY3010
+;
+KBRETN
+	CALL	STATINC
+	LD	(HL),B
+;
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+	CALL	LDTIM3
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$08
+;;	AND	$1F
+;;	ADD	A,$10
+	LD	(HL),A
+	RET
+;
+KBY3010
+	LD	A,$01
+	LD	($D3E6),A	;(S) 吸入音！
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+;
+	LD	A,(FRCNT)
+	AND	$03
+	JR	NZ,KBY3030
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$0C
+	JR	Z,KBY3030
+;
+	AND	%10000000
+	JR	Z,KBY3020
+;
+	INC	(HL)
+	INC	(HL)
+KBY3020
+	DEC	(HL)
+KBY3030
+	LD	A,(PLCHPT)
+	CP	$FF
+	JR	Z,KBY3050
+;
+;	LD	HL,ENMUKI
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	RLA
+;	AND	%00000110
+;	OR	$01
+;	CALL	ENPTST
+;
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	CP	E
+	JR	NZ,KBY3050
+;
+	CALL	E4XCHK
+	ADD	A,$40
+	CP	$80
+	JR	NC,KBY3050
+;
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	HL
+	PUSH	AF
+	LD	A,(ENDSYP)
+	LD	(HL),A
+	CALL	E4YCHK
+	LD	E,A
+	POP	AF
+	POP	HL
+	LD	(HL),A
+	LD	A,E
+	ADD	A,$30
+	CP	$60
+	JR	NC,KBY3050
+;
+	LD	A,$08
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	CPL
+	INC	A
+	LD	(PLYSPD),A
+;
+	LD	A,(WORK1)
+	CPL
+	INC	A
+	LD	(PLXSPD),A
+;
+	PUSH	BC
+	CALL	MVCALC
+	CALL	PLBGCKL
+	POP	BC
+;
+	LD	HL,ENSVXL
+	LD	A,(PLXPSL)
+	SUB	(HL)
+	ADD	A,$04
+	CP	$08
+	JR	NC,KBY3050
+;
+	LD	HL,ENDSYP
+	LD	A,(PLYPSL)
+	SUB	(HL)
+	ADD	A,$04
+	CP	$08
+	JR	NC,KBY3050
+;
+	CALL	LDTIM0
+	LD	(HL),$80
+;
+	CALL	STATINC
+KBY3050
+KBPTST2
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	RLA
+	AND	%00000110
+	OR	$01
+	CALL	ENPTST
+	RET
+;===============================
+KBY4000
+	CALL	LDTIM0
+	JR	Z,KBY4030
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,KBY4010
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,KBY4010
+;
+	INC	(HL)
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$0C
+;
+	LD	A,$09
+	LD	(SOUND1),A	;(S) Bomb set !
+KBY4010
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$08
+	CALL	ENPTST
+;
+	LD	A,$FF
+	LD	(PLCHPT),A
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+	RET
+KBY4030
+	LD	(HL),$0C
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),B
+;
+	XOR	A
+	LD	(PLYSPD),A
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	LD	A,$18
+	JR	Z,KBY4040
+	LD	A,$E8
+KBY4040
+	LD	(PLXSPD),A
+;
+	LD	A,$10
+	LD	(PLZSPD),A
+	LD	A,$20
+	LD	(PLFLSH),A
+;
+	LD	A,$02
+	LD	(PLJPFG),A
+;
+	LD	A,$02
+	LD	(HARTDW),A
+;
+	LD	A,$08
+	LD	(SOUND1),A	;(S)
+;
+	CALL	STATINC
+	RET
+;===============================
+KBY5000
+	CALL	LDTIM0
+	JP	Z,KBRETN
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+;
+	JP	KBPTST2
+;===============================
+KARBYCD
+;0
+	DB	$62,$20,$60,$20
+	DB	$68,$20,$66,$20
+;;	DB	$74,$00,$72,$00
+;;	DB	$7A,$00,$7C,$00
+;2
+	DB	$60,$00,$62,$00
+	DB	$66,$00,$68,$00
+;;	DB	$72,$20,$74,$20
+;;	DB	$7C,$20,$7A,$20
+;4
+	DB	$62,$20,$60,$20
+	DB	$68,$20,$66,$20
+;6
+	DB	$60,$00,$62,$00
+	DB	$66,$00,$68,$00
+;----------------------------
+KARBYCD2
+;8
+	DB	$00,$FC,$62,$20
+	DB	$00,$04,$6A,$20
+	DB	$00,$0C,$64,$20
+;;	DB	$00,$FC,$64,$00
+;;	DB	$00,$04,$7E,$00
+;;	DB	$00,$0C,$72,$00
+;9
+	DB	$00,$FC,$64,$00
+	DB	$00,$04,$6A,$00
+	DB	$00,$0C,$62,$00
+;;	DB	$00,$FC,$62,$20
+;;	DB	$00,$04,$7E,$00
+;;	DB	$00,$0C,$74,$20
+;A
+	DB	$00,$FC,$62,$20
+	DB	$00,$04,$6A,$20
+	DB	$00,$0C,$64,$20
+; 
+	DB	$00,$FC,$64,$00
+	DB	$00,$04,$6A,$00
+	DB	$00,$0C,$62,$00
+;
+KBAIRCD
+;0
+	DB	$00,$0E,$24,$00
+	DB	$F8,$18,$24,$00
+	DB	$08,$18,$24,$00
+;1
+	DB	$FE,$13,$24,$00
+	DB	$03,$13,$24,$00
+	DB	$03,$13,$FF,$00
+;2
+	DB	$00,$FA,$24,$00
+	DB	$F8,$F0,$24,$00
+	DB	$08,$F0,$24,$00
+;3
+	DB	$FE,$F5,$24,$00
+	DB	$03,$F5,$24,$00
+	DB	$03,$F5,$FF,$00
+;------------------------------------
+KARBYCS
+	LD	A,(ENCHPT2)
+	CP	$08
+	JR	NC,KBY000
+;
+	LD	DE,KARBYCD
+	CALL  	EN2CST
+;
+	LD	A,(ENSTAT2)
+	CP	$02
+	JR	NZ,KBCS10	;吸引？
+;				;yes !
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	RLA
+	AND	$02
+	LD	E,A
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	OR	E
+	RLA
+	RLA
+	AND	%11111100
+	LD	E,A
+	RLA
+	AND	%11111000
+	ADD	A,E
+	LD	E,A
+	LD	D,B
+	LD	HL,KBAIRCD
+	ADD	HL,DE
+	LD	C,$03
+	CALL	ENOMST
+;
+	LD	A,$03
+	CALL	NXOMSBL
+KBCS10
+	RET
+;------------------------------------
+KBY000
+	SUB	$08
+	RLA
+	RLA
+	AND	%11111100
+	LD	E,A
+	SLA	A
+	ADD	A,E
+	LD	E,A
+	LD	D,B
+	LD	HL,KARBYCD2
+	ADD	HL,DE
+;
+	LD	C,$03
+	CALL  	ENOMST
+;
+	JP	SADWSTL
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	O ちゃん			  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OCHANMV
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JP	NZ,OBALLMV	; Ball ?
+;
+	LD	A,C
+	LD	(BSINDX2),A
+;
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,OCH0F00	;Ball initial set !
+;
+	INC	(HL)
+;
+	LD	A,OCHAN
+	CALL	ENIDSHL
+;
+	LD	A,E
+	LD	(BSINDX),A
+;
+	LD	A,(WORK1)
+	ADD	A,$10
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+	LD	A,(WORK0)
+	ADD	A,$30
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENWRK3
+	ADD	HL,DE
+	INC	(HL)
+OCH0F00
+	CALL	OCHANCS
+;
+	CALL	BSSDCK	;(S)
+;
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JP	NZ,BSFLSB
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+;
+	CALL	CREPKEL
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,OCH0000
+;
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+OCH0000
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	OCBLSH	
+	DW	OCNIGE	
+	DW	OCCACH1
+	DW	OCCACH2
+	DW	OCSHOT
+;=========================================
+OCBLSH
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	$00
+	JR	NZ,OCBS30	;プレイヤーがボールを持った？
+;				; NO
+	LD	A,(PLXPSL)
+	PUSH	AF
+	LD	A,(PLYPSL)
+	PUSH	AF
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLXPSL),A
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLYPSL),A
+;
+	LD	A,$10
+	CALL	PSERCHL
+;
+	CALL	E4MVCL
+;
+	CALL	ENBGCKL
+;
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+	ADD	A,$0C
+	CP	$18
+	JR	NC,OCBS10
+	CALL	E4YCHK
+	ADD	A,$0C
+	CP	$18
+	JR	NC,OCBS10
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	CALL	LDTIM0
+	LD	(HL),$1F
+;
+	LD	A,$1C
+	LD	(SOUND2),A	;(S)
+OCBS10
+	POP	AF
+	LD	(PLYPSL),A
+	POP	AF
+	LD	(PLXPSL),A
+	JR	OCJPST
+;
+OCBS30
+	CALL	STATINC
+OCJPST
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,OCBS40
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$10
+OCBS40
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	CALL	ENPTST
+;
+	RET	
+;=====================================
+OCNXSD
+	DB	$0C,$F4,$0C,$F4
+OCNYSD
+	DB	$FC,$FC,$04,$04
+;
+OCNIGE
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	$00
+	JR	NZ,OCN008	;ボールが止った？
+;				; YES !
+	CALL	STATINC
+	LD	(HL),B
+OCN008
+	CALL	LDTIM0
+	JR	NZ,OCN010
+;
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$10
+	LD	(HL),A
+;
+	AND	$03
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+	LD	E,A
+;
+	LD	D,B
+	LD	HL,OCNXSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,OCNYSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+OCN010
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	CALL	OCJPST
+;
+	LD	A,(FRCNT)
+	AND	%00001000
+	JR	Z,OCN020
+;
+	INC	(HL)
+	INC	(HL)
+OCN020
+	RET
+;=====================================
+OCCAXD
+	DB	$00,$02,$04,$06
+	DB	$08,$0A,$0C,$0E
+	DB	$00,$FE,$FC,$FA
+	DB	$F8,$F6,$F4,$F2
+OCCAYD
+	DB	$F0,$F1,$F2,$F4
+	DB	$F6,$F8,$FA,$FE
+	DB	$F0,$F1,$F2,$F4
+	DB	$F6,$F8,$FA,$FE
+;	DB	$F0,$F1,$F2,$F4
+;	DB	$F6,$F8,$FA,$FE
+;	DB	$F0,$F1,$F2,$F4
+;	DB	$F6,$F8,$FA,$FE
+OCCACH1
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	RLA	
+	RLA	
+	RLA	
+	AND	%00001000
+	LD	E,A
+;
+	CALL	LDTIM0
+	JR	NZ,OCC1010
+;
+	LD	(HL),$20
+;
+	CALL	STATINC
+	RET
+OCC1010
+	RRA
+	RRA
+	AND	$07
+	OR	E
+OCCAPS
+	PUSH	BC
+	LD	C,A
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+;
+	LD	A,(ENSVXL)
+;
+	LD	HL,OCCAXD
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+;;	LD	A,(ENSVYL)
+;
+	LD	HL,OCCAYD
+	ADD	HL,BC
+;;	ADD	A,(HL)
+	LD	A,(HL)
+	CPL
+	INC	A
+;
+	POP	BC
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	ADD	A,(HL)
+;
+	LD	HL,ENZPSL
+;;	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$02
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+OCCAPT
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	OR	$02
+	CALL	ENPTST
+	RET
+;=====================================
+OCCACH2	
+	XOR	A
+	CALL	OCCAPS
+;
+	CALL	LDTIM0
+	JR	NZ,OCC2010
+;
+	LD	(HL),$20
+;
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	(HL),$04
+;
+	PUSH	BC
+	PUSH	DE
+	POP	BC
+;
+	LD	A,$20
+	CALL	PSERCHL
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$18
+	POP	BC
+;
+;;	CALL	ENSDCL
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$20
+;
+	LD	A,$08
+	LD	(SOUND1),A	;(S)
+;
+	CALL	STATINC
+	RET
+OCC2010
+	CALL	OCJPST
+;
+	LD	A,$04
+	CALL	PSERCHL
+;
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+;
+	CALL	OCCAPT
+;
+	CALL	E4MVCL
+	CALL	ENBGCKL
+	RET
+;=====================================
+OCSHOT
+	CALL	LDTIM0
+	JR	NZ,OCSH010
+;
+	CALL	STATINC
+	LD	(HL),B
+OCSH010
+;;;	CALL	OCJPST
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	CALL	ENPTST
+	RET
+;=====================================
+;=====================================
+;=====================================
+;=====================================
+;=====================================
+;=====================================
+;
+;
+;=====================================
+OCHANCD
+;0
+	DB	$00,$FC,$64,$20
+	DB	$00,$04,$62,$20
+	DB	$00,$0C,$60,$20
+	DB	$F0,$FC,$6C,$20
+;1	NORMAL
+	DB	$00,$FC,$60,$00
+	DB	$00,$04,$62,$00
+	DB	$00,$0C,$64,$00
+	DB	$F0,$0C,$6C,$00
+;2
+	DB	$00,$FC,$6A,$20
+	DB	$00,$04,$68,$20
+	DB	$00,$0C,$66,$20
+	DB	$F0,$FC,$6C,$00
+;3	CACH
+	DB	$00,$FC,$66,$00
+	DB	$00,$04,$68,$00
+	DB	$00,$0C,$6A,$00
+	DB	$F0,$0C,$6C,$20
+;-----------------------------------
+OCHANCS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+	RLA
+	RLA
+	AND	%11110000
+	LD	E,A
+	LD	D,B
+	LD	HL,OCHANCD
+	ADD	HL,DE
+	LD	C,$04
+	CALL	ENOMST
+;
+	JP	SADWSTL
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	O ちゃん ボール			  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OBALLCD
+	DB	$6E,$00,$6E,$20
+OBALLMV	
+;	LD	A,C
+;	LD	(BSINDX),A
+;;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	(HL),%10010010
+;
+	LD	HL,ENSHMK
+	ADD	HL,BC
+	LD	(HL),%11111111	;段さチェック無し！
+;
+	LD	DE,OBALLCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+	CALL	CRKNENL
+;
+	CALL	E4MVCL
+	CALL	E4ZCLC
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(ENHELP2),A
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,OBL0000
+;
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	SRA	A
+	CPL
+	CP	$07
+	JR	NC,OBL00F0
+;
+	XOR	A
+	JR	OBL00F2
+OBL00F0
+	LD	A,$09
+	LD	(SOUND1),A	;(S)バウンド！
+OBL00F2
+	LD	(HL),A
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	SRA	(HL)	
+	SRA	(HL)	
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	SRA	(HL)	
+	SRA	(HL)	
+OBL0000
+	CALL	ENBGCKL
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	OBL1000	;転がり
+	DW	OBL2000	;敵キャッチ
+	DW	OBL3000	;プレイヤーキャッチ
+	DW	OBL4000	;プレイヤーが投げ！
+	DW	OBL5000	;敵が投げ！
+;================================================
+OBL1000
+	LD	A,(ENHELP2)
+	DEC	A
+	AND	%10000000
+	JR	Z,OBL1010
+;
+	LD	HL,ENYSPD
+	CALL	OBSDDW
+	LD	HL,ENXSPD
+OBSDDW
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBL1010
+;
+	AND	%10000000
+	JR	Z,OBL1008
+;
+	INC	(HL)
+	INC	(HL)
+OBL1008
+	DEC	(HL)
+OBL1010
+	CALL	CRENPSL
+	JR	NC,OBL1060
+;
+	LD	A,(POWDRTM)
+	AND	A
+	JR	NZ,OBL1060
+;
+	LD	A,(ITEMB)
+	CP	PBULE
+	JR	NZ,OBL1020	; Bulesret check !
+;
+	LD	A,(KEYA2)
+	AND	%00100000
+	JR	NZ,OBL1030
+	JR	OBL1060
+OBL1020
+	LD	A,(ITEMA)
+	CP	PBULE
+	JR	NZ,OBL1060
+;
+	LD	A,(KEYA2)
+	AND	%00010000
+	JR	Z,OBL1060
+;
+OBL1030
+	LD	A,(WPLCAMD)
+	AND	A
+	JR	NZ,OBL1060
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	(HL),ECACH
+;
+	LD	HL,ENCAST
+	ADD	HL,BC
+	LD	(HL),B
+;
+	LD	A,(PLCMKI)
+	LD	(PLCAMK),A
+;
+	CALL	LDTIM0
+	LD	(HL),$02
+;
+	LD	HL,SOUND2
+	LD	(HL),$02	;(S)
+OBL1060
+	RET
+;================================================
+OBL2000
+	RET
+;================================================
+OBL3000
+	RET
+;================================================
+OBL4000
+	LD	A,(BSINDX2)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(ENSVXL)
+	SUB	(HL)
+	ADD	A,$0C
+	CP	$18
+	JP	NC,OBL4002
+;
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(ENDSYP)
+	SUB	(HL)
+	ADD	A,$0C
+	CP	$18
+	JR	NC,OBL4002
+;
+	LD	HL,ENHNFG
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	LD	HL,ENFLSH
+	ADD	HL,DE
+	LD	(HL),$20
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	HL
+	LD	HL,ENHNXS
+	ADD	HL,DE
+	LD	(HL),A
+	POP	HL
+	CPL
+	INC	A
+	SRA	A
+	LD	(HL),A	
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	HL
+	LD	HL,ENHNYS
+	ADD	HL,DE
+	LD	(HL),A
+	POP	HL
+	CPL
+	INC	A
+	SRA	A
+	LD	(HL),A	
+;
+	LD	A,$07
+	LD	(SOUND2),A	;(S)
+;
+	LD	HL,ENLIFE
+	ADD	HL,DE
+	LD	A,(HL)
+	SUB	$02
+	LD	(HL),A
+	DEC	A
+	AND	%10000000
+	JR	Z,OBL4001	;Fail ?
+;				;Yes !
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	(HL),EFAIL ;A
+;
+;	LD	HL,ENTIM4
+;	ADD	HL,DE
+;	LD	(HL),$2F
+;;
+;	LD	HL,ENMOD0
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	LD	(HL),$04		; OAM use count 4 of set !
+;;
+;	LD	HL,ENMOD3
+;	ADD	HL,DE
+;	RES	7,(HL)
+;
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	(HL),EFAIL ;A
+;
+	LD	HL,ENTIM4
+	ADD	HL,BC
+	LD	(HL),$1F
+;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(HL),$04		; OAM use count 4 of set !
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	RES	7,(HL)
+;
+	LD	A,$10
+	LD	(SOUND2),A	;(S)
+;
+;;	CALL	BGMSET	;(S)
+;;	LD	A,$06
+;;	LD	(SOUND1),A	;(S)
+OBL4001
+	CALL	STATINC
+	LD	(HL),B
+OBL4002
+;
+;
+;
+;
+;
+;
+	JR	OBL5010
+;
+OBL5000
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	(HL),%00010010
+;
+	CALL	CRENPLL
+;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	(HL),%10010010
+;
+OBL5010
+	LD	A,(ENHELP)
+	AND	A
+	JR	NZ,OBL4010
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBL4020
+;
+	AND	$03
+	JR	Z,OBL4008
+;
+	LD	HL,ENXSPD
+	JR	OBL400A
+OBL4008
+	LD	HL,ENYSPD
+OBL400A
+	ADD	HL,BC
+	LD	A,(HL)
+	CPL
+	INC	A
+	SRA	A
+	LD	(HL),A
+OBL4010
+	CALL	STATINC
+	LD	(HL),B
+OBL4020
+	RET
+;================================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	トランプ スロット		  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SLOTCD
+;Heart
+	DB	$74,$00,$76,$00
+	DB	$76,$20,$74,$20
+;Daiya
+	DB	$70,$00,$72,$00
+	DB	$72,$20,$70,$20
+;Spead
+	DB	$78,$00,$7A,$00
+	DB	$7A,$20,$78,$20
+;Club 
+	DB	$7C,$00,$7E,$00
+	DB	$7E,$20,$7C,$20
+;- - - - - - - - - - - - - - -
+SLOTMV
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	(HL),$20
+;
+	LD	DE,SLOTCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	SLTWLK
+	DW	SLTSTP
+	DW	SLTGO
+;-------------------------------------
+SLTWLK
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,SLW090
+;
+	LD	(HL),$20
+;
+	CALL	ENSDCL
+;
+	CALL	STATINC
+SLW090
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+SLPTST
+	LD	HL,ENMUKI
+	ADD	HL,BC
+;
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,SLGC08
+;
+	LD	A,(HL)
+	INC	A
+	AND	$03
+	LD	(HL),A
+SLGC08
+;;	LD	HL,ENMUKI
+;;	ADD	HL,BC
+	LD	E,(HL)
+	SLA	E
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	OR	E
+	CALL	ENPTST
+SLGOCK
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,SLGC10
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	CALL	LDTIM0
+	LD	(HL),$40
+;
+	CALL	ENSDCL
+SLGC10
+	RET
+;-------------------------------------
+SLWKXS
+	DB	$0C,$F4,$00,$00
+SLWKYS
+	DB	$00,$00,$F4,$0C
+;- - - - - - - - - - - - - - - - - -
+SLTSTP
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,SLS090
+;
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$20
+	LD	(HL),A
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	CALL	RNDSUB
+	AND	$03
+	LD	E,A
+	LD	D,B
+	LD	HL,SLWKXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,SLWKYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+SLS090
+	JR	SLPTST
+;-------------------------------------
+SLTGO 
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JP	NZ,SLG090
+;
+	LD	(WORK0),A
+;
+	LD	E,ENNO-1
+	LD	D,B
+SLG020
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,SLG050
+;
+	LD	HL,ENMYNO
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	SLOT
+	JR	NZ,SLG050
+;
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	$02
+	JR	NZ,SLG050
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	NZ,SLG050
+;
+	LD	A,(WORK0)
+	INC	A
+	LD	(WORK0),A
+SLG050
+	DEC	E
+	LD	A,E
+	CP	$FF
+	JR	NZ,SLG020
+;
+	LD	A,(WORK0)
+	CP	$03
+	JP	NZ,SLG090	;All stop ?
+;				;yes !
+	PUSH	BC
+	LD	C,B
+;
+	LD	E,ENNO-1
+	LD	D,B
+SLG058
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,SLG060
+;
+	LD	HL,ENMYNO
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	SLOT
+	JR	NZ,SLG060
+;
+	LD	HL,ENMUKI
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,WORK2
+	ADD	HL,BC
+	LD	(HL),A
+	INC	BC
+SLG060
+	DEC	E
+	LD	A,E
+	CP	$FF
+	JR	NZ,SLG058
+;
+	POP	BC
+;
+	CALL	NOSDST	;(S)
+;
+	LD	E,$00
+;
+	LD	A,(WORK2)
+;;	CP	$02
+;;	JR	NC,SLG068
+;;	JR	NC,SLG070
+	LD	HL,WORK3
+	CP	(HL)
+	JR	NZ,SLG068
+;;	JR	NZ,SLG070
+	INC	HL
+	CP	(HL)
+	JR	NZ,SLG068	;全部同じ？
+;;	JR	NZ,SLG070	;全部同じ？
+;				;YES !
+	LD	E,$FF
+	CP	$02
+	JR	NC,SLG068	;当たり？(ハートorダイヤ）
+;
+	LD	HL,SOUND1
+	LD	(HL),$02	;(S)				; yes !
+;
+	LD	E,HART1
+	CP	$01
+	JR	NZ,SLG068
+	LD	E,RUPY1
+SLG068
+	LD	A,E
+	LD	(ENHELP),A
+;
+SLG070
+	LD	E,ENNO-1
+	LD	D,B
+SLG078
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,SLG07A
+;
+	LD	HL,ENMYNO
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	SLOT
+	JR	NZ,SLG07A
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	NZ,SLG079
+;
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	(HL),D
+	JR	SLG07A
+SLG079
+	LD	HL,ENITMF
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENTIM4
+	ADD	HL,DE
+	LD	(HL),$1F
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	(HL),EFAIL
+;
+	LD	HL,ENMOD0
+	ADD	HL,DE
+	LD	(HL),%00000100
+;
+	LD	HL,SOUND3	;(S)
+	LD	(HL),$13
+;
+;;	LD	HL,SOUND1	;(S)
+;;	LD	(HL),$06
+SLG07A
+	DEC	E
+	LD	A,E
+	CP	$FF
+	JR	NZ,SLG078
+;
+;
+;
+;
+SLG090
+	RET
+;=====================================
+;=				     =
+;=====================================
+SKEL0CD
+	DB	$4A,$00,$4C,$00
+	DB	$4C,$20,$4A,$20
+	DB	$4E,$00,$4E,$20
+;- - - - - - - - - - - - - - - - - - - -
+SKEL0MV
+	LD	DE,SKEL0CD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+	CALL	CREPKEL
+;
+	LD	A,(ENSTAT2)
+	RST	0
+	DW	SKSTOP
+	DW	SKWALK
+	DW	SKJUMP
+	DW	SKDOWN
+;=========================================
+SKSTOP
+	CALL	LDTIM0
+	JR	NZ,SKS010
+;
+	CALL	STATINC
+SKS010
+	RET
+;=========================================
+SKWALK
+	LD	A,(FRCNT)
+	XOR	C
+	AND	$3
+	JR	NZ,SKW010
+;
+	LD	A,$08
+	CALL	PSERCHL
+SKW010
+	CALL	E4XCHK
+	ADD	A,$1C
+	CP	$38
+	JR	NC,SKW020
+	CALL	E4YCHK
+	ADD	A,$1C
+	CP	$38
+	JR	NC,SKW020
+;
+;;;	LD	A,$28
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$28 ;A
+;
+	LD	A,$10
+	CALL	PSERCHL
+;
+	CALL	STATINC
+SKW020
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	AND	%00000001
+	CALL	ENPTST
+	RET
+;=========================================
+SKJUMP
+	CALL	E4MVCL
+	CALL	ENBGCKL
+	CALL	E4ZCLC
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	LD	A,(HL)
+	CP	$2
+	JR	NC,SKJ010
+;
+;;	LD	A,$C0
+	LD	(HL),$C0 ;A
+;
+	CALL	LDTIM0
+;;	LD	A,$10
+	LD	(HL),$10 ;A
+;
+	CALL	ENSDCL
+;
+	CALL	STATINC
+SKJ010
+	LD	A,$2
+	CALL	ENPTST
+	RET
+;=========================================
+SKDOWN
+	CALL	LDTIM0
+	JR	NZ,SKD090
+;
+	CALL	E4ZCLC
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,SKD010
+	AND	%10000000
+	JR	Z,SKD090
+;
+SKD010
+	LD	(HL),B
+;
+	CALL	LDTIM0
+;;	LD	A,$20
+	LD	(HL),$20 ;A
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(HL),B
+	BIT	7,A
+	JR	Z,SKD090
+;
+	CP	$D0
+	JR	NC,SKD090
+;
+	LD	A,(ENSVXL)
+	LD	(WORK0),A
+	LD	A,(ENDSYP)
+	ADD	A,$C
+	LD	(WORK1),A
+	CALL	FLASHST
+SKD090
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	水 の 中ボス			  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MZMKCK
+	DB	$00,$03,$01,$02
+;;;	DB	$01,$02,$00,$03
+;
+MIZUBMV
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JP	NZ,MIZUSMV
+;
+;	LD	A,(DNJNNO)
+;	LD	E,A
+;	LD	D,B
+;	LD	HL,WARPSV
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	AND	%00000001
+;	JP	NZ,E4CLER
+;
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,MZBI100
+;
+	INC	(HL)
+;
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	(HL),$08
+;
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	(HL),$01
+MZBI100
+	CALL	SHRVSE
+;
+	CALL	MIZUBCS
+;
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JP	NZ,BSFLSB
+;
+	CALL	E4STCK
+;
+	CALL	BSSDCK	;(S)
+;
+	CALL	ENHNCL
+;
+	CALL	CRENPLL
+;
+	CALL	E4MVCL
+;
+	LD	A,(PLJPFG)
+	AND	A
+	JR	NZ,MZB000
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	LD	(HL),%11000100
+;
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	NZ,MZB0F8
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,MZMKCK
+	ADD	HL,DE
+	LD	A,(HL)
+	PUSH	AF
+	CALL	E4XYCK
+	POP	AF
+	CP	E
+	JR	Z,MZB0F8
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	LD	(HL),%10000100
+MZB0F8
+	CALL	CRKNENL
+MZB000
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	MZB1000
+	DW	MZB2000
+;---------------------------------------
+MZXSPD
+	DB	$14,$00,$EC,$00
+;;	DB	$18,$00,$E8,$00
+MZYSPD
+	DB	$00,$14,$00,$EC
+;;	DB	$00,$18,$00,$E8
+;----------------------------------
+MZCHPT
+	DB	6,7
+	DB	0,1
+	DB	4,5
+	DB	2,3
+MZSXAD
+	DB	$10,$10
+	DB	$F4,$0C
+	DB	$F0,$F0
+	DB	$F4,$0C
+MZSYAD
+	DB	$F4,$0C
+	DB	$10,$10
+	DB	$F4,$0C
+	DB	$F0,$F0
+MZSXSD
+	DB	$80,$80
+	DB	$80,$7F
+	DB	$7F,$7F
+	DB	$80,$7F
+MZSYSD
+	DB	$80,$7F
+	DB	$80,$80
+	DB	$80,$7F
+	DB	$7F,$7F
+MZSCPT
+	DB	$00,$02
+	DB	$00,$01
+	DB	$01,$03
+	DB	$02,$03
+;
+;--------------------------------------
+MZB1000
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	A,(HL)
+;;	CP	$05
+	AND	A
+	JR	Z,MZB1002
+;
+	CALL	MZB1003
+;
+	CALL	STATINC
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENWRK4
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	LDTIM0
+	LD	(HL),$58
+;
+	CALL	RNDSUB
+	AND	$01
+	JR	NZ,MZB0900
+;
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	A,(HL)
+	CPL
+	INC	A
+	LD	(HL),A
+;
+MZB0900
+	CALL	ENSDCL
+;
+	RET
+;---------------------------------
+MZB1002
+	CALL	LDTIM0
+	JR	Z,MZB1003
+;
+;;;	CALL	ENSDCL
+;
+	CP	$01
+	JR	Z,MZBNEXT
+	RET
+MZB1003
+;;	LD	HL,ENWRK3
+;;	ADD	HL,BC
+;	LD	HL,ENLIFE
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	$05
+;	JR	Z,MZB1025
+;	CP	$06
+;	JR	Z,MZB1025
+;	CP	$07
+;	JR	Z,MZB1025
+;	CP	$08
+;	JR	NZ,MZB1028
+;;
+;MZB1025
+;	LD	(HL),$04
+;
+;	CALL	STATINC
+;	CALL	LDTIM0
+;	LD	(HL),$6A
+;;
+;	LD	HL,ENWRK3
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CPL
+;	INC	A
+;	LD	(HL),A
+;
+;;	LD	HL,ENWRK3
+;;	ADD	HL,BC
+;;	LD	(HL),$04
+MZB1028
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$20
+	JR	C,MZB1010
+	CP	$80
+	JR	NC,MZB1010
+;
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$28
+	JR	C,MZB1008
+	CP	$68
+	JR	C,MZB1050
+;
+MZB1008
+	LD	A,(ENSVYL)
+	LD	(HL),A
+	JR	MZB1020
+MZB1010
+;;;	CALL	ENPSSV
+	LD	A,(ENSVXL)
+	LD	(HL),A
+MZB1020
+	CALL	LDTIM0
+	LD	(HL),$15
+;
+	CALL	ENSDCL
+	RET
+;
+;
+MZBNEXT
+;;	LD	E,$01
+;;	LD	HL,ENLIFE
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	CP	$05
+;;	JR	NC,MZB1030
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	E,(HL)
+;
+;;	LD	E,$FF
+MZB1030
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,E
+	AND	$03
+	LD	(HL),A
+MZSDST
+MZB1050
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+;;	LD	HL,ENWRK3
+;;	ADD	HL,BC
+;;	OR	(HL)
+	LD	E,A
+	LD	D,B
+	LD	HL,MZXSPD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,MZYSPD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	SLA	E
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	OR	E
+	AND	%00000111
+	LD	E,A
+	LD	D,B
+	LD	HL,MZCHPT
+	ADD	HL,DE
+	LD	A,(HL)
+	CALL	ENPTST
+;
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,MZB10A0
+;
+	LD	A,$2F
+	LD	(SOUND3),A	;(S)
+;
+	LD	A,$01
+MZB1090
+	LD	(ENHELP),A
+;
+	LD	A,MIZUB
+	CALL	ENIDSHL
+	JR	C,MZB10A0
+;
+	PUSH	BC
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	SLA	A
+	LD	HL,ENHELP
+	OR	(HL)
+	LD	C,A
+	LD	HL,MZSXAD
+	ADD	HL,BC
+	LD	A,(WORK0)
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MZSYAD
+	ADD	HL,BC
+	LD	A,(WORK1)
+	ADD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MZSXSD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MZSYSD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MZSCPT
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENCHPT
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENWRK0
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	LD	HL,ENMOD0
+	ADD	HL,DE
+	LD	(HL),%11000010
+	LD	HL,ENMOD3
+	ADD	HL,DE
+	LD	(HL),%00000000
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+	LD	(HL),$0C
+;
+	POP	BC
+;
+	LD	A,(ENHELP)
+	DEC	A
+	CP	$FF
+	JR	NZ,MZB1090
+;
+MZB10A0
+	RET
+;=====================================
+MZB2000
+	CALL	LDTIM0
+	JR	NZ,MZB2010
+;
+;;;	LD	(HL),$20
+;
+	LD	HL,ENWRK4
+	ADD	HL,BC
+	LD	A,(HL)
+	XOR	$02
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	STATINC
+	LD	(HL),B
+	RET
+;;	JP	MZSDST
+MZB2010
+	AND	$03
+	JR	NZ,MZB2020
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	A
+	AND	$03
+	LD	(HL),A
+MZB2020
+	CALL	MZSDST
+	CALL	ENSDCL
+;
+	RET
+;=====================================
+MIZUBCD
+;0	D1
+	DB	$F8,$F8,$60,$00
+	DB	$F8,$00,$62,$00
+	DB	$F8,$08,$62,$20
+	DB	$F8,$10,$60,$20
+	DB	$08,$F8,$64,$00
+	DB	$08,$00,$66,$00
+	DB	$08,$08,$66,$20
+	DB	$08,$10,$64,$20
+;1	D2
+	DB	$FA,$F8,$60,$00
+	DB	$FA,$00,$62,$00
+	DB	$FA,$08,$62,$20
+	DB	$FA,$10,$60,$20
+	DB	$08,$F8,$64,$00
+	DB	$08,$00,$66,$00
+	DB	$08,$08,$66,$20
+	DB	$08,$10,$64,$20
+;2	U1
+	DB	$F8,$F8,$64,$40
+	DB	$F8,$00,$66,$40
+	DB	$F8,$08,$66,$60
+	DB	$F8,$10,$64,$60
+	DB	$08,$F8,$60,$40
+	DB	$08,$00,$62,$40
+	DB	$08,$08,$62,$60
+	DB	$08,$10,$60,$60
+;3	U2
+	DB	$F8,$F8,$64,$40
+	DB	$F8,$00,$66,$40
+	DB	$F8,$08,$66,$60
+	DB	$F8,$10,$64,$60
+	DB	$06,$F8,$60,$40
+	DB	$06,$00,$62,$40
+	DB	$06,$08,$62,$60
+	DB	$06,$10,$60,$60
+;4	L1
+	DB	$F8,$F8,$68,$00
+	DB	$F8,$00,$6A,$00
+	DB	$F8,$08,$62,$20
+	DB	$F8,$10,$60,$20
+	DB	$08,$F8,$68,$40
+	DB	$08,$00,$6A,$40
+	DB	$08,$08,$62,$60
+	DB	$08,$10,$60,$60
+;5	L2
+	DB	$F8,$F8,$68,$00
+	DB	$F8,$00,$6A,$00
+	DB	$F8,$06,$62,$20
+	DB	$F8,$0E,$60,$20
+	DB	$08,$F8,$68,$40
+	DB	$08,$00,$6A,$40
+	DB	$08,$06,$62,$60
+	DB	$08,$0E,$60,$60
+;6	R1
+	DB	$F8,$F8,$60,$00
+	DB	$F8,$00,$62,$00
+	DB	$F8,$08,$6A,$20
+	DB	$F8,$10,$68,$20
+	DB	$08,$F8,$60,$40
+	DB	$08,$00,$62,$40
+	DB	$08,$08,$6A,$60
+	DB	$08,$10,$68,$60
+;7	R2
+	DB	$F8,$FA,$60,$00
+	DB	$F8,$02,$62,$00
+	DB	$F8,$08,$6A,$20
+	DB	$F8,$10,$68,$20
+	DB	$08,$FA,$60,$40
+	DB	$08,$02,$62,$40
+	DB	$08,$08,$6A,$60
+	DB	$08,$10,$68,$60
+;- - - - - - - - - - - - - - - - - - - -
+MIZUBCS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+	RLA
+	RLA
+	RLA
+	AND	%11100000
+	LD	E,A
+	LD	D,B
+	LD	HL,MIZUBCD
+	ADD	HL,DE
+;
+	LD	C,$08
+	CALL	ENOMST
+	RET
+;===============================================
+;=					       =
+;===============================================
+MIZUSCD
+	DB	$6C,$00,$6E,$00
+	DB	$6E,$20,$6C,$20
+	DB	$6C,$40,$6E,$40
+	DB	$6E,$60,$6C,$60
+;
+MIZUSMV
+	LD	DE,MIZUSCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	LDTIM0
+	JP	Z,E4CLER
+;
+	CP	$06
+	JR	NZ,MZS010
+;
+	CALL	E4MVCL
+MZS010
+	RET
+;===============================================
+;=					       =
+;===============================================
+SWBLKCD
+	DB	$F8,$10,$FA,$10
+;--------------------------------------
+SWBLKMV
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	NZ,SWI100
+;
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$08
+	LD	(HL),A
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),$10
+	JP	STATINC
+;---------------------------------
+SWI100
+	LD	DE,SWBLKCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+;	LD	A,(ENSTAT2)
+;	DEC	A
+;	RST	00
+;	DW	SWB1000
+;	DW	SWB2000
+;;----------------------------------
+;SWB1000
+;	LD	A,(ENSVXL)
+;	LD	HL,ENWRK1
+;	ADD	HL,BC
+;	LD	(HL),A
+;	SUB	$18
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	(HL),A
+;;
+;	JP	STATINC
+;;----------------------------------
+;SWB2000
+	LD	A,(HIKUSFG)
+	CP	$02
+	JR	Z,SWB2050
+	AND	A
+	JR	Z,SWB2010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	CP	$0A
+	JR	NZ,SWB2008
+;
+	LD	(HL),B
+;
+	LD	A,$11
+	LD	(SOUND3),A	;(S)
+;
+SWB2002
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$20
+	JR	NC,SWB2008
+;
+	INC	(HL)
+SWB2008
+	RET
+;-------------------------------------
+SWB2010
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,SWB2060
+;
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,SWB2050
+;
+	DEC	(HL)
+SWB2050
+	LD	A,(HL)
+	CP	$04
+	JR	NC,SWB2058
+;
+	CALL	CRENPSL
+	JR	NC,SWB2070
+;
+	LD	A,$08
+	LD	(HANEFG),A	
+;
+;	LD	A,(ENMYNO2)
+;	CP	SWBLK2
+;	JR	Z,SWB205A
+;;
+;	CALL	E4YCHK
+;	LD	A,E
+;	CP	$02
+;;
+;	LD	A,$F0
+;	JR	Z,SWB2053
+;	LD	A,$10
+;SWB2053
+;	LD	(PLYSPD),A
+;
+	LD	A,$10
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	LD	(PLYSPD),A
+	LD	A,(WORK1)
+	LD	(PLXSPD),A
+SWB2058
+	RET
+;
+;SWB205A
+;	CALL	E4XCHK
+;	LD	A,E
+;	CP	$00
+;;
+;	LD	A,$10
+;	JR	Z,SWB205B 
+;	LD	A,$F0
+;SWB205B
+;	LD	(PLXSPD),A
+;	RET
+SWB2060
+	CALL	CRENPSL
+	JR	NC,SWB2070
+;
+	CALL	M4CRSB
+SWB2070
+	RET
+;----------------------------------
+;--------------------------------------
+SWBLK2MV
+	LD	A,(ENSTAT2)
+	AND	A
+	JP	NZ,SWI100
+;
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$08
+	LD	(HL),A
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),$10
+	JP	STATINC
+;===============================================
+;=					       =
+;===============================================
+MOTOSCD
+	DB	$44,$00,$44,$20
+	DB	$46,$00,$46,$20
+MOTOSCD2
+	DB	$64,$00,$64,$20
+	DB	$66,$00,$66,$20
+;- - - - - - - - - - - - - - - - - - - -
+;
+MOTOSMV
+;	LD	A,(KENLEV)
+;	CP	$02
+;	JR	NC,MT0010	; Ken 1 ?
+;;				; Yes !
+;	LD	HL,ENLIFE
+;	ADD	HL,BC
+;	LD	(HL),$60
+;MT0010
+	LD	DE,MOTOSCD
+;
+	LD	A,(DNJNNO)
+	CP	$0A
+	JR	NZ,MT0010
+;
+	LD	DE,MOTOSCD2
+MT0010
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+	CALL	CREPKEL
+;
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;---------------------------------------
+MOMAIN
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+;
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),A
+	CALL	ENPTST
+;
+	LD	A,(FRCNT)
+	XOR	C
+	AND	$03
+	JR	NZ,MOWARI
+;
+;;;	LD	A,$0C		
+;
+	CALL	RNDSUB
+	XOR	C
+	AND	$07
+	ADD	A,$04
+;
+MOSUB
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	LD	HL,ENYSPD
+	CALL	RURURU
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$0C
+	JR	Z,MXCHK
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),B ;$00
+;
+MXCHK
+	LD	A,(WORK1)
+	LD	HL,ENXSPD
+	CALL	RURURU
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JR	Z,MMFIN
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),B ;$00
+;
+MMFIN
+	RET
+;
+RURURU
+;
+	ADD	HL,BC
+	SUB	(HL)
+	JR	Z,MOWARI
+;
+	BIT	7,A
+	JR	Z,MOINC
+;
+	DEC	(HL)
+	JR	MOWARI
+;
+MOINC
+	INC	(HL)
+;
+MOWARI
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	パネル順番秘密				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PANELCD
+	DB	$FF,$00,$FF,$20
+	DB	$3A,$00,$3A,$20
+	DB	$3C,$00,$3C,$20
+	DB	$3C,$00,$3C,$20
+PNCKXP
+	DB	$58,$78,$78,$28,$28
+	DB	$28,$78,$58,$28,$78
+	DB	$28,$78,$28,$78,$58
+	DB	$58,$28,$78,$28,$78
+PNCKYP
+	DB	$40,$30,$50,$50,$30
+	DB	$30,$50,$40,$50,$30
+	DB	$50,$50,$30,$30,$40
+	DB	$40,$50,$30,$30,$50
+;- - - - - - - - - - - - - - - - - - - 
+PNFLCD
+;0
+	DB	$F2,$00,$3A,$00
+	DB	$F2,$08,$3A,$20
+	DB	$0E,$00,$3A,$00
+	DB	$0E,$08,$3A,$20
+;1
+	DB	$F6,$0A,$3A,$00
+	DB	$F6,$12,$3A,$20
+	DB	$0A,$F6,$3A,$00
+	DB	$0A,$FE,$3A,$20
+;2
+	DB	$00,$0E,$3A,$00
+	DB	$00,$16,$3A,$20
+	DB	$00,$F2,$3A,$00
+	DB	$00,$FA,$3A,$20
+;3
+	DB	$0A,$0A,$3A,$00
+	DB	$0A,$12,$3A,$20
+	DB	$F6,$F6,$3A,$00
+	DB	$F6,$FE,$3A,$20
+;- - - - - - - - - - - - - - - - - - - 
+PANELMV
+PANEL2MV
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	Z,PN0000	;当たりフラッシュ？
+;				;YES !
+	CALL	LDTIM0
+	JP	Z,E4CLER
+	RLA
+	RLA
+	AND	%00110000
+	LD	E,A
+	LD	D,B
+	LD	HL,PNFLCD
+	ADD	HL,DE
+	LD	C,$04
+	CALL	ENOMST
+;
+	LD	A,$02
+	CALL	NXOMSBL
+	RET	
+;
+PN0000
+	CALL	E4STCK
+;
+	LD	A,(ENMYNO2)
+	CP	PANEL
+	JR	NZ,PN0001
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	AND	$03
+	CALL	ENPTST
+;
+	LD	DE,PANELCD
+	CALL	EN2CST
+PN0001
+	LD	HL,ENCONT
+	ADD	HL,BC
+;
+	LD	A,(PANELMD)
+;;	AND	$07
+	LD	E,A
+	SLA	A
+	SLA	A
+	ADD	A,E
+	ADD	A,(HL)
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,PNCKXP
+	ADD	HL,DE
+	LD	A,(HL)
+;;;	LD	(ENSVXL),A
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,PNCKYP
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	(HL),A
+;;;	LD	(ENDSYP),A
+;
+	CALL	ENPSSV
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(FTUNNO)
+	CP	(HL)
+	JR	Z,PN00A0
+	CP	DTURZ
+	JR	NZ,PN00A0
+;
+	CALL	CRENPSL
+	JR	NC,PN0090
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$04
+	JR	NZ,PN0030
+;
+	CALL	E4CLER
+;
+	CALL	NAZOCLR	;(S)
+;
+;;	LD	HL,PANELMD
+;;	SET	7,(HL)
+;;	RET
+	JR	PN00A0
+PN0030
+	INC	(HL)
+;
+	LD	A,$13
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,PANEL
+	CALL	ENIDSHL
+	JR	C,PN0038
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	PUSH	BC
+	PUSH	DE
+	POP	BC
+;
+	CALL	STATINC
+	CALL	LDTIM0
+	LD	(HL),$18
+;
+	POP	BC
+PN0038
+	JR	PN00A0
+;;	RET
+;
+PN0090
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	(HL),B
+;
+PN00A0
+	LD	A,(FTUNNO)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	情報開発部  日野 重文			%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+HNMVXS
+	DB	$08,$F8,$00,$00
+HNMVYS
+	DB	$00,$00,$F8,$08
+;
+HINO0MV
+	CALL	HINO0CS
+;
+	XOR	A
+	LD	(ITEMNOT),A
+;
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JP	NZ,BSFLSB
+;
+	CALL	E4STCK
+;
+	CALL	BSSDCK	;(S)
+;
+	CALL	E4HNSB
+;
+	CALL	LDTIM1
+	JR	Z,HNM01110
+;
+	CALL	HNHELP	;コウチョク！
+HNM01110
+	LD	A,(ENSTAT2) ;HL)
+	CP	$04
+	JR	NC,HIN0000
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$03
+	JR	NZ,HIN0000
+;
+	CALL	STATINC
+	LD	(HL),$05
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+	RET
+HIN0000
+	LD	A,(ENSTAT2) ;HL)
+	RST	00	
+	DW	HN1WLK
+	DW	HNSTOP
+	DW	HNATWT
+	DW	HNATCK
+	DW	HNCACH
+	DW	HNBOMB
+;
+;;	AND	A
+;;	JR	Z,HN1WLK
+;----------------------------------
+HNSTOP
+	CALL	CREPKEL
+;- - STOP - -
+	CALL	LDTIM0
+	JR	Z,HN1S02
+;
+	CP	$0A
+	JR	NZ,HN1S01	; Shot chance ?
+;				; yes 
+	CALL	E4XYCK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,E
+	CP	(HL)
+	JR	NZ,HN1S01
+;
+;;	BOMBR SET
+HN1S01
+	CALL	ENBGCKL
+	RET
+;--------------------------------
+HN1S02
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	CP	$02
+	JR	NZ,HN1S03	; Atack time ?
+;				; yes !
+	LD	(HL),B
+;
+	CALL	RNDSUB
+	AND	$01
+	JR	NZ,HN1S03
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	CALL	LDTIM0
+	LD	(HL),$30
+	RET
+HN1S03
+	CALL	LDTIM0
+	CALL	RNDSUB
+	AND	$1F
+	OR	$20
+	LD	(HL),A
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	A
+	AND	$3
+	LD	(HL),A
+	CP	$00
+	JR	NZ,HN1S08	; 4 move 1 serch !
+;
+	CALL	E4XYCK
+	JR	HN1S0A
+HN1S08
+	CALL	RNDSUB
+HN1S0A
+	AND	$03
+;	LD	HL,ENMUKI
+;	ADD	HL,BC
+;	LD	(HL),A
+;
+	LD	E,A
+	LD	D,B ;$0
+	LD	HL,HNMVXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,HNMVYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+HN1S10
+	RET
+;------------------------------------------
+;- - WALK - -
+HN1WLK
+	CALL	CREPKEL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%00001111
+	JR	NZ,HN1STS
+;
+	CALL	LDTIM0
+	JR	NZ,HN1M10
+HN1STS
+	CALL	RNDSUB
+	AND	$0F
+	OR	$10
+	LD	(HL),A
+;
+	CALL	STATINC
+;
+	CALL	ENSDCL
+HN1M10
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;=====================================
+HNPTST
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	RRA
+	RRA
+	RRA
+	RRA
+;;	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;------------------------------------------
+HNATWT
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,HNAW10
+;
+	LD	(HL),$20
+;
+	CALL	STATINC
+;
+	LD	A,$18
+	CALL	PSERCHL
+HNAW10
+HNPTS2
+	CALL	HNPTST
+	CALL	HNPTST
+;
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,HNP210
+;
+	LD	A,$20
+	LD	(SOUND1),A	;(S)
+;
+HNP210
+	RET
+;------------------------------------------
+HNATCK
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,HNAT10
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+HNAT10
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	CALL	E4XCHK
+	ADD	A,$18
+	CP	$30
+	JR	NC,HNAT30
+;
+	CALL	E4YCHK
+	ADD	A,$18
+	CP	$30
+	JR	NC,HNAT30
+;
+	LD	A,(PLMODE)
+	CP	PMOVE
+	JR	NZ,HNAT30
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+	LD	(HL),$3F+$10
+;
+	LD	A,$16
+	LD	(SOUND2),A	;(S)
+HNAT30
+	LD	A,(FRCNT)
+	AND	$07
+	JR	NZ,HNAT50
+;
+	LD	A,(ENSVXL)
+	LD	(WORK0),A
+;
+	LD	A,(ENDSYP)
+	ADD	A,$0A
+	LD	(WORK1),A
+;
+	LD	A,DSZN
+	CALL	EXIDSH
+HNAT50
+	JR	HNPTS2
+;---------------------------------------
+HNCAPT
+	DB	$00,$00,$00,$00,$01,$01,$01,$01,$00,$00
+HNCAXD
+	DB	$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$F3,$F7,$FB,$00
+HNCAZD
+	DB	$15,$15,$15,$15,$15,$14,$14,$14,$10,$08,$04,$00
+;- - - - - - -
+HNCACH
+	CALL	LDTIM0
+	JR	NZ,HNCA10
+;
+	CALL	STATINC
+	LD	(HL),B
+	RET
+;----------------------------------------
+HNCA10
+	CP	$20
+	JR	NZ,HNCA20
+;
+	LD	A,$20
+	LD	(PLYSPD),A
+	LD	A,(PLXPSL)
+	CP	$50
+	LD	A,$E0
+	JR	NC,HNCA11
+	LD	A,$20
+HNCA11
+	LD	(PLXSPD),A
+;
+	LD	A,$10
+	LD	(PLZSPD),A
+;
+	LD	A,$02
+	LD	(PLJPFG),A
+;
+	LD	A,$08
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,$08
+	LD	(HARTDW),A
+;
+	LD	A,(ENSVXL)
+	LD	(PLXPSL),A
+	LD	A,(ENSVYL)
+	LD	(PLYPSL),A
+;
+	CALL	LDTIM1
+	LD	(HL),$50
+;
+	RET
+;-------------------------------------------
+HNCA20
+	RRA
+	RRA
+	RRA
+	AND	$0F
+	LD	E,A
+	LD	D,B
+	LD	HL,HNCAPT
+	ADD	HL,DE
+	LD	A,(HL)
+	CALL	ENPTST
+;
+	CALL	LDTIM0
+	CP	$20
+	JR	C,HNCA90
+	SUB	$20
+	RRA
+	RRA
+	AND	$0F
+	LD	E,A
+	LD	D,B
+	LD	HL,HNCAXD
+	ADD	HL,DE
+	LD	A,(ENSVXL)
+	ADD	A,(HL)
+	LD	(PLXPSL),A
+	LD	HL,HNCAZD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLZPSL),A
+;
+	LD	A,$02
+	LD	(PLJPFG),A
+;
+	LD	A,(ENSVYL)
+	LD	(PLYPSL),A
+;
+HNHELP
+	LD	A,$01
+	LD	(PLSTOP),A
+;
+	LD	A,$6A
+	LD	(PLCHPT),A
+;
+	LD	(ITEMNOT),A
+HNCA90
+	RET
+;---------------------------------
+HNBOMB
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,HNBO10
+;
+	CALL	STATINC
+	LD	(HL),B
+	RET
+HNBO10
+	LD	E,$00
+	CP	$10
+	JR	C,HNBO20
+	INC	E
+HNBO20
+	CP	$10
+	JR	NZ,HNBO30
+;
+	LD	A,BOMBR
+	CALL	ENIDSHL
+	JR	C,HNBO30
+;
+	LD	A,(WORK0)
+	SUB	$0C
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	SUB	$00
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	JP	E4BOSET
+;
+HNBO30
+	LD	A,E
+	CALL	ENPTST
+	RET
+;---------------------------------
+;==========================================
+HINO0CD
+;0
+	DB	$F4,$F8,$60,$00	
+	DB	$F4,$00,$62,$00	
+	DB	$F4,$08,$64,$00	
+	DB	$F4,$10,$66,$00	
+	DB	$04,$F8,$68,$00	
+	DB	$04,$00,$6A,$00	
+	DB	$04,$08,$6C,$00	
+	DB	$04,$10,$6E,$00	
+;1
+	DB	$F4,$F8,$66,$20	
+	DB	$F4,$00,$64,$20	
+	DB	$F4,$08,$62,$20	
+	DB	$F4,$10,$60,$20	
+	DB	$04,$F8,$6E,$20	
+	DB	$04,$00,$6C,$20	
+	DB	$04,$08,$6A,$20	
+	DB	$04,$10,$68,$20	
+HINO0CS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+	RLA
+	RLA
+	RLA
+	AND	%11100000
+	LD	E,A
+	LD	D,B
+	LD	HL,HINO0CD
+	ADD	HL,DE
+	LD	C,$08
+	CALL	ENOMST
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	ノモス					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NOMOSMV
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	LD	HL,ENITMF
+	ADD	HL,BC
+	LD	(HL),KEYSM ; #6 カギ
+;
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	08	;Max 12
+	JR	NC,NM0000
+;
+	LD	E,$02
+	CP	04
+	JR	NC,NM00F8
+;
+	LD	E,$03
+NM00F8
+	LD	A,E
+	CALL	ENPTST
+NM0000
+	CALL	NOMOSCS
+;
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JR	Z,NM0001
+;=====================================
+BSFLSB
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	RST	00
+	DW	NFL1000
+	DW	NFL1800
+	DW	NFL2000
+	DW	NFL3000
+;-------------------------------------
+NFL1000
+	CALL	LDTIM0
+	LD	(HL),$A0
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	CALL	INCWRK1
+	RET
+;-------------------------------------
+NFL1800
+	CALL	LDTIM0
+	JR	NZ,NFL1810
+;
+	LD	(HL),$C0
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	CALL	INCWRK1
+NFL1810
+	RET
+;-------------------------------------
+NFL2000
+	CALL	LDTIM0
+	JR	NZ,NFL2010
+;
+;;	CALL	BBSDST	;(S)
+	LD	A,$1A
+	LD	(SOUND3),A	;(S)
+;
+;;	LD	A,(BGMNO)
+;;	LD	(SOUND4),A	;(S)
+	CALL	BGMSET	;(S)
+;
+	CALL	ENFEND
+;
+	LD	A,(ENMYNO2)
+	CP	NOMOS
+	RET	Z
+;
+	LD	A,(ENMYNO2)
+	CP	HINO0
+	JR	Z,NFL20001
+	CP	MIZUB
+	JR	Z,NFL20001
+	CP	OCHAN
+	JR	NZ,NFL20011
+;
+NFL20001
+	LD	A,(DNJNNO)
+	CP	$06
+	RET	NC
+;
+NFL20011
+	JP  	DJSVSB	; Save on !
+NFL2010
+	CALL	ESMRN4
+	RET
+;-------------------------------------
+NFL3000
+	RET
+;
+;=========================================
+NM0001
+	CALL	E4STCK
+;
+	CALL	BSSDCK
+;
+	CALL	CRKNENL
+;
+	CALL	M4CROS
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,NOM0010
+;
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+NOM0010
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	JR	Z,NOM0020
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+;
+	LD	A,$6A
+	LD	(PLCHPT),A
+NOM0020
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	CP	(HL)
+	LD	(HL),A
+	JP	Z,NOM0050
+;
+	CP	$08
+	JR	NC,NOM0050
+	CP	$04
+	JR	NC,NOM0030
+;
+;	CP	07
+;	JR	Z,NOM0030	
+;	CP	03
+;	JR	NZ,NOM0050	
+;=============================================
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$02
+	JR	NC,NOM0050
+;
+	INC	(HL)
+;
+	LD	A,KTOBJ
+	CALL	ENIDSHL
+	JR	C,NOM0050
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	DEC	A
+	LD	(HL),A
+	LD	(WORK0),A
+;
+	LD	A,(WORK1)
+	LD	HL,WORK3
+	SUB	(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	SUB	$10
+;;	LD	(HL),A
+;;	LD	(WORK1),A
+	JR	NOM0040
+;
+NOM0030
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$01
+	JR	NC,NOM0050
+;
+	INC	(HL)
+;=============================================
+	LD	A,KTOBJ
+	CALL	ENIDSHL
+	JR	C,NOM0050
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	ADD	A,$07
+	LD	(HL),A
+	LD	(WORK0),A
+;
+	LD	A,(WORK1)
+	LD	HL,WORK3
+	SUB	(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+NOM0040
+	LD	(HL),A
+	LD	(WORK1),A
+;
+	LD	HL,ENTIM1
+	ADD	HL,DE
+	LD	(HL),$0F
+;
+	LD	HL,ENMOD0
+	ADD	HL,DE
+	LD	(HL),%11000100
+;
+	LD	A,SMK1
+	CALL	EXIDSH
+;
+	LD	A,$29
+	LD	(SOUND3),A	;(S)
+NOM0050
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	NOM1000
+	DW	NOM1800
+	DW	NOM2000
+	DW	NOM3000
+	DW	NOM4000
+	DW	NOM5000
+	DW	NOM6000
+	DW	NOM7000
+;-----------------------------------------
+NOM1000
+	CALL	ENHNCL
+;
+	CALL	E4XCHK
+	ADD	A,$20
+	CP	$40
+	JR	NC,NOM1010
+;
+	CALL	E4YCHK
+	ADD	A,$20
+	CP	$40
+	JR	NC,NOM1010
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+	LD	(HL),$30
+NOM1010
+	RET
+;-----------------------------------------
+NOM1800
+	CALL	ENHNCL
+;
+	CALL	LDTIM0
+	JR	NZ,NOM1890
+;
+	LD	(HL),$80
+;
+	CALL	STATINC
+NOM1890
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;-----------------------------------------
+NOM2000
+	CALL	ENHNCL
+;
+	CALL	LDTIM0
+	JR	NZ,NOM2090
+;
+	LD	(HL),$50
+;
+	CALL	STATINC
+;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	RES	7,(HL)
+;
+	LD	HL,ENMOD1
+	ADD	HL,BC
+	RES	7,(HL)
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	RES	6,(HL)
+	RET
+;
+NOM2090
+	LD	E,$08
+	AND	%00000100
+	JR	Z,NOM20A0
+	LD	E,$F8
+NOM20A0
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),E
+;
+	CALL	E4XCLC
+	RET
+;-----------------------------------------
+NOM3000
+	CALL	E4HNSB
+;
+	CALL	LDTIM0
+	JR	NZ,NOM3008
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$30
+;
+	CALL	STATINC
+;
+E4JPSD
+	LD	A,$24
+	LD	(SOUND1),A	;(S)
+	RET
+;
+NOM3008
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,NOM3010
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$0C
+;
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$05
+	LD	A,$08
+	JR	NC,NOM300A
+	LD	A,$0C
+NOM300A
+	CALL	PSERCHL
+;
+	LD	A,$20
+	LD	(SOUND1),A	;(S)
+NOM3010	
+	CALL	E4MVCL
+	RET
+;-----------------------------------------
+NOM4000
+	CALL	E4HNSB
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%11111110
+	JR	NZ,NOM4030
+;
+	CALL	LDTIM0
+	LD	(HL),$10
+;
+	CALL	ENSDCL
+;
+	CALL	STATINC
+NOM4030
+	CALL	E4MVCL
+	RET
+;-----------------------------------------
+NOM5000
+	CALL	E4HNSB
+;
+	CALL	LDTIM0
+	LD	A,$00
+	JR	NZ,NOM5010
+;
+	CALL	STATINC
+;
+	LD	A,$B0
+NOM5010
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),A
+	RET
+;-----------------------------------------
+NOM6000
+	CALL	E4HNSB
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,NOM6030
+;
+	LD	A,$30
+	LD	(TILTCT),A
+;
+	LD	A,$04
+	LD	(TILTMK),A
+;
+	LD	A,$0B
+	LD	(SOUND1),A	;(S)
+;
+	CALL	LDTIM0
+	LD	(HL),$30
+;
+	LD	A,(PLJPFG)
+	AND	A
+	JR	NZ,NOM6010	;プレイヤー地面？
+;				; YES !
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$40	;しびれタイム
+NOM6010
+	CALL	STATINC
+NOM6030
+	RET
+;-----------------------------------------
+NOM7000
+	CALL	E4HNSB
+;
+	CALL	LDTIM0
+	JR	NZ,NOM7020
+;
+	CALL	STATINC
+	LD	(HL),$02
+NOM7020
+	RET
+;===================================
+NOMOSCD
+;0
+	DB	$F4,$F8,$70,$00
+	DB	$F4,$00,$72,$00
+	DB	$F4,$08,$72,$20
+	DB	$F4,$10,$70,$20
+	DB	$04,$F8,$74,$00
+	DB	$04,$00,$76,$00
+	DB	$04,$08,$7A,$00
+	DB	$04,$10,$7A,$20
+;1
+	DB	$F4,$F8,$70,$00
+	DB	$F4,$00,$78,$00
+	DB	$F4,$08,$78,$20
+	DB	$F4,$10,$70,$20
+	DB	$04,$F8,$74,$00
+	DB	$04,$00,$76,$00
+	DB	$04,$08,$7A,$00
+	DB	$04,$10,$7A,$20
+;2
+	DB	$F4,$F8,$70,$00
+	DB	$F4,$00,$72,$00
+	DB	$F4,$08,$72,$20
+	DB	$F4,$10,$70,$20
+	DB	$04,$F8,$74,$00
+	DB	$04,$00,$76,$00
+	DB	$04,$08,$76,$20
+	DB	$04,$10,$74,$20
+;3
+	DB	$F4,$F8,$7C,$00
+	DB	$F4,$00,$7E,$00
+	DB	$F4,$08,$7E,$20
+	DB	$F4,$10,$7C,$20
+	DB	$04,$F8,$74,$00
+	DB	$04,$00,$76,$00
+	DB	$04,$08,$76,$20
+	DB	$04,$10,$74,$20
+;-----------------------------------
+NOMOSSWD
+	DB	$0C,$FB,$26,$00
+	DB	$0C,$01,$26,$00
+	DB	$0C,$07,$26,$00
+	DB	$0C,$0D,$26,$00
+;-----------------------------------
+NOMOSCS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+	RLA
+	RLA	
+	RLA
+	AND	%11100000
+	LD	E,A
+	LD	D,B
+	LD	HL,NOMOSCD
+	ADD	HL,DE
+	LD	C,$08
+	CALL	ENOMST
+;
+	LD	A,$04
+	CALL	NXOMSBL
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,NMCS10
+;
+	LD	A,(ENSVYL)
+	LD	(ENDSYP),A
+;
+	LD	HL,NOMOSSWD
+	LD	C,$4
+	CALL	ENOMST
+NMCS10
+	JP	ENPSSV
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	砂漠ラネモーラ				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	DB	00
+RSSXAD
+	DB	$04,$FC
+RSSXSD
+	DB	$08,$F8
+;----------------------------------------
+RANEMMV
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$02
+	JP	Z,RSUNA
+;
+	CP	$00
+	JR	NZ,RN00E0	; Initial ?
+;				; yes !
+	INC	(HL)
+;
+	LD	A,$50
+	LD	(BGMNO),A	;(S)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	CALL	LDTIM0
+	LD	(HL),$50
+;
+	LD	E,$00
+;
+	LD	A,$FF
+	LD	HL,ZMVBUF
+RN00D0
+	LD	(HLI),A
+	DEC	E
+	JR	NZ,RN00D0
+RN00E0
+	CALL	RANEMCS
+;
+	LD	A,(ENMODE2)
+	CP	EFAIL
+	JP	NZ,RN00F0
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	RST	00
+	DW	RFL1000
+	DW	RFL2000
+	DW	RFL3000
+	DW	RFL4000
+;------------------------------------------
+RFL1000
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	CALL	LDTIM0
+	LD	(HL),$60
+;
+INCWRK1
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	INC	(HL)
+	RET
+;-----------------------------------------
+RFL2000
+	CALL	LDTIM0
+	JR	NZ,RFL2010
+;
+	LD	(HL),$CF
+;
+	CALL	INCWRK1	
+;
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	(HL),$05
+RFL2010
+	RET
+;-----------------------------------------
+RFL3000
+	CALL	LDTIM0
+	JR	NZ,RFL3002
+;
+	CALL	BGMSET	;(S)
+;
+	LD	A,KEYSM
+	CALL	ENIDSHL
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK3)
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENCHPT
+	ADD	HL,DE
+	LD	(HL),$02
+;
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	LD	HL,ENTIM1
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	CALL	E4CLER
+;----------------------------------
+	LD	A,(ENSVXL)
+	LD	(WORK0),A
+	LD	A,(ENDSYP)
+	JR	RFL3008
+;
+RFL3002
+	AND	$1F
+	JR	NZ,RFL3010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	E,(HL)
+	DEC	(HL)
+	LD	D,B
+	LD	HL,RNPSAD
+	ADD	HL,DE
+	SUB	(HL)
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,XMVBUF
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(WORK0),A
+;
+	LD	HL,ZMVBUF
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	%10000000
+	JR	NZ,RFL3010
+;
+	PUSH	HL
+	LD	HL,YMVBUF
+	ADD	HL,DE
+	LD	A,(HL)
+	POP	HL
+	SUB	(HL)
+	LD	(HL),$FF
+RFL3008
+	LD	(WORK1),A
+;
+	LD	A,SMK1
+	CALL	EXIDSH
+;
+	LD	A,$13
+	LD	(SOUND3),A	;(S)
+;;	LD	A,$06
+;;	LD	(SOUND1),A	;(S)
+RFL3010
+	RET
+;-----------------------------------------
+RFL4000
+	RET
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+;&					     &
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+RN00F0
+	CALL	E4STCK
+;
+	CALL	BSSDCK
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	JR	Z,RN0000
+;
+	AND	$0F
+	JR	NZ,RN0000
+;
+	LD	A,$02
+RSS010
+	LD	(ENHELP),A
+;
+	LD	A,RANEM
+	CALL	ENIDSHL
+	JR	C,RN0000
+;
+	PUSH	BC
+;
+	LD	A,(ENHELP)
+	LD	C,A
+;
+	LD	HL,ENCHPT
+	ADD	HL,DE
+	AND	$02
+	LD	(HL),A
+;
+	LD	A,(BSXPSL)
+	LD	HL,RSSXAD-1
+	ADD	HL,BC
+;
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,RSSXSD-1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(BSYPSL)
+	ADD	A,$00
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),$F0
+;
+	LD	HL,ENWRK2
+	ADD	HL,DE
+	LD	(HL),$02
+;
+	LD	HL,ENMOD0
+	ADD	HL,DE
+	LD	(HL),%11000001
+;
+	POP	BC
+;
+	LD	A,(ENHELP)
+	DEC	A
+	JR	NZ,RSS010
+;
+RN0000
+	CALL	RAPTST
+;
+	CALL	ENHNCL
+;
+	LD	A,(ENSTAT2)
+	CP	$02
+	JR	C,RN0010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	(HL)
+	AND	$FF
+	LD	E,A
+	LD	D,B
+	LD	HL,XMVBUF
+	ADD	HL,DE
+	LD	A,(ENSVXL)
+	LD	(HL),A
+	LD	HL,YMVBUF
+	ADD	HL,DE
+	LD	A,(ENSVYL)
+	LD	(HL),A
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ZMVBUF
+	ADD	HL,DE
+	LD	(HL),A
+;
+RN0010
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	RN1000	;出現待ち1
+	DW	RN2000	;出現待ち2
+	DW	RN3000	;上昇
+	DW	RN4000	;移動
+	DW	RN5000	;下降
+	DW	RN6000	;
+;=============================================
+RNSTXS
+	DB	$28,$38,$48,$58,$68,$78,$88
+	DB	$28
+RNSTYS
+	DB	$30,$40,$50,$60,$70,$30,$40
+	DB	$50
+;- - - - - - - - - - - - - - - -
+RN1000
+	CALL	LDTIM0
+	JR	NZ,RN1010
+;
+	CALL	LDTIM0
+	LD	(HL),$18
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	D,B
+	LD	HL,RNSTXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	HL,RNSTYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),B
+;
+	CALL	ENPSSV
+;
+	CALL	STATINC
+RN1010
+	RET
+;=============================================
+RN2000
+	CALL	LDTIM0
+	JR	NZ,RN2010
+;
+	LD	(HL),$20
+;
+	LD	A,(PLXPSL)
+	PUSH	AF
+	LD	A,(PLYPSL)
+	PUSH	AF
+;
+	LD	A,$58
+	LD	(PLXPSL),A
+	LD	A,$50
+	LD	(PLYPSL),A
+;
+	LD	A,$08
+	CALL	PSERCHL
+;
+	POP	AF
+	LD	(PLYPSL),A
+	POP	AF
+	LD	(PLXPSL),A
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$08
+;
+	LD	A,(ENSVXL)
+	LD	(BSXPSL),A
+	LD	A,(ENSVYL)
+	LD	(BSYPSL),A
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$61
+;
+	CALL	STATINC
+RN2010
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,$05
+	CALL	ENPTST
+	RET
+;=============================================
+RN3000
+	CALL	LDTIM0
+	JR	NZ,RN3010
+;
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$20
+	LD	(HL),A
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),$20
+;
+	CALL	STATINC
+RN3010
+	CALL	E4MVCL
+	CALL	E4ZCLC
+;
+	CALL	CREPKEL
+	RET
+;=============================================
+RN4000
+	CALL	LDTIM0
+	JR	NZ,RN4008
+;
+	LD	(HL),$80
+;
+	CALL	STATINC
+;
+RN4008
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	(HL)
+	LD	A,(HL)
+	BIT	0,A
+	JR	NZ,RN4020
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	AND	$20
+	JR	NZ,RN4010
+;
+	INC	(HL)
+	INC	(HL)
+RN4010
+	DEC	(HL)
+RN4020
+	CALL	E4MVCL
+	CALL	E4ZCLC
+;
+	CALL	CREPKEL
+	RET
+;=============================================
+RN5000
+	CALL	LDTIM0
+	JR	NZ,RN5008
+;
+	LD	(HL),$60	
+;
+	CALL	STATINC
+	LD	(HL),B
+	RET
+RN5008
+	CP	$78
+	JR	NZ,RN500C
+;
+	LD	A,(ENSVXL)
+	LD	(BSXPSL),A
+	LD	A,(ENSVYL)
+	LD	(BSYPSL),A
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$60
+;
+	LD	A,$23
+	LD	(SOUND3),A	;(S) 砂潜る！
+RN500C
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$F4
+	AND	%10000000
+	JR	NZ,RN5010
+;
+	DEC	(HL)
+RN5010
+	LD	A,(FRCNT)
+	AND	$07
+	JR	NZ,RN5030	
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,RN5020
+;
+	AND	%10000000
+	JR	Z,RN5018
+	INC	(HL)
+	INC	(HL)
+RN5018
+	DEC	(HL)
+RN5020
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,RN5030
+;
+	AND	%10000000
+	JR	Z,RN5028
+	INC	(HL)
+	INC	(HL)
+RN5028
+	DEC	(HL)
+RN5030
+	CALL	E4MVCL
+	CALL	E4ZCLC
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	JR	NZ,RN5060
+;
+	CALL	CREPKEL
+;
+RN5060
+	LD	A,$02
+	CALL	ENPTST
+	RET
+;=============================================
+RN6000
+;===================================
+RANEMCD
+	DB	$72,$00,$74,$00
+	DB	$74,$20,$72,$20
+	DB	$70,$00,$70,$20
+	DB	$70,$40,$70,$60
+	DB	$76,$00,$76,$20
+;
+	DB	$7A,$00,$7A,$60	;予告もこもこ
+	DB	$7A,$40,$7A,$20	;
+;
+	DB	$78,$00,$78,$60	;Tail
+	DB	$78,$40,$78,$20
+;----------------------------
+RNPSAD
+	DB	$0C,$18,$24,$30,$3C,$48
+;;	DB	$60,$50,$40,$30,$20,$10
+;
+RANEMCS
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	JR	NZ,RNC008
+;
+	LD	DE,RANEMCD
+	CALL	EN2CST
+RNC008
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(WORK0),A			
+;
+	LD	A,(FRCNT)
+	AND	$01
+	JR	Z,RNC010
+;
+	LD	A,$06
+	LD	(ENHELP2),A
+	LD	A,$00
+	JR	RNC020
+RNC010
+	LD	A,$FF
+	LD	(ENHELP2),A
+	LD	A,$05
+RNC020
+	LD	(ENHELP),A
+;
+	LD	E,A
+	LD	D,B
+	LD	HL,RNPSAD
+	ADD	HL,DE
+;
+	LD	A,(WORK0)
+	SUB	(HL)
+	AND	$FF
+	LD	E,A
+	LD	D,$00
+	LD	HL,XMVBUF
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(ENSVXL),A		
+	LD	HL,YMVBUF
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(ENSVYL),A
+	LD	HL,ZMVBUF
+	ADD	HL,DE
+	SUB	(HL)
+	LD	(ENDSYP),A		
+;
+	LD	A,(HL)
+	AND	%10000000
+	JR	NZ,RNC012
+;
+	LD	A,(ENHELP)
+	CP	$05
+	LD	A,$04
+	JR	NZ,RNC028	;Tail ?
+;				; yes !
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,$07
+RNC028
+	LD	(ENCHPT2),A
+;
+	LD	DE,RANEMCD
+	CALL	EN2CST
+;
+RNC012
+	LD	E,$FF
+	LD	A,(FRCNT)
+	AND	$01
+	JR	Z,RNC018
+;
+	LD	E,$01
+RNC018
+	LD	HL,ENHELP2
+	LD	A,(ENHELP)
+	ADD	A,E
+	CP	(HL)
+	JR	NZ,RNC020
+;
+;
+	JP	ENPSSV
+;
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+RAPTST
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	D,A
+	BIT	7,A
+	JR	Z,RAPT020
+;
+	CPL
+	INC	A
+RAPT020
+	LD	E,A
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	BIT	7,A
+	JR	Z,RAPT030
+;
+	CPL
+	INC	A
+;
+RAPT030
+	CP	E	;YSPD-XSPD
+	JR	NC,YRAN2
+;
+;XRAN2- - - - - - - - - - - - - - 
+	BIT	7,D
+	JR	NZ,XRANL	;LEFT
+;
+	LD	A,$01
+	JR	RAPT040
+;
+XRANL
+	LD	A,$00
+	JR	RAPT040
+;
+YRAN2
+	BIT	7,(HL)
+	JR	NZ,YRANU	;UP
+;
+	LD	A,$02
+	JR	RAPT040
+YRANU
+	LD	A,$03
+;- - - - - -  - - - - - - - - - - - - - - - - - - - -
+RAPT040
+	CALL	ENPTST
+	RET
+;=======================================
+RSUNACD
+	DB	$7C,$20
+	DB	$7E,$20
+	DB	$7C,$00
+	DB	$7E,$00
+;
+RSUNA
+	LD	DE,RSUNACD
+	CALL	EN1CST
+;
+	CALL	E4STCK
+;
+	CALL	E4MVCL
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	AND	A
+	JR	NZ,RS0010
+;
+	LD	HL,ENCHPT
+	ADD	HL,BC
+	INC	(HL)
+RS0010
+	CP	$10
+	JR	NZ,RS0020
+;
+	CALL	E4CLER
+RS0020
+	RET	
+;
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	お座敷ワンワン				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OZWANCD
+	DB	$70,$00,$72,$00
+	DB	$74,$00,$76,$00
+;
+	DB	$72,$20,$70,$20
+	DB	$76,$20,$74,$20
+;ENDING
+	DB	$00,$00,$02,$00
+	DB	$04,$00,$06,$00
+;
+	DB	$02,$20,$00,$20
+	DB	$06,$20,$04,$20
+OZWANCD2  ;リボン付
+	DB	$78,$00,$7A,$00
+	DB	$7C,$00,$7E,$00
+;
+	DB	$7A,$20,$78,$20
+	DB	$7E,$20,$7C,$20
+;ENDING
+	DB	$10,$00,$12,$00
+	DB	$14,$00,$16,$00
+;
+	DB	$12,$20,$10,$20
+	DB	$16,$20,$14,$20
+;- - - - - - - - - - - - - - - - - -
+OZWANMV
+	LD	A,(MSGEFG)
+	AND	A
+	JR	Z,OZW000
+;
+	LD	A,(MSGENO)
+	CP	$82
+	JR	Z,OZW000
+;
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+;
+	CALL	ENSDCL
+;
+	LD	A,(MJSTCT)
+	LD	E,$00
+	AND	%00000110
+	JR	Z,OZW0E0
+	INC	E
+OZW0E0
+	LD	A,E
+	LD	(ENCHPT2),A
+OZW000
+;;	LD	HL,ENLIFE
+;;	ADD	HL,BC
+;;	LD	(HL),$4C
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,OZT000
+;
+	LD	A,(ENCHPT2)
+	ADD	A,$02
+	LD	(ENCHPT2),A
+OZT000
+	LD	DE,OZWANCD
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,OZR900	;ENDING USE !
+;
+	LD	A,(GRNDPT)
+	CP	$B2
+	JR	NZ,OZT001	;メスワンワん？
+;				;yes !
+	LD	A,(MEGAF)
+	CP	$03
+	JR	C,OZT001	;リボン交換後？
+;				;YES !
+OZR900
+	LD	DE,OZWANCD2	;リボン付
+OZT001
+	LD	A,(GMMODE)
+	CP	ENDG
+	JR	NZ,OZT002
+;
+	LD	A,(ENCHPT2)
+	ADD	A,$04
+	LD	(ENCHPT2),A
+OZT002
+	CALL	EN2CST
+;
+;;	CALL	CRKNENL
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+;;	LD	A,(ENSTAT2)
+;;	CP	$03
+;;	JR	Z,OZT010
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,OZT010
+;
+	XOR	A
+	LD	(HL),A
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),A
+OZT010
+;	LD	HL,ENFLSH
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+;	JR	Z,OZT020
+;;
+ ;	CP	$08
+;	JR	NZ,OZT018
+;;
+;	CALL	STATINC
+;	LD	A,$02
+;	LD	(HL),A
+;	LD	(ENSTAT2),A
+;;
+;	CALL	LDTIM0
+;	LD	(HL),$10
+;
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	NWCT
+;	JR	Z,OZT018
+;	INC	(HL)
+OZT018
+;	CALL	STATINC
+;	LD	A,$02
+;	LD	(HL),A
+;	LD	(ENSTAT2),A
+OZT020
+;	LD	A,(ENSTAT2)
+;	CP	$02
+;	JR	NC,OZT050
+;
+;;;;;;;;;
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+;	JR	Z,OZT028
+;
+;	CP	$20
+;	JR	NZ,OZT023
+;;
+;	DEC	(HL)
+;;
+;;	LD	A,$03
+;;	LD	(MEGAF),A	;ドッグフードと交換！
+;;;
+;;	LD	A,$0D
+;;	LD	(CHTRF2),A	;転送！
+;;;
+;;	CALL	YOSSISET
+;OZT023
+;	RET
+;
+OZT028
+	LD	A,(ENSTAT2)
+	CP	$02
+	JR	NC,OZT050
+;
+	CALL	E4MSCK
+	JR	NC,OZT050
+;
+	LD	E,$23
+;
+	LD	A,(GRNDPT)
+	CP	$B2
+	JR	NZ,OZT030	;小屋？(メスワンワン）
+;				;YES!
+	LD	E,$80
+;
+	LD	A,(MEGAF)
+	CP	$02
+	JR	NZ,OZT027	;リンクがリボンもっている？
+;				;YES !
+	CALL	STATINC
+	LD	(HL),$02
+;
+	LD	E,$81
+OZT027
+	LD	A,E
+	CALL  	MSGCH2
+	JP  	WASDST	;(S)
+;;	JR	OZT050
+OZT030
+	LD	A,E
+	CALL	MSGCHK
+;
+	CALL	WASDST	;(S)
+OZT050
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	OZSTOP
+	DW	OZWALK
+	DW	OZMSGE
+	DW	OZMSGE2
+;;	DW	OZATWT
+;;	DW	OZATCK
+;======================================
+OZMSGE
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,OZMS80
+;
+	LD	A,(MSANSR)
+	AND	A
+	JR	NZ,OZMS70
+;
+	LD	A,$03
+	LD	(MEGAF),A
+	LD	A,$0D
+	LD	(CHTRF2),A
+;
+	LD	A,$83
+	CALL	MSGCH2
+;
+	CALL	WASDST	;(S)
+;
+	CALL	STATINC
+	RET
+OZMS70
+	CALL	STATINC
+	LD	(HL),B
+;
+	LD	A,$84
+	CALL	MSGCH2	
+;
+WASDST
+	LD	A,$18
+	LD	(SOUND2),A	;(S)
+;;	CALL	WASDST	;(S)
+OZMS80
+	RET
+;======================================
+OZMSGE2
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,OZM210
+;
+	CALL	YOSSISET
+;
+	CALL	STATINC
+	LD	(HL),B
+OZM210
+	RET
+;------------------------------------
+OZWKXS
+	DB	$02,$08,$0C,$08
+	DB	$FE,$F8,$F4,$F8
+;NWWKYS
+;	DB	$FA,$FC,$00,$04
+;	DB	$06,$04,$00,$FC
+;------------------------------------
+OZSTOP
+	XOR	A
+	CALL	ENPTST
+	CALL	LDTIM0
+	JR	NZ,OZS010
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	D,B
+	LD	HL,OZWKXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,E
+	AND	$04
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	HL,OZWKXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	LDTIM0
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$30
+	LD	(HL),A
+;
+	CALL	STATINC
+OZS010
+	JP	OZPTST
+;------------------------------------
+OZWALK
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,OZW020
+;
+	CALL	LDTIM0
+	JR	NZ,OZW010
+;
+	LD	(HL),$30
+	CALL	STATINC
+	LD	(HL),B
+	RET
+OZW010
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$08
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	INC	(HL)
+OZW020
+OZPTST
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;
+;------------------------------------
+;OZATWT
+;	CALL	LDTIM0
+;	JR	NZ,OAW090
+;;
+;	CALL	STATINC
+;;
+;	LD	A,$24
+;	CALL	PSERCHL
+;;
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	LD	(HL),$18
+;;
+;	CALL	E4XCHK
+;	LD	HL,ENMUKI
+;	ADD	HL,BC
+;	LD	A,E
+;	LD	(HL),A
+;
+;OAW090
+;	LD	A,(FRCNT)
+;	RRA
+;	RRA
+;	AND	$01
+;	CALL	ENPTST
+;	RET
+;
+;------------------------------------
+;OZATCK
+;	CALL	E4MVCL
+;	CALL	ENBGCKL
+;;
+;	LD	HL,ENMOD0
+;	ADD	HL,BC
+;	LD	(HL),%01010010
+;;
+;	CALL	CRENPLL
+;;
+;	LD	HL,ENMOD0
+;	ADD	HL,BC
+;	LD	(HL),%10010010
+;;
+;	LD	A,(ENHELP)
+;	AND	A
+;	JR	Z,OZAT10
+;
+;	CALL	STATINC
+;	LD	(HL),B
+;;
+;	CALL	LDTIM0
+;	LD	(HL),$20
+;OZAT10
+;	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	ワンワン主人				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MSWANCD
+;	DB	$60,$00,$62,$00
+;	DB	$62,$20,$60,$20	;	前
+;;
+;	DB	$64,$00,$66,$00
+;	DB	$66,$20,$64,$20	;	後
+;;
+;	DB	$68,$00,$6A,$00
+;	DB	$6C,$00,$6E,$00	;	左
+;;
+;	DB	$6A,$20,$68,$20
+;	DB	$6E,$20,$6C,$20 ;	右
+;- - - - - - - - - - - - - - - - - 
+	DB	$60,$00,$62,$00
+	DB	$62,$20,$60,$20
+;
+	DB	$64,$00,$66,$00
+	DB	$66,$20,$64,$20
+;
+	DB	$68,$00,$6A,$00
+	DB	$6C,$00,$6E,$00
+;
+	DB	$6A,$20,$68,$20
+	DB	$6E,$20,$6C,$20
+;- - - - - - - - - - - - - - - - - - - - -
+MSWANMV
+	CALL	LDTIM0
+	CP	$01
+	JR	NZ,MSWE00
+	LD	(HL),B
+;
+	LD	A,$FF
+	LD	(HARTUP),A
+MSWE00
+;;	LD	A,(HARTMX)
+;;	CP	10
+;;	JR	NC,MWM0002	;TEST!
+;
+;	LD	A,(WARPSV+1)
+;	AND	%00000010
+;	JR	Z,MWM0002	;ダンジョン２クリアー後？
+;;				;YES !
+;	XOR	A
+;	LD	(WANFLG),A	;ワンワンもとに戻す！
+;MWM0002
+	LD	A,(FRCNT)
+	AND	%00011111
+	JR	NZ,MWM020
+;
+	CALL	E4XYCK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+MWM020
+	CALL	M4PTST
+;
+	LD	DE,MSWANCD
+	CALL	EN2CST
+;
+	LD	A,(WANFLG)
+	CP	$80
+	JR	NZ,MWM022	;ワンワンピンチ？
+;				; YES !
+	CALL	E4ZCLC		;オバチャンジャンプ！
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,MWM01E
+	AND	%10000000
+	JR	Z,MWM021
+;
+MWM01E
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+;
+	LD	A,(FRCNT)
+	AND	$3F
+	JR	NZ,MWM021
+;
+	LD	(HL),$10
+MWM021
+;
+MWM022
+	CALL	E4STCK
+;
+	LD	A,(ENSVYL)
+	LD	(ENDSYP),A
+;
+	CALL	M4CROS
+;
+	CALL	ENPSSV
+;
+;	CALL	LDTIM0
+;	JR	Z,MWM012
+;	CP	$01
+;	JR	Z,MWM028
+;;
+;	CP	$20
+;	JR	NZ,MWM011
+;;
+;	DEC	(HL)
+;	CALL	YOSSISET
+;MWM011
+;	RET
+;
+MWM012
+	CALL	E4MSCK
+	JR	NC,MWM1010
+;
+;	LD	A,(MEGAF)
+;	CP	$02
+;	JR	NZ,MWM028	;リボン持っている？
+;;				;YES !
+;	LD	A,$03
+;	LD	(MEGAF),A	;ドッグフードと交換！
+;	LD	A,$0D
+;	LD	(CHTRF2),A	;転送！
+;;
+;	CALL	LDTIM0
+;	LD	(HL),$30
+;;
+;	LD	A,$30
+;	CALL	MSGCH2
+;	RET
+;
+;;	CALL	YOSSISET
+;
+MWM028
+;	LD	HL,ENWRK3
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	PUSH	AF
+;	INC	A
+;	CP	$03
+;	JR	NZ,MSM1002
+;	XOR	A
+;MSM1002
+;	LD	(HL),A
+;	POP	AF
+;	ADD	A,$30
+	LD	E,$30
+;
+;;	LD	A,(WARPSV+1)
+;;	AND	%00000010
+;;	JR	NZ,MWM100C	;ﾀﾞﾝｼﾞｮﾝ2ｸﾘｱｰ?
+;				;No!
+	LD	A,(WARPSV+1)
+	AND	%00000010
+	JR	Z,MWM0002	;ダンジョン２クリアー後？
+;				;YES !
+	LD	A,(WANFLG)
+	CP	$01
+	JR	NZ,MWM0002	;ワンワン連れ帰った？
+;				;yes !
+	XOR	A
+	LD	(WANFLG),A	;ワンワンもとに戻す！
+;
+	CALL	LDTIM0
+	LD	(HL),$10	;ライフ万たん!
+;
+	LD	E,$2F	;ありがとう！
+	JR	MWM100C
+MWM0002
+	LD	A,(WANFLG)
+	AND	A
+	JR	Z,MWM100C
+	LD	E,$31		;ワンワンさらわれた!
+	CP	$01
+	JR	NZ,MWM100C	;ワンワン連れて帰った？
+;				; YES !
+	LD	E,$32		;
+MWM100C
+	LD	A,E
+	CALL	MWMSCK
+;;	CALL	MSGCH2
+MWM1010
+	RET
+;=============================
+MWMSCK
+;;	LD	E,A
+;;;
+;;	LD	A,(PLYPSL)
+;;	PUSH	AF
+;;;
+;;	LD	A,$10
+;;	LD	(PLYPSL),A
+;
+	LD	A,E
+	CALL	MSGCH2
+;;	POP	AF
+;;	LD	(PLYPSL),A
+	LD	HL,MSGEFG
+	SET	7,(HL)
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	うるりら じいさん 			%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+URURIMV
+	CALL	URURICS
+;
+	CALL	E4STCK
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+;
+	CALL	M4CROS
+;
+	CALL	E4MSCK
+	JR	NC,URU010
+;
+	LD	A,(URURIFG)
+	AND	A
+	JR	NZ,URUMS10
+;
+	LD	A,$01
+	LD	(URURIFG),A	;会ったフラグ！
+;
+URUMS10
+	LD	A,$40
+	CALL	MSGCH2
+URU010
+	RET
+;===============================================
+URURICD
+;0
+	DB	$F0,$00,$70,$00
+	DB	$F0,$08,$72,$00
+	DB	$00,$00,$74,$00
+	DB	$00,$08,$76,$00
+;1
+	DB	$F0,$00,$78,$00
+	DB	$F0,$08,$7A,$00
+	DB	$00,$00,$7C,$00
+	DB	$00,$08,$7E,$00
+;
+URURICS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+;
+	RLA
+	RLA
+	AND	%11110000
+	LD	E,A
+	LD	D,B
+	LD	HL,URURICD
+	ADD	HL,DE
+;
+	LD	C,$04
+	CALL	ENOMST
+;
+	LD	A,$04
+	CALL	NXOMSBL
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+KARASCD
+	DB	$50,$00,$52,$00
+	DB	$54,$00,$56,$00
+	DB	$52,$20,$50,$20
+	DB	$56,$20,$54,$20
+;- - - - - - - - - - - - - - - - - 
+KARASMV
+	LD	A,(GRNDPT)
+	CP	$58
+	JR	NZ,KRS0090	;城？
+;				; YES !
+	LD	A,(DJSVBF)
+	AND	%00010000
+	JP	NZ,E4CLER
+;
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	LD	HL,ENITMF
+	ADD	HL,BC
+	LD	(HL),KAKIN	;はっぱ
+;
+KRS0090
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A        
+	JR	NZ,KRM010
+;
+	LD	A,(ENCHPT2)
+	ADD	A,$02
+	LD	(ENCHPT2),A
+KRM010
+	LD	DE,KARASCD
+	CALL	EN2CST
+;
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	NZ,KRM012	; Initial ?
+;				; Yes !
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$04
+	LD	(HL),A
+;
+	CALL	STATINC
+	LD	A,(HL)
+	LD	(ENSTAT2),A
+KRM012
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+;
+	LD	A,(ENSTAT2)
+	DEC	A
+	RST	00
+;;	DW	KARASIT
+	DW	KAR100
+	DW	KAR200
+	DW	KAR300
+	DW	KAR400
+;;------------------------------------
+;KARASIT
+;	LD	HL,ENYPSL
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	SUB	$04
+;	LD	(HL),A
+;;
+;	JP	STATINC
+;------------------------------------
+KAR100
+	LD	A,(GRNDPT)
+	CP	$58
+	JR	NZ,KAR108	;城カラス？
+;				; yes !
+	LD	A,(KTINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,KAR110
+;
+	LD	HL,ENMYNO
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	KTOBJ
+	JR	NZ,KAR110
+;
+	LD	HL,ENTIM1
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,KAR110
+;
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(ENSVXL)
+	SUB	(HL)
+	ADD	A,$10
+	CP	$20
+	JR	NC,KAR110
+;
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(ENDSYP)
+	SUB	(HL)
+	ADD	A,$28
+	CP	$50
+	JR	NC,KAR110	;草ぶつけた？
+;				;YES !
+	JR	KAR10A
+;
+KAR108
+	CALL	E4XCHK
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+	ADD	A,$18
+	CP	$30
+	JR	NC,KAR110
+;
+	CALL	E4YCHK
+	ADD	A,$30
+	CP	$60
+	JR	NC,KAR110
+;
+KAR10A
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	(HL),%00010010
+;
+	CALL	LDTIM0
+	LD	(HL),$22
+;
+	CALL	STATINC
+KAR110
+	RET
+;------------------------------------
+KAR200
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JR	NZ,KAR210
+;
+	LD	(HL),$30
+;
+	JP	STATINC
+;
+KAR210
+	CALL	ENSDCL
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$08
+	CALL	E4ZCLC
+;
+	JR	KRPTST
+;------------------------------------
+KAR300
+	CALL	CREPKEL
+;
+	CALL	LDTIM0
+	JP	Z,STATINC
+;
+	AND	$01
+	JR	NZ,KAR330
+;
+	LD	A,$20
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	SUB	(HL)
+	AND	%10000000
+	JR	NZ,KAR310
+	INC	(HL)
+	INC	(HL)
+KAR310
+	DEC	(HL)
+;
+	LD	A,(WORK1)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	SUB	(HL)
+	AND	%10000000
+	JR	NZ,KAR320
+	INC	(HL)
+	INC	(HL)
+KAR320
+	DEC	(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+KAR330
+	CALL	E4MVCL
+;
+;;	LD	HL,ENCONT
+;;	ADD	HL,BC
+;;	INC	(HL)
+	CALL	KASDST
+KRPTST
+;;	LD	HL,ENCONT
+;;	ADD	HL,BC
+;;	INC	(HL)
+	CALL	KASDST
+	LD	A,(HL)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	JP	ENPTST
+;------------------------------------
+KASDST
+;	LD	HL,ENCONT
+;	ADD	HL,BC
+;	INC	(HL)
+;	LD	A,(HL)
+;	AND	$0F
+;	JR	NZ,KSDS10
+;;
+;	LD	A,$07
+;	LD	(SOUND3),A	;(S)
+	CALL	HABATAKI	;(S)
+KSDS10
+	RET
+;------------------------------------
+KAR400
+	CALL	CREPKEL
+;
+	LD	A,(FRCNT)
+	AND	$03
+	JR	NZ,KAR430
+;
+	LD	A,$20
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	CPL
+	INC	A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	SUB	(HL)
+	AND	%10000000
+	JR	NZ,KAR410
+	INC	(HL)
+	INC	(HL)
+KAR410
+	DEC	(HL)
+;
+	LD	A,(WORK1)
+	CPL
+	INC	A
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	SUB	(HL)
+	AND	%10000000
+	JR	NZ,KAR420
+	INC	(HL)
+	INC	(HL)
+KAR420
+	DEC	(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+KAR430
+	CALL	KAR330
+;------------------------------------
+E4GAWY
+	LD	A,(ENDSYP)
+	CP	$88
+	JP	NC,E4CLER
+;
+	LD	A,(ENSVXL)
+	CP	$A8
+	JP	NC,E4CLER
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	電撃トレイシー				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TRYCYCD
+;0 <-
+	DB	$F8,$00,$64,$00
+	DB	$F8,$08,$66,$00
+	DB	$08,$00,$68,$00
+	DB	$08,$08,$6A,$00
+;1 
+	DB	$F8,$00,$60,$00
+	DB	$F8,$08,$62,$00
+	DB	$08,$00,$68,$00
+	DB	$08,$08,$6A,$00
+;2 ->
+	DB	$F8,$00,$66,$20
+	DB	$F8,$08,$64,$20
+	DB	$08,$00,$6A,$20
+	DB	$08,$08,$68,$20
+TTUBOCD
+	DB	$A0,$10
+;- - - - - - - - - - - - - - - - - - - - -
+TRYCYMV
+	CALL	LDTIM0
+	JR	Z,TRY0010
+;
+	LD	A,(PLXPSL)
+	LD	(ENSVXL),A
+;
+	LD	A,(PLYPS2)
+	SUB	$10
+	LD	(ENDSYP),A
+;
+	LD	A,$6C  ;
+	LD	(PLCHPT),A
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+;
+	LD	A,$03
+	LD	(PLCMKI),A
+;
+	XOR	A
+	LD	(PCUTFG),A
+	LD	(WCUTFG),A
+	LD	(SPCTWT),A
+	LD	(SPCTTM),A
+;
+	LD	DE,TTUBOCD
+	CALL	EN1CST
+;
+	CALL	ENPSSV
+TRY0010
+	LD	E,$00
+	LD	A,(PLXPSL)
+	CP	$30
+	JR	C,TRYC10
+	LD	E,$01
+	CP	$60
+	JR	C,TRYC10
+	LD	E,$02
+TRYC10
+	LD	A,E
+	LD	(ENCHPT2),A
+;
+	RLA
+	RLA
+	RLA
+	RLA
+	AND	%11110000
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,TRYCYCD
+	ADD	HL,DE
+;
+	LD	A,(ENDSYP)
+	SUB	$04
+	LD	(ENDSYP),A
+;
+	LD	C,$04
+	CALL	ENOMST
+;
+	LD	A,$04
+	CALL	NXOMSBL
+;
+	CALL	ENPSSV
+;
+	CALL	E4STCK
+;
+	CALL	M4CROS
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	TRY1000
+	DW	TRY2000
+	DW	TRY3000
+	DW	TRY4000
+	DW	TRY5000
+;------------------------------------------
+TRMSCK
+	LD	A,(PLYPSL)
+	LD	HL,ENSVYL
+	SUB	(HL)
+	ADD	A,$28
+	CP	$50
+	CALL	E4MSSB
+	RET
+;;	CALL	E4MSCK
+;---------------------------------
+TRY1000
+	CALL	TRMSCK
+	JR	NC,TRY1010
+;
+	LD	A,$17	;わたしきまぐれトレイシー、、、
+	CALL	MSGCHK
+	LD	HL,MSGEFG
+	SET	7,(HL)
+;
+	LD	A,(ENFLCT)
+	AND	$01
+;;	LD	E,A
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(TRYCYCT)
+	CP	$07
+	JR	NZ,TRY1008	;８回目！
+;
+	INC	(HL)
+	INC	(HL)
+TRY1008
+	CALL	STATINC
+TRY1010
+	RET
+;------------------------------------------
+TRY2000
+;;	CALL	E4MSCK
+	CALL	TRMSCK
+	RET	NC
+;;	JR	NC,TRY2020
+;
+	LD	A,(KBINF)
+	AND	A
+	JR	NZ,TRY2010
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$01
+	LD	A,$18	; ２８ルピーで、、
+	JR	Z,TRY2008
+;
+	LD	A,$19 	; 42ルピーで、、、
+TRY2008
+	CALL	MSGCHK
+	LD	HL,MSGEFG
+	SET	7,(HL)
+	JP  	STATINC
+;;TRY2020
+;;	RET
+TRY2010
+	LD	A,$1C	;でも、あんたにはうらない！
+	CALL  	MSGCHK
+	LD	HL,MSGEFG
+	SET	7,(HL)
+	RET
+;------------------------------------------
+TRYRUPL
+	DB	$28,$42,$07,$07
+TRYRUPH
+	DB	$00,$00,$00,$00
+TRYRUPL2
+	DB	$1C,$2A,$07,$07
+TRYRUPH2
+	DB	$00,$00,$00,$00
+;IZHARTD2
+;;                 3   4   5   6   7   8   9  10  11  12  13  14
+;	DB	$18,$20,$28,$30,$38,$40,$48,$50,$58,$60,$68,$70
+;- - - - - - - - - - - - - - - - - - - - -
+TRY3000
+	LD	A,(MSGEFG)
+	AND	A
+	JP	NZ,TRY3070
+;
+	LD	A,(MSANSR)
+	AND	A
+	JR	NZ,TRY3010	;はい！
+;
+;;	LD	E,$00
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	E,(HL)
+;;	LD	A,E
+;;	LD	(WORK0),A
+	LD	D,B
+	LD	HL,TRYRUPH
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,TRYRUPL
+	ADD	HL,DE
+	LD	E,(HL)
+	LD	D,A
+;
+	LD	A,(COINC2)
+	SUB	E
+	LD	A,(COINC1)
+	SBC	A,D
+	JR	NC,TRY300C ; Not Rupy ?
+;				; yes !
+	LD	A,$1B
+	JR	TRMSST	;でなおしな！
+;;TRY3009
+;;	LD	A,$1C	;でも、あんたにはうらない！
+;;	JR	TRMSST
+;- - - - - - - - - - - - - -
+TRY300C
+	LD	A,(TRYCYCT)
+	INC	A
+	AND	$07
+	LD	(TRYCYCT),A
+	JR	NZ,TRY3008
+;
+	LD	A,$1E	;やっぱり７でいい！
+	CALL	MSGCHK
+	LD	HL,MSGEFG
+	SET	7,(HL)
+	JP	STATINC
+TRY3008
+;;	LD	A,(WORK0)	
+TRYGET
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,TRYRUPL2
+	ADD	HL,DE
+	LD	A,(COIND2)
+	ADD	A,(HL)
+	LD	(COIND2),A
+	RL	A	; Cary save 
+;
+	LD	HL,TRYRUPH2
+	ADD	HL,DE
+	RR	A	; Cary read
+	LD	A,(COIND1)
+	ADC	A,(HL)
+	LD	(COIND1),A
+;
+	LD	HL,KBINF
+	INC	(HL)
+;
+	LD	A,$1A	;ども、アリガトウ！
+	CALL	TRMSST
+;
+	CALL	STATINC
+	LD	(HL),$04
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+	LD	A,$01
+	LD	(SOUND1),A	;(S)
+;
+;	LD	A,(HARTMX)
+;	LD	E,A
+;	LD	D,B
+;	LD	HL,IZHARTD2-3
+;	ADD	HL,DE
+;	LD	A,(HARTCT)
+;	CP	(HL)
+;	RET	NZ
+;;
+;	CALL	STATINC
+;	LD	(HL),B
+	RET
+;------------------------------
+TRY3010
+	LD	A,$1D	;なにさ、プンプン、、
+TRMSST	
+	CALL	MSGCHK
+	LD	HL,MSGEFG
+	SET	7,(HL)
+;
+	CALL	STATINC
+	LD	(HL),B
+TRY3070
+	RET
+;----------------------------------------------
+TRY4000
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,TRY4030
+;
+	JR	TRYGET
+TRY4030
+	RET
+;----------------------------------------------
+TRY5000
+	CALL	LDTIM0
+	RET	NZ
+;
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,TRY5010
+;
+	LD	A,(HARTFUL)
+	AND	A
+	JR	NZ,TRY5008
+;
+	LD	A,$FF
+	LD	(HARTUP),A
+;
+	LD	A,$9A
+	CALL	MSGCH2	;ライフサービスよ！
+	LD	HL,MSGEFG
+	SET	7,(HL)
+;
+TRY5008
+	CALL	STATINC
+	LD	(HL),B
+TRY5010
+	LD	A,$02
+	LD	(PLSTOP),A
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	子供 A,B,C,D				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+KODOMOCD
+	DB	$70,$00,$72,$00
+	DB	$72,$20,$70,$20
+	DB	$74,$00,$76,$00
+	DB	$76,$20,$74,$20
+;
+KODOMOCD2
+	DB	$78,$00,$7A,$00
+	DB	$7C,$00,$7E,$00
+	DB	$7A,$20,$78,$20
+	DB	$7E,$20,$7C,$20
+KDBALLCD
+	DB	$3E,$00
+;-----------------------
+KODOMBMV
+KODOMCMV
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,KDM0000
+;--- Ball ----
+	LD	DE,KDBALLCD
+	CALL	EN1CST
+;
+	CALL	E4STCK
+;
+	CALL	E4MVCL
+	CALL	E4ZCLC
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+;
+	CALL	LDTIM0
+	JP	Z,E4CLER
+	RET
+;=================================
+KDM0000
+;	LD	A,(DJSVBF)
+;	AND	%00100000
+;	JP	NZ,KDM0010
+;
+	LD	A,(WANFLG)
+	CP	$80
+	JP	NZ,KDM0010
+;
+	LD	A,(GMMODE)
+	CP	ENDG
+	JP	Z,KDM0010
+;
+	LD	DE,KODOMOCD
+	CALL	EN2CST
+;
+	CALL	E4YCHK
+	LD	A,E
+	DEC	A
+	AND	$02
+	XOR	$02
+	LD	E,A
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,E
+	CALL	ENPTST
+;
+;;;	LD	A,(ENSTAT2)	
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	RST	00
+	DW	KDW1000
+	DW	KDW2000
+	DW	KDW3000
+;----------------------------------
+KDW1000
+	CALL	E4STCK
+;
+;;	CALL	LDTIM0
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),$30
+;
+	LD	A,$0E
+	LD	(SOUND4),A	;(S)
+	LD	(BGMNO),A
+	LD	(BGMNO2),A
+WRK2INC
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	INC	(HL)
+	RET
+;;	JP	STATINC
+;----------------------------------
+KDW2000
+	CALL	E4STCK
+;
+;;	CALL	LDTIM0
+;
+;
+	CALL	E4YCHK
+	ADD	A,$20
+	CP	$40
+	JR	C,KDW2010
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	DEC	(HL)
+	JR	NZ,KDW2020
+;
+KDW2010
+	LD	A,(SBHR)
+	CP	$04
+	RET	NZ
+;
+	LD	A,(ENMYNO2)
+	CP	KODOMB
+	JR	NZ,KDW2018
+;
+	LD	A,$20
+	CALL	MSGCH3
+;
+;	LD	HL,GRRMSV+$0B0
+;	SET	5,(HL)
+;
+KDW2018
+	JP  	WRK2INC
+KDW2020
+	LD	A,$08
+	CALL	PSERCHL
+	CALL	E4MVCL
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+	LD	(ITEMNOT),A
+	RET
+;----------------------------------
+KDW3000
+	XOR	A
+	LD	(ITEMNOT),A
+;
+	LD	A,(ENSVYL)
+	LD	(ENDSYP),A
+	CALL	M4CROS
+	CALL	ENPSSV
+;
+	CALL	E4MSCK
+	JR	NC,KDW3010
+;
+	LD	A,$20
+	CALL	MSGCH3
+KDW3010
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,KDW3018
+	AND	%10000000
+	JR	Z,KDW3020
+;
+KDW3018
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+;
+	LD	A,(FRCNT)
+	AND	$1F
+	JR	NZ,KDW3020
+;
+	LD	(HL),$10
+KDW3020
+	RET
+;==============================================
+KDM0010
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(ENCHPT2)
+	OR	(HL)
+	LD	(ENCHPT2),A
+;
+	LD	DE,KODOMOCD2
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	KODMSCK
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,KDB010
+;
+	XOR	A
+	LD	(HL),A
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),A
+KDB010
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	KDCA100
+	DW	KDCA200
+;-----------------------------------
+KDCA100
+	CALL	LDTIM0
+	JR	NZ,KDCA110
+;
+	LD	(HL),$80
+;
+	CALL	STATINC
+;
+	LD	A,$01
+	CALL	ENPTST
+;-- Ball shot --
+	LD	A,KODOMB
+	CALL	ENIDSHL
+	JR	C,KDCA110
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENWRK0
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	LD	A,(ENMYNO2)
+	CP	KODOMB	
+	LD	A,$14
+	JR	Z,BAST10
+	LD	A,$EC
+BAST10
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+	LD	(HL),$24
+KDCA110
+	RET
+;-----------------------------------
+KDCA200
+	CALL	LDTIM0
+	JR	NZ,KDCA210
+;
+	LD	(HL),$60
+;
+	CALL	STATINC
+	LD	(HL),B
+	RET
+KDCA210
+	CP	$60
+	JR	NC,KDCA220
+;
+	CP	$40
+	JR	NC,KDCA218
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,KDCA218
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$08
+KDCA218
+	XOR	A
+	CALL	ENPTST
+KDCA220
+	RET
+;
+;===========================================
+KODOMAMV
+KODOMDMV
+	LD	A,(GRNDPT)
+	CP	$92
+	JR	NZ,KDAD10	;噴水前?
+;
+	LD	A,(MEGAF)
+	CP	$07
+	JP	C,E4CLER	;マリン海にいる！
+;
+KDAD10
+	LD	DE,KODOMOCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+;
+;	AND	%00011111
+;	JR	NZ,KDM010
+;;
+;	CALL	E4XYCK
+;	LD	HL,ENMUKI
+;	ADD	HL,BC
+;	LD	(HL),E
+;KDM010
+;	CALL	M4PTST
+;
+KODMSCK
+	LD	A,(ENSVYL)
+	LD	(ENDSYP),A
+	CALL	M4CROS
+	CALL	ENPSSV
+;
+	CALL	E4MSCK
+	JR	NC,KDM090
+;
+	LD	A,(MARINOF)
+	AND	A
+	JR	Z,KDMS077
+;
+	LD	A,$23
+	JP	MSGCH2
+KDMS077
+	LD	A,(MARINFG)
+	AND	A
+	JR	Z,KDMS078
+;
+	LD	A,$21
+	JP	MSGCH2
+KDMS078
+	LD	A,(GRNDPT)
+	CP	$92
+	JR	NZ,KDMS090
+;
+	LD	A,(GRRMSV+$FD)
+	AND	%00110000
+	JR	NZ,KDMS090	;セイウチ退いた？
+;
+	LD	A,$20
+	JP	MSGCH2
+KDMS090
+	LD	A,(WARPSV+$01)
+	AND	%00000010
+	JR	Z,KDMS098	;２クリアー？
+;
+	LD	A,(DJRMSV+$1BE)
+	AND	%00010000
+	JR	NZ,KDMS098	;オカリナ取った？
+;				;NO!
+	LD	A,(GRNDPT)
+	CP	$83
+	JR	NZ,KDMS098
+;
+	LD	A,$22
+	JP	MSGCH2
+KDMS098
+;;	LD	HL,ENCONT
+;;	ADD	HL,BC
+	LD	HL,KDMSCTS
+	LD	A,(HL)
+	PUSH	AF
+	INC	A
+	CP	$04
+	JR	NZ,KDM080
+	XOR	A
+KDM080
+	LD	(HL),A
+;
+	LD	A,(WARPSV)
+	AND	%00000010
+	JR	NZ,KDM088	; Dundeon 1 cleard ?
+;				; NO !
+	POP	AF
+	ADD	A,$18
+	JP  	MSGCH2
+KDM088
+	POP	AF
+	LD	A,(ENMYNO2)
+	SUB	KODOMA
+	ADD	A,$1C
+	CALL	MSGCH2
+KDM090
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BHANAMV
+	CALL	BHANACS
+;
+;	LD	A,(PLFLSH)
+;	CP	$12
+;	JR	C,BHN000
+;;
+;	LD	A,$10
+;	LD	(PLFLSH),A
+;BHN000
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+	CALL	CRKNENL
+	CALL	M4CROS
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	BHN1000
+	DW	BHN2000
+	DW	BHN3000
+;----------------------------------
+BHN1000
+	CALL	LDTIM0
+	LD	(HL),$C0
+	JP	STATINC
+;----------------------------------
+BHN2000
+	CALL	LDTIM0
+	JR	NZ,BHN2010
+;
+	LD	(HL),$50
+;
+	CALL	STATINC
+BHN2010
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;----------------------------------
+BHN3000
+	CALL	LDTIM0
+	JR	NZ,BHM3010
+;
+	CALL	STATINC
+	LD	(HL),B
+BHM3010
+	CP	$4A
+	JR	NZ,BHM3020
+;
+	LD	A,BHFIR
+	CALL	ENIDSHL
+	JR	C,BHM3020
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	PUSH	BC
+	PUSH	DE
+	POP	BC
+;
+	LD	A,$0C
+	CALL	PSERCHL
+;
+	POP	BC
+BHM3020
+	LD	A,$02
+	CALL	ENPTST
+	RET
+;====================================
+BHANACD
+;0
+	DB	$F8,$F8,$70,$00
+	DB	$F8,$00,$72,$00
+	DB	$F8,$08,$72,$20
+	DB	$F8,$10,$70,$20
+	DB	$08,$F8,$74,$00
+	DB	$08,$00,$76,$00
+	DB	$08,$08,$76,$20
+	DB	$08,$10,$74,$20
+;1
+	DB	$F9,$F9,$70,$00
+	DB	$F9,$01,$72,$00
+	DB	$F9,$07,$72,$20
+	DB	$F9,$0F,$70,$20
+	DB	$07,$F9,$74,$00
+	DB	$07,$01,$76,$00
+	DB	$07,$07,$76,$20
+	DB	$07,$0F,$74,$20
+;2
+	DB	$F8,$F8,$78,$00
+	DB	$F8,$00,$7A,$00
+	DB	$F8,$08,$7A,$20
+	DB	$F8,$10,$78,$20
+	DB	$08,$F8,$7C,$00
+	DB	$08,$00,$7E,$00
+	DB	$08,$08,$7E,$20
+	DB	$08,$10,$7C,$20
+BHANACS
+	LD	A,(ENCHPT2)
+	RLA
+	RLA
+;
+	RLA
+	RLA
+	RLA
+	AND	%11100000
+	LD	E,A
+	LD	D,B
+	LD	HL,BHANACD
+	ADD	HL,DE
+	LD	C,$08
+	CALL	ENOMST
+;
+	LD	A,$08
+	CALL	NXOMSBL
+;
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BHFIRCD
+	DB	$1E,$00,$1E,$60
+	DB	$1E,$40,$1E,$20
+;
+	DB	$32,$00,$32,$20	; Fail!
+	DB	$30,$00,$30,$20
+;- - - - - - - - - - - - - - - - - -
+BHFIRMV
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	(HL),$30
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,BHFR100	;ゾーラビーム？
+;				; YES !
+	LD	A,(FRCNT)
+	RLA
+	RLA
+	AND	$10
+	LD	(ENFLCL),A	;光！
+BHFR100
+	LD	DE,BHFIRCD
+	CALL	EN2CST
+;
+	CALL	LDTIM0
+	JR	Z,BHF008
+	DEC	A
+	JP	Z,E4CLER
+;
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,$02
+	JP	ENPTST
+;
+BHF008
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$02
+	JR	C,BHF010
+;
+	CALL	LDTIM0
+	LD	(HL),$10
+	RET
+;
+BHF010
+	LD	(HL),B
+;
+	CALL	E4STCK
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+;
+	CALL	CREPKEL
+;
+	CALL	E4MVCL
+;
+	JP	E4GAWY
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SHANACD
+	DB	$50,$00,$50,$20	
+	DB	$52,$00,$52,$20	
+SHANAMV
+	LD	DE,SHANACD
+	CALL	EN2CST
+;
+;	LD	A,(PLFLSH)
+;	CP	$12
+;	JR	C,SHN000
+;;
+;	LD	A,$10
+;	LD	(PLFLSH),A
+;SHN000
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+	CALL	CRKNENL
+	CALL	M4CROS
+;
+	LD	A,(FRCNT)
+;;	RRA
+;;	RRA
+;;	RRA
+;;	RRA
+;;	RRA
+;;	AND	$01	
+	LD	E,B
+	AND	%00110000
+	JR	Z,SHNC10
+	INC	E
+SHNC10
+	LD	A,E
+	CALL	ENPTST
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+M4CROS
+	CALL	CRENPSL
+	JR	NC,M420E0
+;
+M4CRSB
+	CALL	PLPSRV
+;
+	CALL	DUSHCL2
+;
+	LD	A,(PFUCKID)
+	AND	A
+	JR	Z,M420E0
+;	
+	LD	E,A
+	LD	D,B
+	LD	HL,ENMYNO-1
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	FUCKS
+	JR	NZ,M420E0
+;
+	LD	HL,ENSTAT-1	; Fuck return
+	ADD	HL,DE
+	LD	(HL),$00
+M420E0
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+M4MVPT
+	DB	$06,$04,$02,$00
+;
+M4PTST
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	E,(HL)
+;;	LD	E,A
+	LD	D,B ;$0
+	LD	HL,M4MVPT
+	ADD	HL,DE
+;
+
+	PUSH	HL
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+;
+	LD	A,(HL)  ;(FRCNT)
+	RRA	
+	RRA	
+	RRA	
+	RRA	
+	POP	HL
+	AND	%00000001
+	OR	(HL)
+;
+	JP	ENPTST
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+E4MSCK
+	LD	E,B
+;
+	LD	A,(PLYPSL)
+	LD	HL,ENSVYL
+	SUB	(HL)
+	ADD	A,$14
+	CP	$28
+;======================================
+E4MSSB
+	JR	NC,E4C0A0
+;
+	LD	A,(PLXPSL)
+	LD	HL,ENSVXL
+	SUB	(HL)
+	ADD	A,$10
+	CP	$20
+	JR	NC,E4C0A0
+;
+	INC	E
+;
+	LD	A,(ENMYNO2)
+	CP	OZWAN
+	JR	Z,E4C022
+;
+	PUSH	DE
+	CALL	E4XYCK
+	LD	A,(PLCMKI)
+	XOR	$01
+	CP	E
+	POP	DE
+	JR	NZ,E4C0A0
+;
+E4C022
+	LD	HL,MSCRFG
+	LD	(HL),$01
+;
+	LD	A,(MSGEFG)
+	LD	HL,WNDFLG
+	OR	(HL)
+	LD	HL,PLJPFG
+	OR	(HL)
+	LD	HL,MSOFTM
+	OR	(HL)
+	JR	NZ,E4C0A0
+;
+	LD	A,(WNDYPS)
+	CP	$80
+	JR	NZ,E4C0A0
+;
+	LD	A,(KEYA2)
+	AND	%00010000
+	JR	Z,E4C0A0
+;
+	SCF
+	RET
+E4C0A0
+	AND	A	; (C) reset !
+	RET
+;============================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;---------------------------------
+E4STCK
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JR	NZ,E4TC12
+;
+E4STCK2
+	LD	A,(GMMODE)
+	CP	GMAP
+	JR	Z,E4TC12
+;
+	LD	HL,ENSTFG
+	LD	A,(MSGEFG)
+;;	AND	A
+	OR	(HL)
+	LD	HL,WNDFLG
+	OR	(HL)
+	JR	NZ,E4TC12
+;
+	LD	A,(SCRLFG)
+	AND	A
+	JR	Z,E4TCF0
+E4TC12
+	POP	AF
+E4TCF0
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%						    %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+E4HNSD
+;;	DB	$0,$0,$0,$0,$0
+;;;	DB	$7,$3,$1,$0,$0
+E4HNSB
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,E4HN90
+;
+	DEC	A
+	LD	(HL),A
+;
+;;	PUSH	AF
+	CALL	HNSMST
+;;	POP	AF
+;
+;;	PUSH	AF
+;;	SRL	A
+;;	SRL	A
+;;	LD	E,A
+;;	LD	D,B ;$0
+;;	LD	HL,E4HNSD
+;;	ADD	HL,DE
+;;	POP	AF
+;;	AND	(HL)
+;;	JR	NZ,E4HN30
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	AF
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	AF
+;
+	LD	HL,ENHNXS
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENHNYS
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	E4MVCL
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%00100000
+	JR	NZ,E4HN28
+;
+	CALL	ENBGCKL
+E4HN28
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	POP	AF
+	LD	(HL),A
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	POP	AF
+	LD	(HL),A
+E4HN30
+	POP	AF
+E4HN90
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+E4MVCL	
+;
+	CALL	E4XCLC 		; X calc
+;
+E4YCLC
+	PUSH	BC
+	LD	A,C
+	ADD	A,<ENNO
+	LD	C,A
+	
+	CALL	E4XCLC		; Y calc
+	POP	BC
+	RET
+;-----------------------------------------
+E4XCLC
+	LD	HL,ENXSPD
+	ADD	HL,BC 
+;
+	LD	A,(HL)
+	AND	A
+	JR	Z,E4L090
+;
+	PUSH	AF
+	SWAP	A
+	AND	$F0
+	LD	HL,ENXSDR
+	ADD	HL,BC 
+	ADD	A,(HL)
+	LD	(HL),A
+	RL	D
+;
+	LD	HL,ENXPSL
+E4L00
+	ADD	HL,BC 
+;
+	POP	AF
+;
+	LD	E,$0
+	BIT	7,A
+	JR	Z,E4C00
+	LD	E,$F0
+E4C00
+	SWAP	A
+	AND	$0F
+	OR	E
+	RR	D
+	ADC	A,(HL)
+	LD	(HL),A
+E4L090
+	RET
+;====================================================
+E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC 
+;
+	LD	A,(HL)
+	AND	A
+	JR	Z,E4L090
+;
+	PUSH	AF
+	SWAP	A
+	AND	$F0
+	LD	HL,ENZSDR
+	ADD	HL,BC 
+	ADD	A,(HL)
+	LD	(HL),A
+	RL	D
+;
+	LD	HL,ENZPSL
+	JR	E4L00
+;====================================
+E4XCHK
+	LD	E,$0
+;
+	LD	A,(PLXPSL)
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	SUB	(HL)
+	BIT	7,A
+	JR	Z,E4X010
+;;	JR	NC,E4X010
+	INC	E
+E4X010
+	LD	D,A
+	RET
+;====================================
+E4YCHK
+	LD	E,$2
+;
+	LD	A,(PLYPSL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	SUB	(HL)
+	BIT	7,A
+	JR	NZ,E4Y010
+;;	JR	C,E4Y010
+	INC	E
+E4Y010
+	LD	D,A
+	RET
+;====================================
+E4XYCK
+	CALL	E4XCHK
+	LD	A,E
+	LD	(WORK0),A
+;
+	LD	A,D
+	BIT	7,A
+	JR	Z,E42010
+	CPL
+	INC	A
+E42010
+	PUSH	AF
+;
+	CALL	E4YCHK
+	LD	A,E
+	LD	(WORK1),A
+;
+	LD	A,D
+	BIT	7,A
+	JR	Z,E4Y020
+	CPL
+	INC	A
+E4Y020
+	POP	DE
+	CP	D
+	JR	NC,E4Y030
+;
+	LD	A,(WORK0)
+	JR	E4Y050
+E4Y030
+	LD	A,(WORK1)
+E4Y050
+	LD	E,A
+	RET
+;============================
+E4CLER
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	(HL),B
+	RET
+;==============================
+;===============================================
+;=	ソニック Ｂーム			       =
+;===============================================
+;==============RIGHT,LEFT,UP,DOWN===============
+;- - - - - - - - - - - - - - - - -
+SONICCD
+	DB	$6A,$20,$68,$20
+	DB	$68,$00,$6A,$00
+	DB	$6C,$40,$6C,$60
+	DB	$6C,$00,$6C,$20
+SONICMV
+	LD	A,(FRCNT)
+	RLA
+	RLA
+	AND	%00010000
+	LD	(ENFLCL),A
+;
+	LD	DE,SONICCD
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	CRENPL2L
+;
+	CALL	E4MVCL
+	CALL	ENBGCK2L
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,SNM010
+;
+	CALL	E4CLER
+SNM010
+	RET
+;==============================
+;===============================================
+;=					       =
+;===============================================
+SPARKCD
+;;BABULCD
+	DB	$5C,$00,$5C,$20
+	DB	$5C,$10,$5C,$30
+;
+STYDT
+	DB	$00,$10,$00,$F0,$00,$F0,$00,$10
+;
+STXDT
+	DB	$10,$00,$F0,$00,$10,$00,$F0,$00
+;
+OHATARI
+	DB	$01,$08,$02,$04,$01,$04,$02,$08
+;
+SPARKMV
+SPAR2MV
+	LD	A,$01
+	LD	(ENBGRV),A	;BG check don't revise
+;
+	LD	A,(FRCNT)
+	RRA
+	AND	$01
+	LD	(ENCHPT2),A
+;
+	LD	DE,SPARKCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+	CALL	CRENPLL
+	CALL	E4MVCL
+	CALL	ENBGAL	;全ポイントＢＧちぇっく
+;--------------------------------
+SPARKMAIN
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,ENWRK1	;;;;;;;
+	ADD	HL,BC		;;;;;;;
+;
+	ADD	A,(HL)		;;;;;;;
+	LD	E,A		;;;;;;;
+;
+	LD	HL,OHATARI	
+	ADD	HL,DE
+;
+	PUSH	HL
+;	
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	POP	HL
+	AND	(HL)
+	JR	NZ,ATARI2
+;
+ATARI
+	CALL	LDTIM0
+	JR	NZ,STIMCK
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$0F
+	JR	NZ,SPMOVE
+;
+	CALL	LDTIM0
+;;	LD	A,$09
+	LD	(HL),$09 ;A
+	JR	SPMOVE
+;
+ATARI2
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	AND	$03
+	LD	(HL),A
+	JR	SPMOVE
+;
+STIMCK
+	CP	$06
+;;;	CP	$01
+	JR	NZ,SPMOVE
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	DEC	(HL)
+	LD	A,(HL)
+	AND	$03
+	LD	(HL),A
+;
+SPMOVE
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,ENWRK1	;;;;;;;
+	ADD	HL,BC		;;;;;;;
+;
+	ADD	A,(HL)		;;;;;;;
+	LD	E,A		;;;;;;;
+;
+	LD	HL,STYDT
+	ADD	HL,DE
+;
+	LD	A,(HL)
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,ENWRK1	;;;;;;;
+	ADD	HL,BC		;;;;;;;
+;
+	ADD	A,(HL)		;;;;;;;
+	LD	E,A		;;;;;;;
+;
+	LD	HL,STXDT
+	ADD	HL,DE
+;
+	LD	A,(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;---------------------------------
+ENBGAL
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	AF
+;;	LD	A,$1
+	LD	(HL),$01 ;A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	AF
+;;	LD	A,$1
+	LD	(HL),$01 ;A
+;
+	CALL	ENBGCKL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	AF
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+;;	LD	A,$FF
+	LD	(HL),$FF ;A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),$FF ;A
+;
+	CALL	ENBGCKL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	POP	AF
+	OR	(HL)
+	LD	(HL),A
+;
+	POP	AF
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+	POP	AF
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	RET
+;===============================================
+;=					       =
+;===============================================
+BLBATCD
+	DB	$42,$00,$42,$20
+	DB	$40,$00,$40,$20
+BLBATCD2
+	DB	$62,$00,$62,$20
+	DB	$60,$00,$60,$20
+;
+BYSPDT
+	DB	$00,$05,$0A,$0D
+BXSPDT
+	DB	$0E,$0D,$0A,$05
+	DB	$00,$FB,$F6,$F3
+	DB	$F2,$F3,$F6,$FB
+	DB	$00,$05,$0A,$0D
+;BYSPDT
+;	DB	$00,$06,$0C,$0E
+;BXSPDT
+;	DB	$10,$0E,$0C,$06
+;	DB	$00,$FA,$F4,$F2
+;	DB	$F0,$F2,$F4,$FA
+;	DB	$00,$06,$0C,$0E
+;
+BSCDT
+	DB	$0C,$04,$08,$00
+;
+BLBATMV
+	LD	DE,BLBATCD
+;
+	LD	A,(DNJNNO)
+	CP	$0A
+	JR	NZ,BLBT100
+;
+	LD	DE,BLBATCD2
+BLBT100
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	E4HNSB
+	CALL	CREPKEL
+;;;;;	CALL	ENMVCL
+;-------------------------------------------------------------
+BATMAIN
+;	LD	HL,ENSTAT
+;	ADD	HL,BC
+;	LD	A,(HL)
+	LD	A,(ENSTAT2)
+	RST	0
+	DW	BLSTOP
+	DW	BMOVE
+;;;	AND	A
+;;;	JP	NZ,BMOVE
+;=================================================
+BLSTOP
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	AND	A
+	CALL	LDTIM0
+	JP	NZ,BCHNG
+;
+	CALL	E4XCHK
+;
+	ADD	A,$20
+	CP	$40
+	JP	NC,BCHNG
+;
+	CALL	E4YCHK
+;
+	ADD	A,$20
+	CP	$40
+	JP	NC,BCHNG
+;
+	CALL	E4XYCK	
+;
+	LD	D,$0
+	LD	HL,BSCDT
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	LDTIM0
+	CALL	RNDSUB
+	AND	$3F
+	ADD	A,$50
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+	LD	(HL),A
+;
+;;	LD	A,$01
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),$01 ;A
+;
+	CALL	STATINC
+;
+	JP	BCHNG
+;=================================================
+BMOVE
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	AND	A
+	CALL	LDTIM0
+	JR	NZ,BBMOVE	; Move stop ?
+;				; yes!
+;;	LD	A,$20
+	LD	(HL),$20 ;A
+;
+;;	XOR	A
+;;	LD	HL,ENSTAT
+;;	ADD	HL,BC
+;;	LD	(HL),A
+	CALL	STATINC
+	LD	(HL),B
+;
+	JR	BCHNG
+;
+BBMOVE
+;;	AND	$07
+;;	JR	NZ,BCHNG	; Way chenge time ?
+;				; yes !
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	CP	$0A
+	JR	C,BCHNG
+;
+	LD	(HL),B	
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	ADD	A,(HL)
+	AND	$0F
+	LD	(HL),A
+;
+BSPSET
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	E,(HL)
+;;	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,BYSPDT
+	ADD	HL,DE
+;
+	LD	A,(HL)
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,BXSPDT
+	ADD	HL,DE
+;
+	LD	A,(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$01F
+	JR	NZ,BCHNG
+;
+	CALL	RNDSUB
+	AND	$02
+	DEC	A
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),A
+;
+BCHNG
+;;	LD	HL,ENSTAT
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	Z,BFIN
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+;
+BFIN
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),A
+;	RET
+	JP	ENPTST
+;==========================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	ふくろう 				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+FUKUROMV
+	LD	A,C
+	LD	(FKINDX),A
+;
+	LD	A,(GRNDPT)
+	CP	$64
+	JR	NZ,FKM0030
+;
+	LD	A,(DJRMSV+$0E3)
+	AND	%01000000
+	RET	Z	;おばけ帰った？	
+;
+	LD	A,(WARPSV+$04)
+	AND	%00000010
+	JP	NZ,E4CLER
+FKM0030
+	LD	A,(GRNDPT)
+	CP	$AC
+	JR	NZ,FKM100
+;
+	LD	A,(DJSVBF)
+	AND	%00010000
+	JP	Z,E4CLER	
+FKM100
+	LD	A,(GRNDPT)
+	CP	$41
+	JR	NZ,FKM0001	;ダンジョン1の入り口？
+;
+	LD	A,(GRKEY1)
+	AND	A
+	RET	Z
+;
+	CALL	LDTIM1
+	RET	NZ
+;;	JP	Z,E4CLER	;森のやつに会った後？
+; 				; YES !
+FKM0001
+	LD	A,(GRNDPT)
+	CP	$EE
+	JR	NZ,FKM0EE
+;
+	LD	A,(GRKEY2)
+	AND	A
+	JR	DJCHEK2
+;
+FKM0EE
+	LD	A,(GRNDPT)
+	CP	$D2
+	JR	Z,FKM036
+	CP	$36
+	JR	NZ,FKM0002
+;
+	LD	A,(WARPSV+$01)
+	AND	A
+	JP	NZ,E4CLER
+;
+	LD	A,(WANFLG)
+	CP	$01
+	JP	NZ,E4CLER
+;
+FKM036
+	LD	A,(WARPSV+0)
+	JR	DJCHEK
+;;	AND	%00000010
+;;	JP	Z,E4CLER	;ダンジョン1クリアー後？
+; 				; YES !
+FKM0002
+	LD	A,(GRNDPT)
+	CP	$08
+	JR	NZ,FKM08
+;
+	LD	A,(WARPSV+$07)
+	AND	%00000010
+	JP	NZ,E4CLER	;8 cleard?
+;
+	LD	A,(GRRMSV+$08)
+	AND	%00010000
+;;	JP	Z,E4CLER
+	RET	Z
+	JR	FKCC90		;マリンたすけた後！
+;
+;;	LD	A,(WARPSV+6)
+;;	JR	DJCHEK
+FKM08
+	CP	$9D
+	JR	NZ,FKM9D
+;
+	LD	A,(WARPSV+4)
+	JR	DJCHEK
+FKM9D
+	CP	$06
+	JR	NZ,FKM06
+;
+	LD	A,(GRRMSV+$06) ;DJSVBF)
+	AND	%00010000
+	RET	Z
+	JR	FKCC90		;殼われた後！
+;;	LD	A,(WARPSV+7)
+;;	JR	DJCHEK
+FKM06
+	CP	$B6
+	JR	NZ,FKM0008
+;
+	LD	A,(WARPSV+2)
+	JR	DJCHEK
+FKM0008
+	CP	$17
+	JR	Z,FKM0V6
+	CP	$9C
+	JR	NZ,FKM09C
+;
+FKM0V6
+	LD	A,(WARPSV+5)
+	JR	DJCHEK
+FKM09C
+	CP	$16
+	JR	NZ,FKM009
+;
+	LD	A,(WARPSV+1)
+DJCHEK
+	AND	%00000010
+DJCHEK2
+	JP	Z,E4CLER	;ダンジョン2クリアー後？
+FKM009
+FKCC90
+FKCHK090
+	LD	A,(GRNDPT)
+	CP	$D2
+	JR	Z,FKSETON2
+;;	CP	$06
+;;	JR	Z,FKSETON2
+	CP	$16
+	JR	Z,FKSETON2
+	CP	$36
+	JR	Z,FKSETON2
+;
+	LD	A,(ENSTAT2)
+	CP	$00
+	JR	Z,FKM00F0
+;
+FKSETON2
+	CALL	FUKUROCS
+FKM00F0
+;	LD	A,(ENSTAT2)
+;	CP	$02
+;	JR	NZ,FKM000
+;
+	LD	A,(FRCNT)
+	AND	%10110000
+	LD	A,$00
+	JR	NZ,FKM010
+	INC	A
+FKM010
+	CALL	ENPTST
+FKM000
+	LD	A,(SCRLFG)
+	AND	A
+	RET	NZ
+;;	CALL	E4STCK
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	FKM0000
+	DW	FKM4000
+	DW	FKM1000
+	DW	FKM2000
+	DW	FKM3000
+;------------------------------
+;	DW	FKM5000
+;	DW	FKM6000
+;-----------------------------------------
+FKM0000
+	LD	A,(GRNDPT)
+;	CP	$D3
+;	JR	NZ,FKM0002
+;;
+;	LD	A,(WARPSV+0)
+;	AND	%00000010
+;	JP	Z,E4CLER	;ダンジョン1クリアー後？
+;; 				; YES !
+;FKM0002
+;	CP	$98
+;	JR	NZ,FKM0008
+;;
+;	LD	A,(WARPSV+1)
+;	AND	%00000010
+;	JP	Z,E4CLER	;ダンジョン２クリアー後？
+;; 				; YES !
+;FKM0008
+	CP	$F2
+	JR	NZ,FKM0010
+;
+	LD	A,$1D
+	LD	(BGMNO),A
+;
+;;	LD	A,(KENLEV)
+;;	AND	A
+;;	JP	Z,FKM0090
+;
+	LD	A,(PLYPSL)
+	CP	$44
+	RET	C
+	LD	A,(PLXPSL)
+	SUB	$58
+	ADD	A,$18
+	CP	$30
+	RET	NC
+;
+;	CALL	LDTIM0
+;	AND	A
+;	JR	Z,FKM00111
+;	CP	$01
+;	JR	Z,FKM0020
+;	RET
+;;
+FKM00111
+;	CALL	LDTIM0
+;	LD	(HL),$20
+;;;;	LD	(HL),$50
+;	RET
+;;
+	JR	FKM0020
+;
+FKM0010
+	LD	A,(KENLEV)
+	AND	A
+	JP	Z,E4CLER
+;
+;;	LD	A,(GRKEY1)
+;;	AND	A
+;;	JP	NZ,E4CLER
+;
+FKM0020
+	LD	A,(BGMNO)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,$22
+	LD	(SOUND4),A	;(S)
+	LD	(BGMNO),A
+	LD	(BGMNO2),A
+;- - - -Furou set - -
+	LD	A,(GRNDPT)
+;;	CP	$06
+;;	JR	Z,FKSETON
+	CP	$16
+	JR	Z,FKSETON
+	CP	$36
+	JR	Z,FKSETON
+	CP	$D2
+	JR	NZ,FK0022	;その場セット！！
+;
+FKSETON
+	CALL	STATINC
+	LD	(HL),$02
+	RET
+FK0022
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),$20
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),$18
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),$10
+;
+	CALL	STATINC
+FKM0090
+	RET
+;-----------------------------------------
+FKM4000
+	CALL	E4XYCK
+	LD	A,E
+	XOR	$01
+	LD	(PLCMKI),A
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+	LD	A,$05
+	LD	(ENSTTM),A
+;
+;;	CALL	E4STCK
+;
+	CALL	FKM2010
+;
+	CALL	E4MVCL
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,FKM4010
+;
+	CALL 	STATINC
+	RET
+FKM4010
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$FC
+	CALL	E4ZCLC
+;
+	CALL	HABATAKI	;(S)
+;	LD	A,(FRCNT)
+;	AND	$07
+;	JR	NZ,FK4012
+;
+;;	LD	A,$05
+;;	LD	(SOUND3),A	;(S)
+;;	LD	A,$2D
+;;	LD	(SOUND3),A	;(S)
+;FK4012
+	LD	A,(FRCNT)
+	AND	$03
+	JR	NZ,FK4050
+;
+	LD	A,$00
+	LD	HL,ENYSPD
+	CALL	FKSUB
+	LD	A,$00
+	LD	HL,ENXSPD
+	CALL	FKSUB
+FK4050
+	RET
+;-------------------------------------
+FKM1000
+	CALL	E4STCK
+;
+	CALL	M4CROS
+;
+;	LD	A,(FRCNT)
+;	AND	$1F
+;	JR	NZ,FKM010
+;;
+;	CALL	RNDSUB
+;	AND	$03
+;	JR	NZ,FKM010
+;;
+;	CALL	LDTIM0
+;	LD	(HL),$1F
+;FKM010
+;	CALL	LDTIM0
+;	LD	A,$00
+;	JR	Z,FKM020
+;	INC	A
+;FKM020
+;KKKKKKK	CALL	E4MSCK
+;KKKKKKK	JR	NC,FKM020
+;
+;	LD	A,(GRNDPT)
+;	CP	$06
+;	JR	Z,FKM0202
+;	CP	$F2
+;	JR	Z,FKM0202	;すぐ話す！
+;
+;	CALL	E4XCHK
+;	ADD	A,$20
+;	CP	$40
+;	RET	NC
+;;
+;	CALL	E4YCHK
+;	ADD	A,$20
+;	CP	$40
+;	RET	NC
+;
+	LD	A,(SBHR)
+	CP	$04
+	RET	NZ
+;
+	LD	A,(BGCKOF)
+	AND	A
+	RET	NZ
+;
+;;	LD	HL,ENWRK0
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	AND	A
+;
+FKM0202
+;	LD	E,$D9	;剣拾う
+;	LD	A,(GRNDPT)
+;	CP	$F2
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C8
+;	CP	$AC
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C0
+;	CP	$80
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C1
+;	CP	$41
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C2
+;	CP	$D2
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C3
+;	CP	$36
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C4
+;	CP	$16
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C5
+;	CP	$B6
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C6
+;	CP	$EE
+;	JR	Z,FKM01A
+;;
+;	LD	E,$CD
+;	CP	$06
+;	JR	Z,FKM01A
+;;
+;	LD	E,$CC
+;	CP	$08
+;	JR	Z,FKM01A
+;
+;	LD	E,$17
+;	CP	$CA
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C6
+;	CP	$EE
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C6
+;	CP	$EE
+;	JR	Z,FKM01A
+;;
+;	LD	E,$C6
+;	CP	$EE
+;	JR	Z,FKM01A
+;;
+;FKM01A
+;
+	LD	A,(GRNDPT)
+	CP	$06
+	JR	NZ,FKM01A
+;
+	LD	A,$CD
+	CALL	MSGCHK
+	JR	FKM01B
+FKM01A
+	CALL	FKMSCK
+FKM01B
+	LD	A,$19
+	LD	(FKMSFG),A	;ふくろうメッセージ音！
+;
+;;	LD	A,E
+;;	CALL	MSGCHK
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+	LD	(HL),$10
+FKM020
+	RET
+;-----------------------------------------
+FKM2000
+	CALL	E4STCK
+;
+	LD	A,(GRNDPT)
+	CP	$06
+	JR	Z,FKM2012
+;
+;;	XOR	A
+;;	LD	(ITEMNOT),A
+;
+	CALL	LDTIM0
+	JR	NZ,FKM2010
+;
+	CALL	STATINC
+;
+FKM2012
+	LD	A,(GRNDPT)
+;	CP	$D3
+;	JR	Z,FKM2010	;Danjyon 1 exit ?
+;				;No
+	LD	E,A		
+	LD	D,B
+	LD	HL,GRRMSV
+	ADD	HL,DE
+	SET	5,(HL)	; %00100000
+	RET
+FKM2010
+	LD	A,$02
+	LD	(PLSTOP),A
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	AND	$02
+	CALL	ENPTST
+;
+	RET
+;-----------------------------------------
+FKM3000
+	CALL	E4STCK
+;
+	CALL	FKM2010
+;	LD	A,(FRCNT)
+;	RRA
+;	RRA
+;	AND	$02
+;	CALL	ENPTST
+;
+	CALL	E4MVCL
+;
+;	LD	A,(ENSVXL)
+;	CP	$A8
+;	JP	NC,E3CLER
+;;
+;	LD	A,(ENDSYP)
+;	CP	$A8
+;	JP	NC,E3CLER
+	CALL	E4GAWY
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$04
+	CALL	E4ZCLC
+;
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,FKM3011
+;
+;;	LD	A,(GRNDPT)
+;;	LD	E,A
+;;	CP	$F2
+;;	JR	NZ,FKM30108
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SOUND4),A	;(S)
+;
+;;	CP	$31		; TODY
+;;	JR	NZ,FKM3016	;最初だけのBGM ?
+;;;				;YES !
+;;	LD	A,$05
+FKM3016
+	LD	(BGMNO),A
+;;FKM30108
+;
+	LD	A,(POWRFG)
+	AND	A
+	JR	Z,FKSD10
+;
+	LD	A,$49
+	LD	(SOUND4),A	;(S)
+	LD	(BGMNO2),A
+FKSD10
+	RET
+FKM3011
+	LD	A,(FRCNT)
+	AND	$07
+	JR	NZ,FK3012
+;
+	LD	A,$05
+	LD	(SOUND3),A	;(S)
+FK3012
+	LD	A,(FRCNT)
+	AND	$01
+	JR	NZ,FK3050
+;
+	LD	A,$20
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	CPL
+	INC	A
+	LD	HL,ENYSPD
+	CALL	FKSUB
+	LD	A,(WORK1)
+	CPL
+	INC	A
+	LD	HL,ENXSPD
+FKSUB
+	ADD	HL,BC
+	SUB	(HL)
+	JR	Z,FK3050
+;
+	BIT	7,A
+	JR	Z,FK3020
+;
+	DEC	(HL)
+	DEC	(HL)
+FK3020
+	INC	(HL)
+FK3050
+	RET
+;====================================
+FUKUROCD
+	DB	$78,$00,$78,$20
+	DB	$7A,$00,$7A,$20
+FUKUROC2
+	DB	$00,$F8,$7C,$00
+	DB	$00,$00,$7E,$00
+	DB	$00,$08,$7E,$20
+	DB	$00,$10,$7C,$20
+;------------------------------------------
+FUKUROCS
+	LD	A,(ENCHPT2)
+	CP	$02
+	JR	NC,FKCS10
+;
+	LD	DE,FUKUROCD
+	JP  	EN2CST
+FKCS10
+	LD	HL,FUKUROC2
+;
+	LD	C,$04
+	CALL	ENOMST
+;
+	LD	A,$04
+	CALL	NXOMSBL
+;
+	LD	A,(GRNDPT)
+	CP	$08
+	JR	Z,FUKCS90
+;
+	CALL	SADWSTL
+	RET
+FUKCS90
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	RES	4,(HL)	;影無し！
+	RET
+;=============================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	電話器				    %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DENWACD
+	DB	$50,$00,$52,$00
+;- - - - - - - - - - - - - - - -
+DENWAMV
+	LD	A,(ENDSYP)
+	SUB	$05
+	LD	(ENDSYP),A
+;
+	LD	DE,DENWACD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	E4MSCK
+	RET	NC
+;;;	JP	NC,DEW100
+;
+;;	LD	HL,DJRMSV+$1A9
+;;	SET	5,(HL)
+;
+	LD	E,$FD
+;
+	LD	A,(GRNDPT)
+	CP	$A9
+	JP	Z,DEN090	;うるりらじいさんの家！
+;
+	LD	E,$41
+;
+;;	LD	A,(DJSVBF)
+	LD	A,(DJRMSV+$1A9)
+	AND	%00100000
+	JP	Z,DEN090
+;
+	LD	E,$46
+;
+	LD	A,(WARPSV+$00)
+	AND	%00000010
+	JP	Z,DEN090
+;
+	LD	E,$42
+;
+	LD	A,(WANFLG)
+	CP	$80
+	JP	Z,DEN090
+;
+	LD	E,$43
+;
+	LD	A,(WARPSV+$01)
+	AND	%00000010
+	JP	Z,DEN090	;2 CLER?
+;				;YES !
+	LD	E,$44
+;
+	LD	A,(WANFLG)
+	CP	$01
+	JP	Z,DEN0A0	;ワンワンまだ返してない！	
+;
+	LD	E,$44
+;
+	LD	A,(URURIFG)
+	CP	$02
+	JP	NZ,DEN090
+;
+	LD	E,$45
+;
+	LD	A,(MEGAF)
+	CP	$05
+	JP	C,DEN090	
+;
+	LD	E,$47
+;
+	LD	A,(GRKEY5)
+	CP	$05
+	JP	C,DEN090
+;
+	LD	E,$48
+;
+	JP	Z,DEN090
+;
+	CP	$06
+	JP	NZ,DEN090
+;
+	LD	E,$49
+;
+	LD	A,(WARPSV+$02)
+	AND	%00000010
+	JP	Z,DEN090
+;
+	LD	E,$4A
+;
+	LD	A,(GRKEY2)
+	AND	A
+	JP	Z,DEN090
+;
+	LD	E,$40
+;
+	LD	A,(WARPSV+$03)
+	AND	%00000010
+	JP	Z,DEN0A0
+;
+	LD	A,(OBAKEFG)
+	AND	A
+	JR	Z,DEN0OB	
+;
+	LD	E,$4B
+;
+	LD	A,(DJRMSV+$0E3)	;お化け帰した？
+	AND	%01000000
+	JR	Z,DEN090
+;
+DEN0OB
+	LD	E,$4C
+;
+	LD	A,(WARPSV+$04)
+	AND	%00000010
+	JR	Z,DEN090
+;
+	LD	E,$45
+;
+	LD	A,(ONPUFG)
+	AND	%00000001	;かえるのうたを覚えた？
+	JP	Z,DEN0A0	;YES !
+;
+	LD	E,$4D
+;
+	LD	A,(WARPSV+$05)
+	AND	%00000010
+	JR	Z,DEN090
+;
+	LD	E,$4E
+;
+	LD	A,(NIWATFG)
+	AND	A
+	JR	Z,DEN078
+;
+	LD	E,$46
+;
+	LD	A,(GRKEY4)
+	AND	A
+	JP	Z,DEN0A0	
+;
+	LD	E,$41
+DEN078
+	LD	A,(WARPSV+$06)
+	AND	%00000010
+;;	JR	Z,DEN090
+	JR	NZ,DEN07A
+;
+	LD	A,E
+	CP	$4E
+	JR	Z,DEN090
+	JR	DEN0A0
+;
+DEN07A
+	LD	E,$4F
+;
+	LD	A,(GRRMSV+$10)	;カメイワ開いた？
+	AND	%00110000
+	JR	Z,DEN090
+;
+	LD	E,$48
+;
+	LD	A,(WARPSV+$07)
+	AND	%00000010
+	JR	Z,DEN0A0
+;;	JR	Z,DEN090
+;
+	LD	E,$42
+;
+	LD	A,(GRRMSV+$06)
+	AND	%00110000
+	JR	Z,DEN0A0	;たまごやま入った？
+;				;YES !
+	LD	E,$43
+;
+	LD	A,(DJRMSV+$174) ;ボスに会った？
+	AND	%01000000
+	JR	Z,DEN0A0
+;
+	LD	E,$47
+	LD	A,(KENLEV)
+	CP	$02
+	JR	C,DEN0A0
+;
+	LD	E,$48
+	JR	DEN0A0
+;
+DEN090
+	LD	A,E
+	CALL	MSGCH2
+	JR	DEN0A8
+DEN0A0
+	LD	A,E
+	CALL	MSGCH3
+;
+DEN0A8
+;	LD	A,(GRNDPT)
+;	LD	E,A
+;	LD	D,B
+;	LD	HL,DJRMSV+$100
+;	ADD	HL,DE
+;	SET	5,(HL)
+;	LD	A,(HL)
+;	LD	(DJSVBF),A
+	LD	HL,DJRMSV+$1A9
+	SET	5,(HL)
+DEW100
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	チョウチョ 				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BTFLYCD
+	DB	$5E,$00
+	DB	$5E,$40
+;;	DB	$5E,$00,$5E,$20
+;;	DB	$5E,$40,$5E,$60
+BTFSPD
+	DB	$04,$FC,$03,$FD
+	DB	$02,$FE,$05,$FA
+;- - - - - - - - - - - - - - - - - - -
+BTFLYMV
+	LD	A,(ENCHPT2)
+	CP	$01
+	JR	NZ,BTF010
+;
+	LD	A,(ENDSYP)
+	SUB	$00
+	LD	(ENDSYP),A
+BTF010
+	LD	DE,BTFLYCD
+	CALL	EN1CST
+;;	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	LD	A,C
+	SLA	A
+	SLA	A
+	SLA	A
+;
+	LD	HL,FRCNT
+;
+	ADD	A,(HL)
+	LD	(ENSTAT2),A
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+;
+	CALL	E4MVCL
+;
+	LD	A,(ENSTAT2)
+	AND	$1F
+	JR	NZ,BTF020
+;
+	CALL	RNDSUB
+	AND	$07
+;;	SUB	$04
+	LD	E,A
+	LD	D,B
+	LD	HL,BTFSPD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+BTF020
+	LD	A,(ENSTAT2)
+	ADD	A,$10
+	AND	$1F
+	JR	NZ,BTF030
+;
+	CALL	RNDSUB
+	AND	$07
+;;	SUB	$04
+	LD	E,A
+	LD	D,B
+	LD	HL,BTFSPD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+BTF030
+	LD	A,(ENSTAT2)
+	AND	$3F
+	JR	NZ,BTF050	;人間サーチ！
+;
+	LD	A,(PLXPSL)
+	PUSH	AF
+	LD	A,(PLYPSL)
+	PUSH	AF
+;
+	LD	A,(MAINDX)
+	CP	$FF
+	JR	Z,BTF080	;マリンいる？
+;				;YES !
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLXPSL),A
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLYPSL),A
+;
+BTF080
+	LD	A,$02
+	CALL	PSERCH2L
+;
+	POP	AF
+	LD	(PLYPSL),A
+	POP	AF
+	LD	(PLXPSL),A
+;
+	LD	A,(WORK0)
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+BTF050
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%   オバケのＱ太郎（の本）		%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OBAQMV
+	LD	A,C
+	LD	(BSINDX2),A
+;	LD	A,(DNJNNO)
+;	LD	E,A
+;	LD	D,B
+;	LD	HL,WARPSV
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	AND	%00000001
+;	JP	NZ,E4CLER
+	LD	A,(DNJNNO)
+	CP	$07
+	JR	NZ,OQ00SB
+;
+	LD	A,$10
+	LD	(ENCHNO),A	;Bank chenge !
+OQ00SB
+	CALL	OBAQCS
+;
+	CALL	BSSDCK	;(S)
+;
+	CALL	SHRVSE
+;
+	LD	A,(ENMODE2)
+	CP	EMOVE
+	JR	Z,OBQ010
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	LD	(HL),%10000000	;フェイルルーチンからムーブへ強制！
+;- - - FAIL - - - -
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	RST	00
+	DW	OBFL100 
+	DW	OBFL200 
+;------------------------------
+OBFL100
+	CALL	LDTIM0
+	LD	(HL),$FF
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+;	LD	A,$01
+;	LD	(MUTEKI),A
+OBWKINC
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	INC	(HL)
+	RET
+;--------------------------
+OBFL200
+	CALL	LDTIM0
+	JP	Z,OBFL230
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CP	$80
+	JR	NC,OBFL210
+;
+	CALL	ESMRN4
+OBFL210
+	RET
+OBFL230
+;;	CALL	HARTBS4
+;
+;;	LD	HL,ENTIM4
+;;	ADD	HL,DE
+;;	LD	(HL),$08	; Water up protect !
+;
+;	LD	A,$02
+;	LD	(MUTEKI),A
+;
+	CALL	BGMSET	;(S)
+;
+	CALL	ENFEND
+;----------------------------------
+	LD	A,(DNJNNO)
+	CP	$07
+	RET	Z
+DJSVSB
+	LD	A,(GRNDPT)
+	LD	E,A
+	LD	D,B
+;
+	LD	A,(DNJNNO)
+	CP	DJROOM2
+	JR	NC,DJSSB10
+	CP	DJROOM
+	JR	C,DJSSB10
+;
+	INC	D
+DJSSB10
+	LD	HL,DJRMSV
+	ADD	HL,DE
+	SET	5,(HL)
+	RET
+;- - - - - - - - - - - - - - - - - - - -
+;;	JP	E4CLER
+;;	RET
+;======================================
+;======================================
+;======================================
+;======================================
+OBQ010
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+	CALL	CREPKEL
+;
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(ENHELP2),A
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBQ090
+;
+	LD	E,$00
+	AND	%10000000
+	JR	NZ,OBQ080
+	LD	E,$03
+OBQ080
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+OBQ090
+	CALL	E4ZCLC
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	NOP
+	NOP
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,OBQ0A0
+;
+	LD	(HL),B
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(HL),B
+	CP	$F2
+	JR	NC,OBQ0A0
+;
+	LD	A,$20
+	LD	(SOUND1),A	;(S)
+OBQ0A0
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	OBQ1000
+	DW	OBQ2000
+	DW	OBQ3000
+	DW	OBQ4000
+;========================================
+OBQ1000	;棒に近つく
+	CALL	LDTIM0
+	JR	NZ,OBQ1090
+;
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(ENSVXL)
+	SUB	(HL)
+	LD	E,$08
+	BIT	7,A
+	JR	NZ,OBQ1010
+	LD	E,$F8
+OBQ1010
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),E	
+;
+	ADD	A,$10
+	CP	$20
+	JR	NC,OBQ020
+;
+	CALL	LDTIM0
+	LD	(HL),$18
+;
+	CALL	STATINC
+	RET
+;- - - - - - - - - - - - - - -
+OBQ020
+	CALL	E4XCLC
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,OBQ030
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$0C
+OBQ030
+	LD	A,$01
+	CALL	ENPTST
+OBQ1090
+	RET
+;===========================================
+OBQ2000
+	CALL	LDTIM0
+	JR	NZ,OBQ2050
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	LD	A,$10
+	JR	NZ,OBQ2010
+;
+	LD	A,$F0
+OBQ2010	
+	PUSH	AF
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	POP	AF
+	LD	(HL),A
+;
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+	CALL	STATINC
+;
+	LD	A,$00
+	CALL	ENPTST
+OBQ2050
+	RET
+;===========================================
+OBQ3000
+	CALL	LDTIM0
+	JR	NZ,OBQ3020
+;
+	CALL	STATINC
+;;;	LD	(HL),B
+OBQ3020
+	RET
+;===========================================
+OBQ4000
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$08
+	LD	A,$01
+	JR	C,OBQ4001
+	INC	A
+OBQ4001
+	CALL	ENPTST
+;
+	CALL	LDTIM0
+	CP	$01
+	JR	Z,OBQ4008
+	CP	$00
+	JP	NZ,OBQ4060
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,OBQ4050
+;
+	CALL	LDTIM0
+	LD	(HL),$10
+	RET
+;
+OBQ4008
+	LD	E,$10
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$19
+	LD	A,(ENHELP2)	;Life
+	CP	$05
+	JR	NC,OBQ4009
+;
+	LD	E,$14
+	LD	(HL),$16
+OBQ4009
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	LD	A,E
+	JR	NZ,OBQ4010
+;
+	CPL
+	INC	A
+OBQ4010	
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(ENDSYP)
+	CP	$50
+	LD	A,E
+	JR	C,OBQ4030
+	CPL
+	INC	A
+OBQ4030
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+;;	LD	A,$0D
+;;	LD	(SOUND1),A	;(S)
+;;	CALL	E4JPSD	;(S)
+OBQ4050
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JR	Z,OBQ4060
+;
+	CALL	STATINC
+	LD	(HL),B
+;
+	CALL	LDTIM0
+	LD	(HL),$08
+;
+	CALL	ENSDCL
+OBQ4060
+	RET
+;========================================
+OBAQCD
+;0
+	DB	$00,$F8,$60,$00
+	DB	$00,$00,$62,$00
+	DB	$00,$08,$64,$00
+	DB	$F0,$00,$6E,$20
+;1
+	DB	$00,$F8,$66,$00
+	DB	$00,$00,$68,$00
+	DB	$00,$08,$6A,$00
+	DB	$F0,$00,$6E,$00
+;1#
+	DB	$00,$F8,$66,$00
+	DB	$00,$00,$68,$00
+	DB	$00,$08,$6A,$00
+	DB	$F0,$06,$6E,$20
+;2
+	DB	$00,$00,$64,$20
+	DB	$00,$08,$62,$20
+	DB	$00,$10,$60,$20
+	DB	$F0,$08,$6E,$00
+;3
+	DB	$00,$00,$6A,$20
+	DB	$00,$08,$68,$20
+	DB	$00,$10,$66,$20
+	DB	$F0,$08,$6E,$20
+;3#
+	DB	$00,$00,$6A,$20
+	DB	$00,$08,$68,$20
+	DB	$00,$10,$66,$20
+	DB	$F0,$02,$6E,$00
+;- - - - - - - - - - - - - - - - -
+OBAQCS
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(ENCHPT2)
+	ADD	A,(HL)
+	RLA
+	RLA
+;
+	RLA
+	RLA
+	AND	%11110000
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,OBAQCD
+;
+;	LD	A,(DNJNNO)
+;	CP	$07
+;	JR	NZ,OBQ0000	; #8?
+;;				;YES!
+;	LD	HL,OBAQCD2
+;OBQ0000
+	ADD	HL,DE
+;
+	LD	C,$04
+	CALL	ENOMST
+;
+	LD	A,$04
+	CALL	NXOMSBL
+;--- sadow set --
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBQC10
+;
+	LD	A,(FRCNT)
+	AND	$01
+	JR	NZ,OBQC10
+;
+	LD	A,(ENOMID)
+	LD	E,A
+	LD	D,B ;$0
+	LD	HL,ENOAM
+	ADD	HL,DE
+;
+	LD	A,(ENSVYL)
+	ADD	A,$0C
+	LD	(HLI),A
+	LD	A,(ENSVXL)
+	ADD	A,$02
+	LD	(HLI),A
+	LD	A,$26
+	LD	(HLI),A
+	LD	A,$00
+	LD	(HLI),A
+;
+	LD	A,(ENSVYL)
+	ADD	A,$0C
+	LD	(HLI),A
+	LD	A,(ENSVXL)
+	ADD	A,$04
+	LD	(HLI),A
+	LD	A,$26
+	LD	(HLI),A
+	LD	A,$00
+	LD	(HLI),A
+;
+	LD	A,$02
+	CALL	NXOMSBL
+OBQC10
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%   オバＱバー				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OBQBARCD
+	DB	$6C,$00,$6C,$20
+	DB	$6C,$40,$6C,$60
+;OBQBARCD2
+;	DB	$6C,$00,$7C,$20
+;	DB	$6C,$40,$7C,$60
+OBBFLYD
+	DB	$70,$60,$50,$40,$30,$20
+;- - - - - - - - - - - - - - - - - - - -
+OBQBARMV
+	LD	A,(DNJNNO)
+	CP	$07
+	JR	NZ,OQB0SB
+;
+	LD	A,$10
+	LD	(ENCHNO),A	;Bank chenge !
+OQB0SB
+;	LD	A,(DNJNNO)
+;	LD	E,A
+;	LD	D,B
+;	LD	HL,WARPSV
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	AND	%00000001
+	LD	A,(DJSVBF)
+	AND	%00100000
+	JP	NZ,E4CLER
+;
+	LD	A,C
+	LD	(BSINDX),A
+;
+	CALL	OBQBARCS
+;
+	CALL	E4STCK
+;
+	LD	A,(BSINDX2)
+	LD	E,A
+	LD	D,B
+	LD	HL,ENMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	EFAIL
+	RET	Z
+	AND	A
+	JR	NZ,OBQB00
+;
+;	LD	A,(MUTEKI)
+;	AND	A
+;	JR	Z,OBQB00
+;	CP	$01
+;	RET	Z	; OBAQ Fail ?
+;			; YES !
+	CALL	LDTIM0
+	JR	NZ,OBBF10
+;
+	LD	(HL),$03
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+;;	LD	A,(HL)
+;;	CP	$06
+;;	JP	Z,E4CLER
+;
+	LD	A,(ENSVXL)
+	LD	(WORK0),A
+	LD	E,(HL)
+	INC	(HL)
+	LD	A,(HL)
+	CP	$06
+	JR	NZ,OBBF02
+;
+	CALL	E4CLER
+;
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,ENONBT
+	ADD	HL,DE
+;
+	LD	A,(GRNDPT)
+	LD	E,A
+	LD	D,B
+;
+	LD	A,(HL)
+	LD	HL,ENONOF
+	ADD	HL,DE
+	OR	(HL)
+	LD	(HL),A	
+OBBF02
+	LD	D,B
+	LD	HL,OBBFLYD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(WORK1),A
+;
+	JP	SMKSDST	;(S)
+;	LD	A,SMK1
+;	CALL	EXIDSH
+;;
+;	LD	HL,EXTIM0
+;	ADD	HL,DE
+;	LD	(HL),$0F
+OBBF10
+	RET
+;=====================================
+OBQB00
+	CALL	ENHNCL
+;
+	LD	A,(PLZPSL)
+	AND	A
+	JR	NZ,OBQB02
+;
+	CALL	CREPKEL
+OBQB02
+	CALL	E4XCLC
+;
+	CALL	ENBGCKL
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBQB80
+;
+	BIT	7,A
+	JR	Z,OBQB10
+;
+	CPL
+	INC	A
+OBQB10
+	LD	E,%00000100
+	CP	$08
+	JR	NC,OBQB20
+	LD	E,%00001000
+OBQB20
+	CP	$04
+	JR	NC,OBQB30
+	LD	E,%00010000
+OBQB30
+	CP	$02
+	JR	NC,OBQB40
+	LD	E,%00100000
+OBQB40
+	LD	D,B
+	LD	A,(FRCNT)
+	AND	E
+	JR	Z,OBQB50
+	INC	D
+OBQB50
+	LD	A,D
+	CALL	ENPTST
+OBQB80
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	OBB1000	;STOP
+	DW	OBB2000	;MOVE
+	DW	OBB3000	;SPEED DOWN
+;=====================================
+OBB1000
+;	CALL	LDTIM0
+;	JR	NZ,OBB1010
+;;
+;	LD	E,$10
+;	LD	A,(ENSVXL)
+;	CP	$50
+;	JR	C,OBB1008
+;	LD	E,$F0
+;OBB1008
+;	LD	HL,ENXSPD
+;	ADD	HL,BC
+;	LD	(HL),E
+;;
+;	CALL	STATINC
+;OBB1010
+	RET
+;=====================================
+OBB2000
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JR	Z,OBB2010
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	SRA	A
+	CPL
+	INC	A
+	LD	(HL),A
+;
+	LD	A,$20
+	LD	(TILTCT),A
+	XOR	A
+	LD	(TILTMK),A
+;
+	LD	A,$0B
+	LD	(SOUND1),A	;(S)
+;
+	CALL	STATINC
+OBB2010
+OBBSDST
+	LD	A,(BGMCNT)
+	INC	A
+	CP	$09
+	JR	C,OBB2020
+;
+	LD	A,$1A
+	LD	(SOUND2),A	;(S)
+;
+	XOR	A
+OBB2020
+	LD	(BGMCNT),A
+	RET	
+;=====================================
+OBB3000
+;;	CALL	OBBSDST	;(S)
+;
+	LD	A,(FRCNT)
+	AND	$07
+	JR	NZ,OBB3020	
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,OBB3080
+	AND	%10000000
+	JR	Z,OBB3010
+	INC	(HL)
+	INC	(HL)
+OBB3010
+	DEC	(HL)
+OBB3020
+	RET
+OBB3080
+	CALL	STATINC
+	LD	(HL),B
+;
+	CALL	LDTIM0
+	LD	(HL),$50
+	RET
+;========================================
+OBBCYL
+	DB	$80,$70,$60,$50,$40,$30
+;
+OBQBARCS
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	$06
+;	JR	Z,OBQBC20
+;
+	LD	A,$20
+	LD	(ENDSYP),A
+OBQBC10
+	LD	DE,OBQBARCD
+;
+;	LD	A,(DNJNNO)
+;	CP	$07
+;	JR	NZ,OBQBC11	;#8 ?
+;;				;Y
+;	LD	DE,OBQBARCD2
+;OBQBC11
+	CALL	EN2CST
+;
+	LD	A,(ENDSYP)
+	ADD	A,$10
+	LD	(ENDSYP),A
+;;	CP	$80
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,OBBCYL
+	ADD	HL,DE
+	CP	(HL)
+	JR	NZ,OBQBC10
+;
+	CALL	ENPSSV
+OBQBC20
+	RET
+;
+;
+;
+;=================================================
+;=================================================
+;===========================================
+ESMRN4
+	AND	$07
+	JR	NZ,K4L310
+;
+	CALL	RNDSUB
+	AND	$1F
+	SUB	$10
+	LD	E,A
+	LD	HL,ENSVXL
+	ADD	A,(HL)
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$1F
+	SUB	$10+4
+	LD	E,A
+	LD	HL,ENDSYP
+	ADD	A,(HL)
+	LD	(HL),A
+;
+	CALL	HBSMS4
+K4L310
+	RET
+;
+;===========================================
+HBSMS4
+	CALL	E4STCK2
+;
+	LD	A,(ENSVXL)
+	LD	(WORK0),A
+	LD	A,(ENDSYP)
+	LD	(WORK1),A
+;----------------------------------
+SMKSDST
+	LD	A,SMK1
+	CALL	EXIDSH
+;
+	LD	A,$13
+	LD	(SOUND3),A	;(S)
+;;	LD	A,$06
+;;	LD	(SOUND1),A	;(S)
+	RET
+;
+;---------------------------------------
+HARTBS4
+;;	CALL	SOUNDCLR	;(S)
+;
+	LD	A,HARTB
+	CALL	ENIDSHL
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	Z,HBS410
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),$F0
+	JR	HBS420
+HBS410
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$10
+;
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),$08
+HBS420
+	CALL	E4CLER
+;
+;;	LD	HL,SOUND3
+;;	LD	(HL),$0C	;(S)
+	CALL	BBSDST	;(S)
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%   ベッド 寝る処理			%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+BEDINMV
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	BDIN000
+	DW	BDIN100
+	DW	BDIN200
+;;	DW	BDIN300
+;-------------------------------------
+BDIN000
+	CALL	E4XCHK
+	ADD	A,$0E
+	CP	$1C
+	JR	NC,BDIN090
+;
+	CALL	E4YCHK
+	ADD	A,$0C
+	CP	$18
+	JR	NC,BDIN090
+;
+	LD	A,(PLCMKI)
+	AND	A
+	JR	NZ,BDIN090
+;
+	LD	A,(PLCBFG)
+	AND	A
+	JR	Z,BDIN090
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+	LD	(HL),$A0
+;
+	LD	A,$01
+	LD	(PLZPSL),A
+	LD	A,$02
+	LD	(PLJPFG),A
+	LD	A,$12
+	LD	(PLZSPD),A
+	LD	A,$0C
+	LD	(PLXSPD),A
+	XOR	A
+	LD	(PLYSPD),A
+;
+	LD	A,$0
+	LD	(PLCMKI),A
+;
+	LD	A,$01
+	LD	(BEDOFF),A
+;
+	LD	A,$1E
+	LD	(SOUND4),A	;(S)
+;
+	XOR	A
+	LD	(SBHR),A
+	LD	(SBCNT),A
+BDIN090
+	RET
+;-------------------------------------
+BLINKCD
+	DB	$50,$00,$52,$00
+;;	DB	$42,$20,$40,$20
+	DB	$54,$00,$56,$00
+;;	DB	$48,$00,$4A,$00
+;;	DB	$48,$00,$4C,$00
+;- - - - - - - - - - - - - - - -
+BDTRAD	;トウロウ場所
+	DB	$98,$42
+	DB	$98,$50
+	DB	$99,$90
+	DB	$99,$82
+;
+BDIN100
+	LD	A,(PLJPFG)
+	AND	A
+	JP	NZ,BDIN1C0
+;
+	CALL	LDTIM0
+	JR	NZ,BDIN190
+;
+	LD	A,$01
+	LD	(WAVFLG),A
+	XOR	A
+	LD	(WAVTIM),A
+	LD	A,$08
+	LD	(WAVCNT4),A
+;
+	CALL	STATINC
+;;	RET
+	XOR	A
+BDIN190
+	PUSH	AF
+;
+	CP	$80
+	JR	NC,BDIN198
+;
+	PUSH	AF
+;
+	AND	$1F
+	JR	NZ,BDIN191
+;
+	LD	A,(SBHR)
+	CP	$02
+	JR	Z,BDIN191
+;
+	LD	A,$03
+	LD	(SBCNT),A
+	PUSH	BC
+	CALL	FDIN
+	POP	BC
+BDIN191
+	POP	AF
+	AND	$0F
+	JR	NZ,BDIN198
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$04
+	JR	Z,BDIN198
+;;
+;	CP	$01
+;	JR	NZ,BDIN192
+;;
+;	LD	A,$90
+;	LD	(BGPFG),A
+;	LD	(OBP1FG),A
+;	LD	A,$08
+;	LD	(OBP0FG),A
+;;
+;BDIN192
+	LD	A,(VRAMD)
+	LD	E,A
+	LD	D,B
+	ADD	A,$5
+	LD	(VRAMD),A
+	LD	HL,VRAMD+1
+	ADD	HL,DE
+	PUSH	HL
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	(HL)
+	SLA	A
+	LD	E,A
+	LD	D,B
+	LD	HL,BDTRAD
+	ADD	HL,DE
+	PUSH	HL
+	POP	DE
+	POP	HL
+	LD	A,(DE)
+	INC	DE
+	LD	(HLI),A
+	LD	A,(DE)
+	LD	(HLI),A
+;
+	LD	A,$01
+	LD	(HLI),A
+;
+	LD	A,$64
+	LD	(HLI),A
+;
+	LD	A,$65
+	LD	(HLI),A
+;
+	LD	(HL),B
+BDIN198
+	POP	AF
+	LD	E,$00
+	CP	$80
+	JR	C,BDIN1A0
+	INC	E
+BDIN1A0
+	LD	A,E
+;------------------------------------
+BEDLINKCS
+	LD	(ENCHPT2),A	
+	LD	A,$58
+	LD	(ENSVXL),A
+	LD	(PLXPSL),A
+	LD	A,$44
+	LD	(ENDSYP),A
+	LD	(PLYPSL),A
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+	LD	A,$FF
+	LD	(PLCHPT),A
+;
+	LD	DE,BLINKCD
+	CALL	EN2CST
+;
+	CALL	ENPSSV
+;
+BDIN1C0
+	RET
+;-------------------------------------
+BDIN200
+	XOR	A
+	CALL	BEDLINKCS
+;
+	LD	A,(WAVFLG)
+	AND	A
+	JR	NZ,BDIN210
+;
+;	CALL	LDTIM0
+;	JR	NZ,BDIN210
+;;
+;	LD	(HL),$08
+;;
+;	CALL	FDIN
+;;
+;	LD	A,(SBHR)
+;	CP	$04
+;	JR	NZ,BDIN210
+;
+	XOR	A
+	LD	(PLCHPT),A
+;
+	LD	HL,NXRMMD
+	LD	A,DNJ
+	LD	(HLI),A
+	LD	A,(DNJNNO)
+	LD	(HLI),A
+	LD	A,$CE
+	LD	(HLI),A
+	LD	A,$50
+	LD	(HLI),A
+	LD	A,$7C
+	LD	(HL),A
+;
+	CALL	E4CLER
+;;	CALL	STATINC
+	JP	NXGOTO3
+;
+BDIN210
+	RET
+;-------------------------------------
+;BDIN300
+;	XOR	A
+;	CALL	BEDLINKCS
+;
+;	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%   妖精の泉				%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IZUMICD
+;0
+	DB	$F0,$FC,$50,$00
+	DB	$F0,$04,$52,$00
+	DB	$F0,$0C,$54,$00
+	DB	$00,$FC,$56,$00
+	DB	$00,$04,$58,$00
+	DB	$00,$0C,$5A,$00
+;1
+IZUMICD2
+	DB	$F0,$FC,$50,$00
+	DB	$F0,$04,$52,$00
+	DB	$F0,$0C,$54,$00
+	DB	$00,$FC,$5C,$00
+	DB	$00,$04,$58,$00
+	DB	$00,$0C,$5E,$00
+;----------------------------------------
+IZHARTCD
+	DB	$A8,$10
+IZHXAD
+	DB	$01,$FF
+IZHXLM
+	DB	$18,$E8
+;----------------------------------------
+IZUMIMV
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JP	Z,IZM0000
+;- - - Heart spining - - -
+	LD	HL,ENMODE
+	LD	A,(BSINDX)
+	LD	E,A
+	LD	D,B
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JP	Z,E4CLER
+;
+	LD	A,(BSINDX2)
+	LD	(ENCHPT2),A
+;
+	LD	DE,IZHARTCD
+	CALL	EN1CST
+;
+	LD	A,(FRCNT)
+	AND	$01
+	JR	NZ,IZH200
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,IZHXAD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	(HL),A
+	LD	HL,IZHXLM
+	ADD	HL,DE
+	CP	(HL)
+	JR	NZ,IZH100
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	XOR	$01
+	LD	(HL),A
+IZH100
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,IZHXAD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	(HL),A
+	LD	HL,IZHXLM
+	ADD	HL,DE
+	CP	(HL)
+	JR	NZ,IZH200
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	XOR	$01
+	LD	(HL),A
+IZH200
+	CALL	E4MVCL
+	RET
+;==========================================
+IZM0000
+	LD	HL,IZUMICD
+;
+	LD	A,(FRCNT)
+	AND	$08
+	JR	Z,IZC010
+;
+	LD	HL,IZUMICD2
+IZC010
+	LD	C,$06
+	CALL	ENOMST
+;
+	LD	A,$06
+	CALL	NXOMSBL
+;
+	CALL	SADWSTL
+;
+	LD	E,$FE
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	AND	%01000000
+	JR	Z,IZM0001
+;
+	LD	E,$02
+IZM0001
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),E
+;
+	CALL	E4ZCLC
+;
+	CALL	E4STCK
+;
+	LD	A,(ENSTAT2)
+	RST	0
+	DW	IZM1000
+	DW	IZM2000
+	DW	IZM3000
+;--------------------------------
+IZM1000
+	XOR	A
+	LD	(BSINDX2),A
+	LD	A,C
+	LD	(BSINDX),A
+;
+	LD	A,(PLXPSL)
+	SUB	$50
+	ADD	A,$08
+	CP	$10
+	JR	NC,IZM1010
+;
+	LD	A,(PLYPSL)
+	SUB	$58
+	ADD	A,$08
+	CP	$10
+	JR	NC,IZM1010
+;
+	CALL	STATINC
+;
+;;	CALL	LDTIM0
+;;	LD	(HL),$FF
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+	CALL	LDTIM3
+	LD	(HL),$48
+;
+	LD	A,$24
+	CALL	MSGCHK
+IZM1010
+	RET
+;=================================================
+IZM2000
+;;	CALL	LDTIM0
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM3
+	JR	NZ,IZM2010
+;
+	CALL	LDTIM0
+	LD	(HL),$48
+;
+	CALL	STATINC
+;
+	LD	A,$26
+	LD	(SOUND1),A	;(S)
+	RET
+IZM2010
+	LD	A,$02
+	LD	(PLSTOP),A
+;
+	LD	A,$1A
+	LD	(SOUND1),A	;(S)
+;
+	CALL	E4STCK
+;
+;;	CALL	LDTIM0
+;;	AND	$0F
+;;	JR	NZ,IZM2020
+;
+	LD	HL,ENTIM2
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,IZM2002
+;
+	LD	(HL),$01
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	04
+	JR	C,IZM2002
+;
+	LD	A,$04
+	LD	(HARTUP),A
+IZM2002
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	JR	NZ,IZM2020
+;
+	LD	(HL),$13
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	10
+	JR	Z,IZM2020
+;
+	INC	(HL)
+;
+;;	LD	A,$06
+;;	LD	(SOUND2),A	;(S)
+;
+	LD	A,IZUMI
+	CALL	ENIDSHL
+	JR	C,IZM2020
+;
+	LD	HL,ENWRK2
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	LD	A,(WORK0)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	ADD	A,$00
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	SUB	$0E
+	LD	(HL),A
+;
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),$E8
+IZM2020
+	RET
+;=================================================
+IZM3000
+	CALL	LDTIM0
+	JP	Z,E4CLER
+;
+	LD	A,(FRCNT)
+	AND	$02
+	LD	A,$00
+	JR	Z,IZM3010
+;
+	LD	A,$FF
+IZM3010	
+	LD	(BSINDX2),A
+	CALL	ENPTST
+;
+	LD	A,$02
+	LD	(PLSTOP),A
+	RET
+;
+;=================================================
+;=================================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%  ハトぽっぽ			   %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+HATO0CD
+;L
+	DB	$68,$00,$6A,$00 ;0
+	DB	$64,$00,$66,$00 ;1
+	DB	$6C,$00,$6E,$00 ;2
+;R
+	DB	$6A,$20,$68,$20
+	DB	$66,$20,$64,$20
+	DB	$6E,$20,$6C,$20
+;- - - - - - - - - - - - - - - - - - -
+HATO0MV
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	A,(ENCHPT2)
+	ADD	A,(HL)
+	LD	(ENCHPT2),A
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,HAT0000
+;
+	AND	%10000000
+	LD	A,$00
+	JR	NZ,HAT00F0
+	LD	A,$03
+HAT00F0
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+HAT0000
+	LD	DE,HATO0CD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JP	Z,HAT1000
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,HAT0010
+;
+	LD	(HL),B
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),B
+HAT0010
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	HTSTOP
+	DW	HTWALK
+	DW	HTFLY 
+;------------------------------------
+HTWKXS
+	DB	$02,$06,$08,$06
+	DB	$FE,$FA,$F8,$FA
+;------------------------------------
+HTSTOP
+	CALL	HTFLYCK
+;
+	XOR	A
+	CALL	ENPTST
+	CALL	LDTIM0
+	JR	NZ,HTS010
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	D,B
+	LD	HL,HTWKXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,E
+	AND	$04
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$07
+	LD	E,A
+	LD	HL,HTWKXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	LDTIM0
+	CALL	RNDSUB
+	AND	$1F
+	ADD	A,$20
+	LD	(HL),A
+;
+	CALL	STATINC
+HTS010
+	JP	HTPTST
+;------------------------------------
+HTWALK
+	CALL	HTFLYCK
+;
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,HTW020
+;
+	CALL	LDTIM0
+	JR	NZ,HTW010
+;
+	LD	(HL),$30
+	CALL	STATINC
+	LD	(HL),B
+	RET
+HTW010
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$08
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	INC	(HL)
+HTW020
+HTPTST
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;-------------------------------------
+HTFLY
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	A,(FRCNT)
+	AND	$01
+	JR	NZ,HTFL10
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	INC	(HL)
+HTFL10
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,HTFL20
+;
+	CALL	STATINC
+	LD	(HL),B
+HTFL20
+	LD	A,(FRCNT)
+	RRA
+;;	RRA
+	AND	$02
+	CALL	ENPTST
+;
+;	LD	A,(FRCNT)
+;	AND	$0F
+;	JR	NZ,HTFL30
+;;
+;	LD	A,$05
+;	LD	(SOUND3),A	;(S)
+;HTFL30
+	RET
+;-------------------------------------
+HTFLYCK
+	LD	A,(PCUTFG)
+	CP	$02
+	JR	NZ,HTFC90
+;
+	CALL	E4XCHK
+	ADD	A,$18
+	CP	$30
+	JR	NC,HTFC90
+;
+	CALL	E4YCHK
+	ADD	A,$18
+	CP	$30
+	JR	NC,HTFC90
+;
+	CALL	STATINC
+	LD	(HL),$02
+;
+	LD	A,$10
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	CPL
+	INC	A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	CPL
+	INC	A
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$0C
+	POP	AF
+HTFC90
+	RET
+;===========================
+HAT1000
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Porus voice		   %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PORUSCD
+	DB	$70,$00,$70,$20
+	DB	$72,$00,$72,$20
+PORUSMV
+	LD	A,(OKARFG)
+	CP	$01
+	JR	NZ,PRCK10
+;
+	LD	A,(ONPUFG)
+	AND	%00000100
+	JR	Z,PRCK10
+;
+	LD	A,(FUESLPT)
+	AND	A
+	JR	NZ,PRCK10
+;
+	LD	A,(ENMODE2)
+	CP	EFAIL
+	JR	Z,PRCK10
+;
+	LD	HL,ENTIM4
+	ADD	HL,BC
+	LD	(HL),$1F
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	(HL),EFAIL
+;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	(HL),$04
+;
+	LD	HL,SOUND3	;(S)
+	LD	(HL),$13
+	RET
+;--------------------------------------------
+PRCK10
+	LD	DE,PORUSCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+;
+	CALL	E4MVCL
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	(HL),$01
+	PUSH	HL
+	CALL	ENBGCKL
+	POP	HL
+	LD	(HL),B
+;
+	CALL	CREPKEL
+;
+	LD	A,(ENSTAT2)
+	AND	$1
+	RST	0
+	DW	PRSTOP
+	DW	PRJUMP
+;------------------------------------------
+PRJPXS
+	DB	$08,$08,$F8,$F8,$04,$FC
+PRJPYS
+	DB	$FC,$04,$FC,$04,$08,$F8
+PRSTOP
+	LD	HL,ENCHPT
+	ADD	HL,BC
+;;	LD	A,$01
+	LD	(HL),$01 ;A
+;
+	CALL	LDTIM0
+	JR	NZ,PRST90
+;
+	CALL	STATINC
+;
+	CALL	RNDSUB
+	AND	$7
+	ADD	A,$10
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$07
+	CP	$6
+	JR	C,PRST50
+;
+	LD	A,$0A
+	CALL	PSERCHL
+	JR	PRST60
+PRST50	
+	LD	E,A
+	LD	D,B
+;
+	LD	HL,PRJPXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A	
+;
+	LD	HL,PRJPYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A	
+;
+PRST60	
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	XOR	A
+;	LD	(HL),A
+	XOR	A
+	CALL	ENPTST
+PRST90
+	RET
+;------------------------------------------
+PRJUMP
+;;	CALL	E4MVCL
+;;	CALL	ENBGCKL
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	JR	Z,PRJ010
+;
+	XOR	A
+	LD	(HL),A
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+;;	LD	A,$20
+	CALL	RNDSUB
+	AND	$0F
+	ADD	A,$18
+	LD	(HL),A
+;
+	CALL	ENSDCL
+PRJ010
+	RET
+
+;=================================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				   %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+KUZUHCD
+	DB	$60,$00,$62,$00
+	DB	$64,$00,$66,$00
+;- - - - - - - - - - - - - - - - - - - - - -
+KUZUHMV
+	LD	DE,KUZUHCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+	CALL	E4HNSB
+;
+;;	CALL	CREPKE
+;
+	XOR	A
+	LD	(ENHELP),A
+;
+	CALL	CRKNENL
+	CALL	CRENPSL
+	JR	NC,KZH000
+;
+	LD	A,$01
+	LD	(ENHELP),A
+;
+	LD	A,(ENSTAT2)
+	CP	$02
+	JR	NC,KZH000
+;
+	CALL	PLPSRV
+KZH000
+	CALL	E4MVCL
+;	CALL	E4ZCLC
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	DEC	(HL)
+;	DEC	(HL)
+;	LD	HL,ENZPSL
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	%10000000
+;	LD	(ENHELP2),A
+;	JR	Z,KZH001
+;;
+;	LD	(HL),B
+;;
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	LD	(HL),B
+;KZH001
+	CALL	ENBGCKL
+;-------------------------------------------
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	SBA1000
+	DW	SBA2000
+	DW	SBA3000
+;---------------------------------------
+SBA1000
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,SBA1010
+;
+;	CALL	E4XYCK
+;	LD	A,E
+;	CP	$03
+;	JR	NZ,SBA1010
+;
+	CALL	STATINC
+;
+	CALL	LDTIM0
+	LD	(HL),$30
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	(HL),$18
+SBA1010
+	RET
+;---------------------------------------
+SBA2000
+	CALL	LDTIM0
+	JR	NZ,SBA2030
+;
+	CALL	STATINC
+;
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	RES	7,(HL)
+;
+	LD	HL,ENMOD1
+	ADD	HL,BC
+	RES	7,(HL)
+;
+	LD	HL,ENMOD3
+	ADD	HL,BC
+	RES	6,(HL)
+;
+	CALL	ENSDCL
+	RET
+SBA2030
+	LD	E,$08
+	AND	$04
+	JR	Z,SBA2050
+	LD	E,$F8
+SBA2050
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),E
+	RET	
+;---------------------------------------
+SBAYSD
+	DB	$F8,$FA
+SBAXSD
+	DB	$00,$06,$08,$06,$00,$FA,$F8,$FA
+;- - - - - - - - - - - - - - - -
+SBA3000
+;	LD	A,(ENHELP2)
+;	AND	A
+;	JR	Z,SBA3010
+;;
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	LD	(HL),$10
+;
+	CALL	LDTIM0
+	JR	NZ,SBA3010
+;
+	CALL	RNDSUB
+	AND	$3F
+	ADD	A,$20
+	LD	(HL),A
+;
+	AND	$07
+	LD	E,A
+	LD	D,B
+	LD	HL,SBAXSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,SBAYSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+SBA3010
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+	RET
+;-------------------------------------------
+;-------------------------------------------
+;-------------------------------------------
+;-------------------------------------------
+;-------------------------------------------
+;-------------------------------------------
+;-------------------------------------------
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+;	JR	NZ,AMOVE
+;;	
+;	CALL	E4XCHK
+;	LD	A,D
+;	ADD	A,$1E
+;	CP	$3C
+;	JR	NC,IRAN
+;;
+;	CALL	E4YCHK
+;	LD	A,D
+;	ADD	A,$1E
+;	CP	$3C
+;	JR	C,FLGIN
+;IRAN
+;	RET
+;;
+;FLGIN
+;;;	LD	A,$01
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	(HL),$01 ;A
+;;
+;;;	LD	HL,ENTIM0
+;;;	ADD	HL,BC
+;	CALL	LDTIM0
+;;;;	LD	A,$50
+;	LD	(HL),$50 ;A
+;	RET
+;;
+;AMOVE	
+;	CP	$01
+;	JR	NZ,ATTACK
+;;
+;;;	LD	HL,ENTIM0
+;;;	ADD	HL,BC
+;;;	LD	A,(HL)
+;	CALL	LDTIM0
+;;;	AND	A
+;	JR	NZ,BULBUL
+;;
+;;;;	LD	A,$02
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	(HL),$02 ;A
+;;
+;	LD	HL,ENMOD0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	%01111111	; Damege on !
+;	LD	(HL),A
+;;
+;	LD	HL,ENMOD1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	%01111111	; Damege on !
+;	LD	(HL),A
+;BULBUL 
+;;;	LD	HL,ENTIM0
+;;;	ADD	HL,BC
+;;;	LD	A,(HL)
+;	CALL	LDTIM0
+;	LD	HL,ENXSPD
+;	ADD	HL,BC
+;	AND	%00000100
+;	JR	NZ,LEFT
+;;
+;;;	LD	A,$08
+;	LD	(HL),$08 ;A
+;	RET
+;LEFT
+;;;	LD	A,$F8
+;	LD	(HL),$F8 ;A
+;	RET
+;ATTACK
+;;-------------------------------------------
+;	CALL    E4ZCLC
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	DEC	(HL)
+;	DEC	(HL)
+;;
+;	LD	HL,ENZPSL
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	BIT	7,A
+;	JR	Z,OWARI
+;;
+;	XOR	A
+;	INC	A
+;	LD	(HL),A
+;	LD	A,$10
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	LD	(HL),A
+;	LD	A,$08
+;	CALL	PSERCHL
+;OWARI
+;	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%					%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TRAP0CD
+	DB	$50,$00,$50,$20
+;
+TPATXS
+	DB	$20,$E0,$00,$00
+TPRTXS
+	DB	$F8,$08,$00,$00
+TPATYS
+	DB	$00,$00,$E0,$20
+TPRTYS
+	DB	$00,$00,$08,$F8
+;- - - - - - - - - - - - - - - - - - - -
+;帰宅用徒歩速度内容集合体
+;- - - - - - - - - - - - - - - - - - - -
+TP0XYT
+	DB	$30,$20
+;
+TRAP0MV
+	LD	A,$01
+	LD	(ENBGRV),A	;BG check don't revise
+;
+	LD	DE,TRAP0CD
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	ENHNCL
+	CALL	CREPKEL
+;
+	LD	A,(ENSTAT2)
+	RST	00
+	DW	TPINIT
+	DW	TPSERCH
+	DW	TPATACK
+	DW	TPRETRN
+;------------------------------------------
+TPINIT
+	LD	A,(ENSVXL)
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(ENDSYP)
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),A
+	JP	STATINC
+;-----------------------------------------
+TPSERCH
+	CALL	LDTIM0
+	JR	NZ,TPSH90
+;
+	CALL	ENSDCL
+;
+	CALL	E4YCHK
+	ADD	A,$12
+	CP	$24
+	JR	NC,TPSH20
+;
+	CALL	E4XCHK
+	LD	D,B
+	LD	HL,TPATXS
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	E,$18		;;;; 横方向スピードタイム（ｘ）
+	JR	TPSH60
+;
+TPSH20
+	CALL	E4XCHK
+	ADD	A,$12
+	CP	$24
+	JR	NC,TPSH90
+;
+	CALL	E4YCHK
+	LD	D,B
+	LD	HL,TPATYS
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),E
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	E,$10		;;;;;; 縦方向スピードタイム（ｙ）
+TPSH60
+	CALL	LDTIM0
+	LD	(HL),E
+;
+	CALL	ENBGCKL
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$0F
+	JR	Z,TPSHA0
+;
+	CALL	LDTIM0
+	LD	(HL),B
+TPSH90
+	RET
+TPSHA0
+	LD	A,$0A
+	LD	(SOUND3),A	;(S)
+;
+	CALL	STATINC
+	RET
+;=======================================
+TPATACK
+	CALL	E4MVCL
+;
+	CALL	LDTIM0
+	JR	NZ,TPAT10
+TPAT08
+	LD	A,$07
+	LD	(SOUND1),A	;(S)
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+	JP  	STATINC
+TPAT10
+	CALL	ENBGCKL
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$0F
+	JR	NZ,TPAT08
+	RET
+;=======================================
+TPRETRN
+	CALL	LDTIM0
+	JR	NZ,TPR090
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	E,(HL)
+	LD	D,B
+	LD	HL,TPRTXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,TPRTYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	E4MVCL
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	CP	(HL)
+	JR	NZ,TPR090
+;
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	CP	(HL)
+	JR	NZ,TPR090
+;
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+	CALL	STATINC
+	LD	(HL),$01
+TPR090
+	RET
+;
+;===============================================
+;=					       =
+;===============================================
+MAGE0CD
+	DB	$6E,$00,$6E,$20
+	DB	$66,$20,$64,$20
+	DB	$64,$00,$66,$00
+	DB	$62,$00,$62,$20
+	DB	$60,$00,$60,$20
+MTSXAD
+	DB	$08,$F8,$00,$00
+MTSYAD
+	DB	$00,$00,$F8,$08
+MTSXSD
+	DB	$20,$E0,$00,$00
+MTSYSD
+	DB	$00,$00,$E0,$20
+;- - - - - - - - - - - - - - - - - - - - - - 
+MAGE0MV
+	LD	DE,MAGE0CD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+	CALL	E4HNSB
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+MAGE0MAIN
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	RST	0
+	DW	MA0CLER		;きえたよーん
+	DW	TELPORT		;消滅中
+	DW	MA0STOP		;出現！
+	DW	MA0BEEM		;ソニックブ～ム発射!!!!!!
+;
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+MA0CLER
+	LD	HL,ENTIM0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,MA0C090
+;
+;	LD	HL,ENSTAT
+;	ADD	HL,BC
+;	INC	(HL)
+	CALL	STATINC
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),$01
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$20
+;
+MA0C090
+	JR	MGCHFF
+;
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),$FF
+;;
+;	CALL	MGMODSET
+;	RET
+;
+TELPORT
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	JR	NZ,TELP020
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	(HL),A
+;
+	LD	HL,ENTIM0
+	ADD	HL,BC
+	LD	(HL),$30
+	CALL	MGMODSET
+	RET
+;
+TELP020
+	LD	A,(HL)
+	AND	$02
+	JR	NZ,TELP090
+;
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),$FF
+MGCHFF
+	LD	A,$FF
+	CALL	ENPTST
+	CALL	MGMODSET
+	RET
+;
+TELP090
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),$00
+	XOR	A
+	CALL	ENPTST
+;
+	CALL	MGMODSET
+	RET
+;
+MA0STOP
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),$00
+	XOR	A
+	CALL	ENPTST
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+	CALL	LDTIM1
+	CP	$02
+	JR	NC,MA0S090
+;
+	LD	A,(HL)
+	CP	$01
+	JR	Z,MA0ATTC
+;
+	LD	(HL),$18
+	CALL	MGMODSET
+;
+	RET
+;
+MA0ATTC
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	(HL),A
+;
+	CP	$01
+	JR	NZ,MA0S090
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$20
+MA0S090
+;
+	CALL	MGMODSET
+	RET
+;
+MA0BEEM
+	CALL	CREPKEL
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+	CALL	LDTIM1
+	CP	$28
+	JR	Z,MA0BATT
+;
+	CP	$02
+	JR	NC,SS0010
+
+	LD	A,(HL)
+	CP	$01
+	JR	Z,MAMAMA
+;
+	LD	(HL),$40
+;
+	CALL	E4XYCK
+;
+	LD	HL,ENMUKI
+	ADD	HL,BC
+	LD	(HL),A
+;
+	INC	A
+;
+	LD	HL,ENCHPT
+	ADD	HL,BC
+	LD	(HL),A
+;
+	RET
+;
+MAMAMA
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),$FF
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	DEC	(HL)
+	RET
+;
+MA0BATT
+	LD	A,SONIC
+	CALL	ENIDSHL
+	JR	C,SS0010
+;
+	PUSH	BC
+;
+	LD	A,(WORK2)
+	LD	HL,ENMUKI
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	C,A
+;
+	LD	HL,MTSXAD
+	ADD	HL,BC
+;
+	LD	A,(WORK0)
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MTSYAD
+	ADD	HL,BC
+;
+	LD	A,(WORK1)
+	ADD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MTSXSD
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,MTSYSD
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	POP	BC
+	LD 	A,(WORK2)
+	LD	HL,ENCHPT
+	ADD	HL,DE
+	LD	(HL),A
+SS0010
+	LD	HL,ENMOD0
+	ADD	HL,BC
+	LD	A,%00000010
+	LD	(HL),A
+	RET
+;
+;===============================================
+;=					       =
+;===============================================
+MGMODSET
+	LD	HL,ENMOD0
+	ADD	HL,BC
+;;;;;;	LD	A,%01000010
+;;;;;;	          %00000010 ;MAGE0
+	LD	(HL),%01000010
+	RET
+;==================================
+GKFLSHCD
+;0
+	DB	$00,$D8,$60,$00
+	DB	$00,$E0,$60,$20
+;
+	DB	$00,$28,$60,$00
+	DB	$00,$30,$60,$20
+;
+	DB	$D8,$00,$62,$00
+	DB	$D8,$08,$62,$20
+;
+	DB	$28,$00,$62,$00
+	DB	$28,$08,$62,$20
+;
+	DB	$F0,$F0,$6A,$00
+	DB	$F0,$F8,$6A,$60
+;
+	DB	$F0,$10,$6A,$40
+	DB	$F0,$18,$6A,$20
+;
+	DB	$10,$F0,$6A,$40
+	DB	$10,$F8,$6A,$20
+;
+	DB	$10,$10,$6A,$00
+	DB	$10,$18,$6A,$60
+;1
+	DB	$00,$E8,$60,$00
+	DB	$00,$F0,$60,$20
+;
+	DB	$00,$18,$60,$00
+	DB	$00,$20,$60,$20
+;
+	DB	$E8,$00,$62,$00
+	DB	$E8,$08,$62,$20
+;
+	DB	$18,$00,$62,$00
+	DB	$18,$08,$62,$20
+;
+	DB	$F0,$F0,$FF,$00
+	DB	$F0,$F8,$FF,$00
+;
+	DB	$F0,$10,$FF,$00
+	DB	$F0,$18,$FF,$00
+;
+	DB	$10,$F0,$FF,$00
+	DB	$10,$F8,$FF,$00
+;
+	DB	$10,$10,$FF,$00
+	DB	$10,$18,$FF,$00
+;2
+	DB	$E0,$E0,$68,$00
+	DB	$E0,$E8,$68,$60
+;
+	DB	$20,$E0,$68,$40
+	DB	$20,$E8,$68,$20
+;
+	DB	$E0,$20,$68,$40
+	DB	$E0,$28,$68,$20
+;
+	DB	$20,$20,$68,$00
+	DB	$20,$28,$68,$60
+;--
+	DB	$00,$F0,$64,$00
+	DB	$00,$F8,$64,$20
+;
+	DB	$F0,$00,$66,$00
+	DB	$F0,$08,$66,$20
+;
+	DB	$00,$10,$64,$00
+	DB	$00,$18,$64,$20
+;
+	DB	$10,$00,$66,$00
+	DB	$10,$08,$66,$20
+;3
+	DB	$E8,$E8,$68,$00
+	DB	$E8,$F0,$68,$60
+;
+	DB	$18,$E8,$68,$40
+	DB	$18,$F0,$68,$20
+;
+	DB	$E8,$18,$68,$40
+	DB	$E8,$20,$68,$20
+;
+	DB	$18,$18,$68,$00
+	DB	$18,$20,$68,$60
+;--
+	DB	$00,$F0,$FF,$00
+	DB	$00,$F8,$FF,$20
+;
+	DB	$F0,$00,$FF,$00
+	DB	$F0,$08,$FF,$20
+;
+	DB	$00,$10,$FF,$00
+	DB	$00,$18,$FF,$20
+;
+	DB	$10,$00,$FF,$00
+	DB	$10,$08,$FF,$20
+;=========================================
+GKFLSHL
+	CALL	E4STCK
+;
+	LD	A,(FRCNT)
+	RRA	
+	RRA	
+	RRA	
+	AND	%00000011
+	LD	E,A
+	LD	D,B
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	LD	HL,GKFLSHCD
+	ADD	HL,DE
+;
+	LD	C,$10
+	CALL	ENOMST
+;
+	LD	A,$10
+	CALL	NXOMSBL
+	RET
+;===============================================
+;=					       =
+;===============================================
+BABULCD
+	DB	$5A,$00,$5A,$20
+	DB	$5A,$10,$5A,$30
+;
+BABULMV
+	LD	DE,BABULCD
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	E4HNSB
+	CALL	CREPKEL
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;--------------------------------
+BABMAIN
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JR	NZ,BXTURN
+;
+	LD	A,(HL)
+	AND	$0C
+	JR	NZ,BYTURN
+;
+	JR	BAMOVE
+;
+BXTURN
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	CPL
+	INC	A
+	LD	(HL),A
+	JR	BAMOVE
+;	
+BYTURN
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	CPL
+	INC	A
+	LD	(HL),A
+;
+BAMOVE
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	CALL	ENPTST
+BABFIN		
+	RET
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;;% プレイヤー飛び降りチェック        %
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;TOBIDMV
+;	CALL	E4XCHK
+;	ADD	A,$08
+;	CP	$10
+;	JR	NC,TBD010
+;;
+;	CALL	E4YCHK
+;	ADD	A,$01
+;	CP	$02
+;	JR	NC,TBD010
+;;
+;	LD	A,(PLMODE)
+;	CP	PTOBI
+;	JR	Z,TBD010
+;;
+;	LD	A,$08
+;	LD	(SOUND1),A	;(S)
+;;
+;	LD	A,PTOBI
+;	LD	(PLMODE),A	; 飛び降りセット
+;	XOR	A
+;	LD	(PLSTAT),A
+;;
+;	CALL	DUSHCL
+;TBD010
+;	RET
+;===============================================
+;=================================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				   %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TEKTACD
+	DB	$58,$00,$58,$20
+	DB	$5A,$00,$5A,$20
+TKJPXS
+	DB	$10,$F0,$10,$F0
+TKJPYS
+	DB	$10,$10,$F0,$F0
+;
+TEKTAMV
+	LD	DE,TEKTACD
+	CALL	EN2CST
+	CALL	E4STCK
+;
+	CALL	E4HNSB
+;
+	CALL	CREPKEL
+;
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%00000011
+	JR	Z,TKM010
+	CALL	E4XTUR
+TKM010
+	LD	A,(HL)
+	AND	%00001100
+	JR	Z,TKM018
+	CALL	E4YTUR
+TKM018
+;;	LD	HL,ENSTAT
+;;	ADD	HL,BC
+	LD	A,(ENSTAT2) ;HL)
+	AND	A
+	JR	NZ,TKM030
+;- - Jumping - -
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	%10000000
+	JR	Z,TKM020	; on floor ?
+;				; yes !
+	XOR	A
+	LD	(HL),A
+	CALL	ENSDCL
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	INC	(HL)
+;
+	CALL	LDTIM0
+;
+	CALL	RNDSUB
+	AND	$3F
+	ADD	A,$10
+;
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,$1
+	CALL	ENPTST
+	RET
+TKM020
+;;	CALL	ENGCLC
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+;;	INC	(HL)
+	RET
+;- - Stopping - -
+TKM030
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	AND	%00010000
+	SRL	A
+	SRL	A
+	SRL	A
+	SRL	A
+;;	LD	HL,ENCHPT
+;;	ADD	HL,BC
+;;	LD	(HL),A
+	CALL	ENPTST
+;
+	AND	A
+	JR	NZ,TKM060
+;
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+	CALL	LDTIM0
+;;	AND	A
+	JR	NZ,TKM060
+;
+	CALL	RNDSUB
+	AND	$07
+	ADD	A,$10
+;;	LD	A,$20
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	E4ZCLC
+;
+	CALL	RNDSUB
+	AND	$3
+	LD	E,A
+	LD	D,B ;$0
+	LD	HL,TKJPXS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	LD	HL,TKJPYS
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	%1
+	JR	Z,TKM050
+;
+	LD	A,$14
+	CALL	PSERCHL
+TKM050
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	XOR	A
+	LD	(HL),A
+;-------------------------------------------
+	CALL	ENPTST
+TKM060
+	RET
+;------------------------------
+E4XTUR
+	LD	HL,ENXSPD
+	JR	T4SUB
+;------------------------------
+E4YTUR
+	LD	HL,ENXSPD
+	ADD	HL,BC
+T4SUB
+	LD	A,(HL)
+	CPL
+	INC	A
+	SRA	A
+;;	SRA	A
+;;	SRA	A
+	LD	(HL),A
+	RET
+;------------------------------
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%		てれさ			%
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TERSACD
+	DB	$62,$20,$60,$20	;RIGHT1
+	DB	$66,$20,$64,$20	;RIGHT2
+	DB	$60,$00,$62,$00	;LEFT1
+	DB	$64,$00,$66,$00	;LEFT2
+	DB	$68,$00,$68,$20	;PYOPYO1
+	DB	$6A,$00,$6A,$20	;PYOPYO2
+	DB	$6E,$20,$6C,$20 ;TERPORTR
+	DB	$6C,$00,$6E,$00 ;TERPORTL
+;
+TERSAMV
+	LD	DE,TERSACD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+	CALL	E4HNSB
+;
+	CALL	E4MVCL
+;
+	CALL	E4GAWY
+;--------------------------------
+TRSAMAIN
+;
+	LD	A,(ENSTAT2)
+	RST	0
+	DW	TEATCK
+	DW	TEEXIT
+;
+;================================
+TEATCK
+	LD	A,(TOURCT)	;燈篭に火がついたか？
+	AND	A
+	JP	NZ,TENINC
+;
+;	LD	HL,ENTIM0	;ワープ前の点滅中か？
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM0
+	JR	NZ,TETENOW
+;
+;	LD	HL,ENTIM1	;ワープ後の点滅中か？
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	JR	NZ,TETE010
+;
+;;;	LD	A,(KEYA1)
+;;;;	AND	%00110000
+;;;	JR	NZ,TTELE
+;
+;;;	LD	A,(KEYA2)
+;;;	AND	%00110000
+;
+	LD	A,(PCUTFG)	;剣はふったか？
+	CP	$03
+	JR	Z,TTELE
+;
+	CALL	RNDSUB		;各テレサ別移動計算方法
+	XOR	C
+	AND	$07
+	ADD	A,$06
+;
+	CALL	PSERCH2L
+	LD	A,(WORK0)
+	LD	HL,ENYSPD
+	CALL	RRRIRA
+;
+	LD	A,(WORK1)
+	LD	HL,ENXSPD
+	CALL	RRRIRA
+;
+	CALL	CRENPLL
+;
+	JR	TEMOVE
+;
+TTELE
+	CALL	E4XCHK		;半径２４内で剣がふられたかどうか
+	ADD	A,$24		;のチェック
+	CP	$48
+	JR	NC,TEMOVE
+;
+	CALL	E4YCHK
+	ADD	A,$24
+	CP	$48
+	JR	NC,TEMOVE
+;
+;;	LD	HL,ENTIM0
+;;	ADD	HL,BC
+	CALL	LDTIM0
+	LD	(HL),$20
+;
+TETENOW
+	CALL	ENSDCL ;TEXYCLR
+	CALL	TERTPRT
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,TEREEE
+;
+	CALL	TEWARP
+;
+TETE010
+	CALL	ENSDCL ;TEXYCLR
+	CALL	TERTPRT
+	RET
+;
+TEMOVE
+	CALL	E4XCHK
+	SLA	E
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,E
+;
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),A
+	CALL	ENPTST
+;
+TEREEE
+	RET
+;
+TENINC
+;	LD	HL,ENSTAT
+;	ADD	HL,BC
+	CALL	STATINC
+	LD	(HL),$01
+	RET
+;============================================================
+TEEXIT
+	LD	A,(TOURCT)
+	AND	A
+	JR	Z,TENDEC
+;
+	LD	HL,ENLIFE
+	ADD	HL,BC
+	LD	(HL),$01
+;
+	CALL	CREPKEL
+;
+	LD	A,$04
+	CALL	PSERCH2L
+;
+	LD	A,(WORK0)
+	CPL
+	INC	A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	CPL
+	INC	A
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+	ADD	A,$04
+;
+	LD	HL,ENCHPT
+	ADD	HL,BC
+	LD	(HL),A
+	RET
+;
+TENDEC
+;	LD	HL,ENSTAT
+;	ADD	HL,BC
+	CALL	STATINC
+	LD	(HL),B ;$00
+	RET
+;
+RRRIRA
+	ADD	HL,BC
+	SUB	(HL)
+	JR	Z,RRRARI
+;
+	BIT	7,A
+	JR	Z,RRRNC
+;
+	DEC	(HL)
+	DEC	(HL)
+	DEC	(HL)
+	DEC	(HL)
+	JR	RRRARI
+;
+RRRNC
+	INC	(HL)
+	INC	(HL)
+	INC	(HL)
+	INC	(HL)
+;
+RRRARI
+	RET
+;============================================================
+TEWARP
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+	CALL	LDTIM1
+	LD	(HL),$20
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),$00
+;====================================
+SWARP
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$48
+	LD	E,A
+;
+	LD	A,$48
+	SUB	E
+	LD	(HL),A
+;
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$50
+	LD	E,A
+;
+	LD	A,$50
+	SUB	E
+	LD	(HL),A
+	RET
+;
+;
+;
+;
+;
+;
+;;=== BAKA BAKA BAKA ====
+;	CP	$48
+;	JR	NC,TEY010
+;;
+;	LD	A,$48
+;	SUB	(HL)
+;	ADD	A,$48
+;	LD	(HL),A
+;	JR	TEX000
+;;
+;TEY010
+;	LD	A,(HL)
+;	SUB	$48
+;	CPL
+;	INC	A
+;	ADD	A,$48
+;	LD	(HL),A
+;;
+;TEX000
+;	LD	HL,ENXPSL
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	$50
+;	JR	NC,TEX010
+;;
+;	LD	A,$50
+;	SUB	(HL)
+;	ADD	A,$50
+;	LD	(HL),A
+;	RET
+;;
+;TEX010
+;	LD	A,(HL)
+;	SUB	$50
+;	CPL
+;	INC	A
+;	ADD	A,$50
+;	LD	(HL),A
+;	RET
+;============================================================
+;TEXYCLR
+;	LD	HL,ENXSPD
+;	ADD	HL,BC
+;	LD	(HL),$00
+;;
+;	LD	HL,ENYSPD
+;	ADD	HL,BC
+;	LD	(HL),$00
+;	RET
+;============================================================
+TERTPRT
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	AND	$01
+	JR	Z,KIETA
+;
+	CALL	E4XCHK
+	SRL	E
+	JR	C,TERH
+;
+	LD	A,$06
+	JR	TER090
+;
+TERH
+	LD	A,$07
+	JR	TER090
+;
+KIETA
+	LD	A,$FF
+TER090
+;	LD	HL,ENCHPT
+;	ADD	HL,BC
+;	LD	(HL),A
+	CALL	ENPTST
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),B ;$00
+;
+;	LD	HL,ENTIM0
+;	ADD	HL,BC
+;	LD	A,(HL)
+	CALL	LDTIM0
+	CP	$01
+	JR	NZ,TRE999
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	INC	(HL)
+TRE999
+	RET
+;================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	飛んでるアイテム	   %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+FLYITCD			;YX
+	DB	$A6,$10 ;00 こいん
+	DB	$8E,$10 ;01 こな
+	DB	$80,$10 ;10 ばくだん
+	DB	$A6,$10 ;11 こいん
+;
+	DB	$A9,$10 ;20 ハート
+FLYITCD2
+	DB	$2A,$40,$2A,$60 ;矢
+;
+FLYITC2
+;0
+	DB	$00,$FC,$22,$00
+	DB	$00,$0C,$22,$20
+;1
+	DB	$00,$FC,$22,$40
+	DB	$00,$0C,$22,$60
+FLITZD
+	DB	$0F,$0F,$10,$11,$11,$11,$10,$0F
+FLITZD2
+	DB	0,0,1,2,2,2,1,0
+;- - - - - - - - - - - - - - - - - -
+FLYITMV
+FLYIT2MV
+	LD	HL,FLITZD
+	LD	A,(YKFLAG)
+	AND	A
+	JR	Z,FLI0000
+	LD	HL,FLITZD2
+FLI0000
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$07
+	LD	E,A
+	LD	D,B
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(ENCHPT2)
+	CP	$05
+	JR	NZ,FLYI0E0
+;
+	LD	DE,FLYITCD2-20
+	CALL	EN2CST
+	JR	FLYI0F0
+;
+FLYI0E0
+	LD	DE,FLYITCD
+	CALL	EN1CST
+;
+FLYI0F0
+	LD	A,(FRCNT)
+	AND	%00001000
+	LD	E,A
+	LD	D,B
+	LD	HL,FLYITC2
+	ADD	HL,DE
+	LD	C,$02
+	CALL	ENOMST
+;
+	LD	A,$02-1
+	CALL	NXOMSBL
+;
+	CALL	ENPSSV
+;
+	CALL	E4STCK
+;
+;	LD	HL,ENCONT
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	INC	(HL)
+;	LD	E,$2
+;	AND	%00100000
+;	JR	Z,FLIT10
+;	LD	E,$FE
+;FLIT10
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	LD	(HL),E
+;;
+;	CALL	E4ZCLC
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	NZ,FLIT18
+;
+	LD	A,(PLZPSL)
+	CP	$0C
+	JR	C,FLIT20
+;
+FLIT18
+	CALL	CRENPSL	
+	JR	NC,FLIT20
+;
+;;	CALL	ENFEND
+	CALL	ENBITON
+	CALL	E4CLER
+;
+	LD	A,$01
+	LD	(SOUND2),A	;(S)
+;
+;	DB	$8E,$10 ;00 こいん
+;	DB	$8E,$10 ;01 こな
+;	DB	$8E,$10 ;10 ばくだん
+;	DB	$8E,$10 ;11 こいん
+	LD	A,(ENCHPT2)
+	RST	00
+	DW	FCOINGT
+	DW	FTUBOGT
+	DW	FBOMBGT
+	DW	FCOINGT
+;
+	DW	FHARTGT
+	DW	FYAGT
+;-----------------------------------
+FHARTGT
+	LD	A,(HARTUP)
+	ADD	A,$18
+	JR	NC,FHG10
+	LD	A,$FF
+FHG10
+	LD	(HARTUP),A
+	RET
+;-----------------------------------
+FYAGT
+	LD	A,(YAAACT)
+	ADD	A,$10
+	DAA
+	LD	(YAAACT),A
+	RET
+;-----------------------------------
+;-----------------------------------
+FCOINGT
+	LD	A,10
+	LD	(COINU2),A
+FLIT20
+	RET
+;-----------------------------------
+FTUBOGT
+	LD	D,PMGIC
+	CALL	ITEMGETS
+;
+	LD	A,$0B
+	LD	(CHTRF2),A	;
+;
+	LD	HL,PWMAX
+	LD	DE,TUBOCT
+	JR	MAXSUB4
+;-----------------------------------
+FBOMBGT
+	LD	HL,BOMAX
+	LD	DE,BOMBCT
+;=======================================
+MAXSUB4
+	LD	A,(DE)
+	CP	(HL)
+	JR	NC,MAX410
+	ADD	A,$10
+	DAA
+	CP	(HL)
+	JR	C,MAX408
+;
+	LD	A,(HL)
+MAX408
+	LD	(DE),A
+MAX410
+	RET
+;-----------------------------------
+;===============================================
+;=					       =
+;===============================================
+SLIMSCD
+	DB	$56,$00
+	DB	$56,$20
+;- - - - - - - - - - - - - - - - - - - - - -
+SLIMSMV
+	CALL	MEGACK4
+;
+	LD	DE,SLIMSCD
+	CALL	EN1CST
+	JP	SLIMSUB
+;===============================================
+;=					       =
+;===============================================
+MEGACK4
+	LD	A,(DNJNNO)
+	CP	$0A
+	RET	NZ
+;
+	LD	A,(GRNDPT)
+	CP	$97
+	JR	Z,MECK410
+	CP	$98
+	RET	NZ
+;
+MECK410
+	LD	A,(WARAFG)
+	AND	A
+	RET	Z
+;
+	LD	A,$FF
+	LD	(ENCHPT2),A
+;;	CALL	ENPTST
+	RET	
+;===============================================
+;=					       =
+;===============================================
+SLIMBCD
+	DB	$52,$00,$52,$20
+	DB	$54,$00,$54,$20
+;- - - - - - - - - - - - - - - - - - - - - -
+SLIMBMV
+;;	LD	A,(BOSSFG)
+;;	AND	A
+;;	JR	NZ,SLB0010	; Normal slimB ?
+;;				; Yes !
+;	LD	HL,ENLIFE
+;	ADD	HL,BC
+;	LD	(HL),$04
+SLB0010
+	CALL	MEGACK4
+;
+	LD	DE,SLIMBCD
+	CALL	EN2CST
+;
+;;	LD	HL,SLIMCNT
+;;	INC	(HL)
+;
+SLIMSUB
+	LD	HL,SLIMCNT
+	INC	(HL)
+;
+	CALL	E4STCK
+;
+	CALL	E4ZCLC
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	DEC	(HL)
+	DEC	(HL)
+	DEC	(HL)
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	A,(HL)
+;;	AND	A
+;;	JR	Z,SLS010
+;;;
+	AND	%10000000
+	LD	(ENHELP),A
+	JR	Z,SLS008
+;
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),B
+;;;	JR	SLS010
+SLS008
+;	CALL	E4ZCLC
+;	LD	HL,ENZSPD
+;	ADD	HL,BC
+;	DEC	(HL)
+;SLS010
+;;	LD	A,(BOSSFG)
+;;	AND	A
+;;	JR	NZ,SLS011
+;
+	LD	A,(ENMYNO2)
+	CP	SLIMB
+	JR	NZ,SLS011
+;
+	LD	HL,ENFLSH
+	ADD	HL,BC
+	LD	A,(HL)
+	CP	$08
+	JR	NZ,SLS011	; Damgege?
+;				; Yes!
+;- - - - 分身 - - - - - -
+	LD	(HL),B
+;
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	A,(HL)
+	PUSH	HL
+	PUSH	AF
+;
+	LD	HL,ENMYNO
+	ADD	HL,BC
+	LD	(HL),SLIMS
+	CALL	ENMDSTL
+;
+	POP	AF
+	POP	HL
+	LD	(HL),A
+;
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	SUB	$04
+	LD	(HL),A
+;
+	CALL	ENSDCL
+;
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	(HL),B
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$20
+;
+;;	CALL	E4ZCLC
+;- - - - - - - - - - - - - - -
+	LD	A,SLIMS
+	CALL	ENIDSHL
+	JR	C,SLS011
+;
+	LD	HL,ENJYUN
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENJYUN
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK0)
+	ADD	A,$08
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK1)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK3)
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$20
+;	PUSH	BC
+;	PUSH	DE
+;	POP	DE
+;	CALL	E4ZCLC
+;	POP	BC
+SLS011
+	CALL	E4HNSB
+;;	CALL	CREPKEL
+;;;;;	CALL	ENMVCL
+;-------------------------------------------
+;;	LD	HL,ENSTAT
+;;	ADD	HL,BC
+;;SLMAIN
+	LD	HL,ENTIM2
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,SLLP010
+;
+	LD	A,(ENSTAT2)
+	AND	$01
+	LD	HL,ENCHPT
+	ADD	HL,BC
+	LD	(HL),A
+;
+;;	CP	$01
+	DEC	A
+	JR	NZ,SLLP010
+;
+	LD	HL,ENTIM2
+	ADD	HL,BC
+	LD	(HL),$08
+;
+SLLP010
+	LD	A,(ENSTAT2)
+	CP	$04
+	JR	Z,SLLP011	;ひっつき？
+;				; NO
+	LD	HL,ENTIM4
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,SLLP011	;プロテクトタイム？
+;				; no
+	CALL	CREPKEL		;ボディチェック！
+SLLP011
+	LD	A,(ENSTAT2)
+	RST	0
+	DW	SLSTOP
+	DW	SLMOVE
+	DW	SBLBUL
+	DW	SLJUMP
+	DW	SLPLAY
+;
+;	AND	A
+;	JR	Z,SLSTOP
+;-----------------------------
+SLMOVE
+	CALL	LDTIM0
+	JR	NZ,SLM010
+;
+;;	LD	A,$10
+	LD	(HL),$10 ;A
+;
+	CALL	ENSDCL
+;
+	CALL	RNDSUB
+	AND	$0F
+	JR	NZ,SLS020
+;
+	CALL	LDTIM0
+;;	LD	A,$50
+	LD	(HL),$50 ;A
+	JP  	STATINC
+;;	RET
+;-------------------------------------
+SLS020
+;;	CALL	STATCLR
+	CALL	STATINC
+	LD	(HL),B
+SLM010
+SLMVCL
+	CALL	E4MVCL
+;
+;	LD	HL,ENTIM1
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM1
+	RET	NZ
+;
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	(HL),$02
+;
+	CALL  	ENBGCKL
+;
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	(HL),B
+	RET
+;-----------------------------
+SLSTOP
+;;	CALL	ENBGCKL
+	CALL	SLMVCL
+;
+	CALL	LDTIM0
+	JR	NZ,SLM070
+;
+;;;	LD	A,$05
+	LD	(HL),$07 ;A
+;
+	CALL	STATINC
+;
+	LD	A,$04
+	CALL	PSERCHL
+;
+SLM070
+	RET
+;---------------------------------
+SBLBUL
+	CALL	LDTIM0
+	JR	NZ,SBL2
+;	
+;;	CALL	STATCLR
+	CALL	STATINC
+;;	LD	(HL),B
+SLJPST
+	LD	A,$10
+	CALL	PSERCHL
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$20
+	RET
+;
+SBL2
+	CALL	LDTIM0
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	AND	%00000100
+	JR	NZ,SEFT
+;
+;;;	LD	A,$08
+	LD	(HL),$08 ;A
+	JR	SBLEND
+SEFT
+;;	LD	A,$F8
+	LD	(HL),$F8 ;A
+
+SBLEND
+;;	XOR	A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),B
+;
+	JP	SLMVCL
+;;	JP  	E4MVCL
+;;	RET
+;==================================
+SLJUMP
+	CALL	SLMVCL
+;
+	LD	A,(ENHELP)
+	AND	A
+	JR	Z,SLJP10
+;
+SLRETN
+	CALL	STATINC
+	LD	(HL),B
+SLJP10
+	RET
+;==================================
+SLPLAY
+	CALL	LDTIM0
+	JR	NZ,SLP010
+;
+	LD	HL,ENTIM4
+	ADD	HL,BC
+	LD	(HL),$30
+;
+	LD	A,$10
+	CALL	PSERCHL
+;
+	LD	HL,ENZSPD
+	ADD	HL,BC
+	LD	(HL),$20
+;
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	INC	(HL)
+;
+	CALL	STATINC
+	LD	(HL),$03
+	RET
+SLP010
+	PUSH	AF
+	RRA
+	AND	$07
+	SUB	$04
+	LD	E,A
+	LD	A,(PLXPSL)
+	SUB	E
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	(HL),A
+	POP	AF
+	RRA
+	RRA
+	AND	$07
+	SUB	$04
+	LD	E,A
+	LD	A,(PLYPSL)
+	SUB	E
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,(PLZPSL)
+	LD	HL,ENZPSL
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	A,$01
+	LD	(SLIMFG),A	;Player hittsuki flag !
+;
+	CALL	ENBGCKL
+;
+	LD	A,(KEYA2)
+	AND	A
+	JR	Z,SLP090
+;
+	CALL	SLP080
+	CALL	SLP080
+	CALL	SLP080
+SLP080
+	CALL	LDTIM0
+	JR	Z,SLP090
+	DEC	(HL)
+SLP090
+	RET
+;
+;===============================================
+;=					       =
+;===============================================
+LAIKUCD
+	DB	$7C,$00,$7C,$20
+	DB	$7E,$00,$7E,$20
+;- - - - - - - - - - - - - - - - - - - - - -
+LAIKUMV
+	LD	DE,LAIKUCD
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	E4HNSB
+;
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	A,(HL)
+	RST	00
+	DW	LIK1000
+	DW	LIK2000
+;----------------------------------------
+LIK1000
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	A
+	CALL	LDTIM3
+	JR	NZ,LKM010
+;
+	CALL	CRENPLL
+	JR	NC,LKM010
+;
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	INC	(HL)
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	(HL),B
+LKM010
+	CALL	CRKNENL
+	JP	MMYMAIN
+;----------------------------------------
+LIK2000
+;	LD	A,(PCUTFG)
+;	CP	$02
+;	JR	NZ,LIK2010
+	LD	A,(KEYA2)
+	AND	%00110000
+	JR	Z,LIK2010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+;;	LD	HL,ENCONT
+;;	ADD	HL,BC
+	LD	A,(HL)
+	CP	$08
+;;	CP	$10
+	JR	C,LIK2010	;　８回剣振り？
+;
+;	LD	HL,ENTIM3
+;	ADD	HL,BC
+	CALL	LDTIM3
+	LD	(HL),$15	;チャンスタイム
+;
+	LD	HL,ENWRK2
+	ADD	HL,BC
+	LD	(HL),B
+	RET
+;
+LIK2010
+;;	LD	A,$01
+;;	LD	(LIKEFG),A
+	LD	A,$FF
+	LD	(PLCHPT),A
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,LKM00C
+; 盾取られ
+	LD	HL,ITEMB
+	LD	E,B
+LKM00A
+	LD	A,(HL)
+	CP	PTATE
+	JR	NZ,LKM00B
+;
+	LD	A,(TATLEV)
+	CP	$02
+	JR	NC,LKM00C	;ＬV １？
+;				;YES !
+	LD	(HL),B
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(TATLEV)
+	LD	(HL),A
+	JR	LKM00C
+LKM00B
+	INC	HL
+	INC	E
+	LD	A,E
+	CP	$02
+	JR	NZ,LKM00A
+;
+LKM00C
+	LD	A,(PLMODE)
+	CP	PMOVE
+	RET	NZ
+;
+	LD	A,(ENSVXL)
+	LD	(PLXPSL),A
+	LD	A,(ENSVYL)
+	LD	(PLYPSL),A
+;
+	XOR	A
+	LD	(PLJPFG),A
+	LD	(PLZPSL),A
+	CALL	MUPTST
+	CALL	MUPTST
+	RET
+;
+
+;	CALL	CRENPLF
+;	JR	NC,LKM010
+;;
+;	CALL	ENSDCL
+;;
+;	LD	A,(PCUTFG)
+;	CP	$02
+;	JR	NZ,LKM009
+;;
+;	LD	HL,ENCONT
+;	ADD	HL,BC
+;	INC	(HL)
+;LKM009
+;	LD	HL,ENCONT
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	$10
+;	JR	C,LKM002	;　８回剣振り？
+;;				; YES !
+;	CALL	CRKNEN
+;LKM002
+;	LD	A,$01
+;	LD	(LIKEFG),A
+;;
+;	LD	A,(TATLEV)
+;	AND	A
+;	JR	Z,LKM00C
+;;
+;	LD	HL,ENWRK0
+;	ADD	HL,BC
+;	LD	(HL),A
+;;
+;;;	LD	A,$00
+;;;	LD	(TATLEV),A	; 盾取られ
+;;
+;	LD	HL,ITEMB
+;	LD	E,$00
+;LKM00A
+;	LD	A,(HL)
+;	CP	PTATE
+;	JR	NZ,LKM00B
+;	LD	(HL),$00
+;LKM00B
+;	INC	HL
+;	INC	E
+;	LD	A,E
+;	CP	$0C
+;	JR	NZ,LKM00A
+;;
+;LKM00C
+;	LD	A,(ENSVXL)
+;	LD	(PLXPSL),A
+;	LD	A,(ENSVYL)
+;	LD	(PLYPSL),A
+;	LD	HL,ENWRK1
+;	ADD	HL,BC
+;	LD	(HL),$01
+;
+;	LD	E,C
+;	LD	D,B
+;	SLA	E
+;	SLA	E
+;	LD	HL,ENOJSZ
+;	ADD	HL,DE
+;	INC	HL
+;	LD	(HL),$10
+;	INC	HL
+;	INC	HL
+;	LD	(HL),$10
+;	JR	LKM018
+;;
+;LKM010
+;	LD	HL,ENCONT
+;	ADD	HL,BC
+;	LD	(HL),$00
+;
+;	CALL	CRKNEN
+;LKM018
+;	CALL	ENMVCL
+;	CALL	ENBGCK
+;	JP	MMYMAIN
+;=========================================
+;=========================================
+;=========================================
+;=========================================
+;=========================================
+;=========================================
+;=========================================
+;===============================================
+;===============================================
+;===============================================
+;===============================================
+;===============================================
+;=					       =
+;===============================================
+MUMMYCD
+	DB	$74,$00,$76,$00
+	DB	$76,$20,$74,$20
+MUMMYCD2
+	DB	$44,$00,$46,$00
+	DB	$46,$20,$44,$20
+;- - - - - - - - - - - - - - - - - - - -
+MMYMVDT
+	DB	$00,$08,$F8,$00,$F8,$08
+;---------------------------------------
+MUMMYMV
+	LD	DE,MUMMYCD
+;
+	LD	A,(DNJNNO)
+	CP	$07
+	JR	NZ,MMC1001	;#8 ?
+;				;YES !
+	LD	DE,MUMMYCD2
+MMC1001
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	ENHNCL
+;
+;;;	CALL	E4HNSB
+	CALL	CREPKEL
+;;	CALL	ENMVCL
+;;	CALL	ENBGCK
+;-----------------------------------------
+MMYMAIN
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JR	NZ,MLRHIT
+;
+	LD	A,(HL)
+	AND	$0C
+	JR	Z,MUCHK
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	XOR	$F0
+	LD	(HL),A
+	JR	MUCHK
+;
+MLRHIT
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	XOR	$F0
+	LD	(HL),A
+;
+MUCHK
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,MUSPSET
+;
+	CALL	RNDSUB
+	AND	$3F
+	JR	NZ,MUAMV
+;
+MUSPSET
+	XOR	A
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	CALL	RNDSUB
+	AND	$03
+	LD	E,A
+	LD	D,B ;$00
+;
+	LD	HL,MMYMVDT
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+	AND	A
+	JR	NZ,MUAMV
+;
+MUMYYY
+;
+	CALL	RNDSUB
+	AND	$01
+	ADD	A,$04
+	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,MMYMVDT
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	LD	(HL),A
+;-----------------------------------------
+MUAMV
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	XOR	A
+	LD	(HL),A	
+;
+;;	LD	A,(FRCNT)
+MUPTST
+	LD	HL,ENWRK3
+	ADD	HL,BC
+	LD	A,(HL)
+	INC	(HL)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	$01
+;
+;;;	LD	HL,ENCHPT
+;;;	ADD	HL,BC
+;;;	LD	(HL),A
+	JP	ENPTST
+;
+;;	RET
+;
+;
+;
+;
+;
+;===================================
+        END
+;===============================================
+;=					       =
+;===============================================
+SWBLKCD
+	DB	$F8,$10,$FA,$10
+;--------------------------------------
+SWBLKMV
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	NZ,SWI100
+;
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$20
+	LD	(HL),A
+	JP	STATINC
+;---------------------------------
+SWI100
+	LD	DE,SWBLKCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	CALL	CRENPSL
+	JR	NC,SWI110
+;
+	CALL	M4CRSB
+;
+	LD	A,$10
+	CALL	PSERCH2L
+	LD	A,(WORK0)
+	LD	(PLYSPD),A
+	LD	A,(WORK1)
+	LD	(PLXSPD),A
+;
+;;	PUSH	BC
+;;	CALL	MVCALC
+;;	POP	BC
+;
+	LD	A,$02
+	LD	(HANEFG),A
+SWI110
+	LD	A,(ENSTAT2)
+	DEC	A
+	RST	00
+	DW	SWB1000
+	DW	SWB2000
+;----------------------------------
+SWB1000
+	LD	A,(ENSVXL)
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),A
+	SUB	$18
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	JP	STATINC
+;----------------------------------
+SWB2000
+	LD	A,(HIKUSFG)
+	CP	$02
+	JR	Z,SWB2050
+	AND	A
+	JR	Z,SWB2010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	CP	$0F
+	JR	NZ,SWB2008
+;
+	LD	(HL),B
+;
+	LD	A,$11
+	LD	(SOUND3),A	;(S)
+;
+SWB2002
+	LD	HL,ENWRK1	;20
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXPSL	;10
+	ADD	HL,BC
+	CP	(HL)
+	JR	C,SWB2008
+;
+	INC	(HL)
+SWB2008
+	RET
+;-------------------------------------
+SWB2010
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,SWB2050
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,BC
+	CP	(HL)
+	JR	Z,SWB2050
+;;	JR	C,SWB2050
+;
+	LD	A,(PLCBFG)
+	AND	A
+	JR	NZ,SWB2050
+;
+	DEC	(HL)
+SWB2050
+	RET
+;----------------------------------
+;--------------------------------------
+SWBLK2MV
+	LD	A,(ENSTAT2)
+	AND	A
+	JR	NZ,S2I100
+;
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	LD	A,(HL)
+	ADD	A,$20
+	LD	(HL),A
+	JP	STATINC
+;---------------------------------
+S2I100
+	LD	DE,SWBLKCD
+	CALL	EN2CST
+;
+	CALL	E4STCK
+;
+	LD	A,(ENSTAT2)
+	DEC	A
+	RST	00
+	DW	SW21000
+	DW	SW22000
+;----------------------------------
+SW21000
+	LD	A,(ENSVYL)
+	LD	HL,ENWRK1
+	ADD	HL,BC
+	LD	(HL),A
+	SUB	$18
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	(HL),A
+;
+	JP	STATINC
+;----------------------------------
+SW22000
+	LD	A,(HIKUSFG)
+	CP	$02
+	JR	Z,SW22050
+	AND	A
+	JR	Z,SW22010
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	INC	(HL)
+	LD	A,(HL)
+	CP	$0F
+	JR	NZ,SW22008
+;
+	LD	(HL),B
+;
+	LD	A,$11
+	LD	(SOUND3),A	;(S)
+;
+SW22002
+	LD	HL,ENWRK1	;20
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYPSL	;10
+	ADD	HL,BC
+	CP	(HL)
+	JR	C,SW22008
+;
+	INC	(HL)
+SW22008
+	RET
+;-------------------------------------
+SW22010
+	LD	A,(FRCNT)
+	AND	$0F
+	JR	NZ,SW22050
+;
+	LD	HL,ENWRK0
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,BC
+	CP	(HL)
+	JR	Z,SW22050
+;
+	DEC	(HL)
+SW22050
+	RET
+;===============================================
+;=					       =
+;===============================================
+BASSFCD
+	DB	$40,$00,$42,$00
+	DB	$44,$00,$46,$00
+	DB	$42,$20,$40,$20
+	DB	$46,$20,$44,$20
+;- - - - - - - - - - - - - - - - - - - -
+BASMVDT
+	DB	$FF,$01
+;---------------------------------------
+BASSFMV
+	LD	DE,BASSFCD
+	CALL	EN2CST
+	CALL	E4STCK
+	CALL	E4HNSB
+	CALL	CREPKEL
+	CALL	E4MVCL
+	CALL	ENBGCKL
+;-----------------------------------------
+BMMAIN
+	LD	HL,ENYSPD
+	ADD	HL,BC
+	XOR	A
+	LD	(HL),A
+;
+	LD	A,(PLSTAT)
+	CP	$02
+	JR	NZ,BAM222
+; - - - - - - - - - - - - - - - 
+BASSCK
+;
+	CALL	E4XCHK
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$80
+	RLA
+	RLA
+;
+	CP	E
+	JR	NZ,BAM222
+;
+	LD	A,D
+	ADD	A,$28
+	CP	$50
+	JR	C,BAM222
+;
+	CALL	E4YCHK
+	LD	A,E
+	CP	$02
+	JR	Z,BPLUP
+;
+	LD	HL,ENYSPD
+	ADD	HL,BC
+;;;	LD	A,$04
+	LD	(HL),$04 ;A
+	JR	BAM222
+;
+BPLUP
+	LD	HL,ENYSPD
+	ADD	HL,BC
+;;	LD	A,$FC
+	LD	(HL),$FC  ;A
+;- - - - - - - - - - - - - - - 
+BAM222
+;
+	LD	HL,ENTIM0
+	ADD	HL,BC
+	XOR	A
+	LD	(HL),A
+;
+	LD	HL,ENCBFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$03
+	JP	NZ,BSTURN
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	NZ,BASAMV
+;
+	CALL	RNDSUB
+	AND	$02
+	JR	NZ,BASAMV
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	E,(HL)
+;;	LD	E,A
+	LD	D,B ;$0
+;
+	LD	HL,BASMVDT
+	ADD	HL,DE
+	LD	A,(HL)
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	(HL),A
+;
+	BIT	7,A
+	JR	Z,BHANDN
+;
+	CPL
+	INC	A
+BHANDN
+;
+	CP	$10
+	JR	C,BASAMV
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	INC	(HL)
+	JR	BASAMV
+;
+BSTURN
+;
+	XOR	A
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	LD	(HL),A
+;
+	LD	HL,ENCONT
+	ADD	HL,BC
+	LD	A,(HL)
+	XOR	$01
+	LD	(HL),A
+;
+BASAMV
+	LD	A,(FRCNT)
+	RRA
+	RRA
+	RRA
+	AND	$01
+	LD	E,A
+;
+	LD	HL,ENXSPD
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$C0
+	JR	NZ,BASA3
+;
+	LD	A,E
+	ADD	A,$02
+	LD	E,A
+BASA3
+;
+	LD	HL,ENCHPT
+	ADD	HL,BC
+	LD	(HL),E
+BSEEE
+	RET
+

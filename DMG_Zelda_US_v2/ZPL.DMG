@@ -1,0 +1,8593 @@
+;;   Ver. USA
+;
+	PUBALL
+;
+BANK0	GROUP	0
+	LIB	ZRAM
+	LIB	ZBN
+;
+;---sub---------------------------------------
+	EXTERN	DATA_MOV,ENEMY,EXSTRA,RAMCLR,RAMCL2,BGDTST,TAKARST,PLBELT,BGMSET
+	EXTERN	ENDTST,COINIT,HARTIT,ITEMDP,RNDSUB,WINDOW,ITEMDP2,DJRMDT,PBSET,PBRETN
+	EXTERN	OBJBG,ENCAPS,PLSLCTS,NMREGIS,NMCLERS,WUPSET,WUPSET2,DOORSUB,DMAPSUB,FUCKSST
+	EXTERN	PLYKMV,PLYKBC,RAMCL3,GRMAPSB,PRTBMSTS,PLROTCS,PLTOBIS,BGCRRD
+	EXTERN	GPSUB,NMCOPYS,GMSTART,DTSAVE,SOUNDCLR,DJITRV,SVOPEN,D7DAT2,MSOKCKL
+	EXTERN	TSAVESB,PLOBORS,KNPWUPS,PLOVERS,PLFOLES,KURDORS,BDCHT1,BDCHT2
+	EXTERN	MSCANC,MSCHNO,MSCHN2,SCROLLS,ANAHORIS,KTFLSTL,BG1CHS,OPENING,TUBOITEM
+	EXTERN	TILTCK,USA,MSGTEST,PLCTBC,KNBNMSD,ITEMUP,PWDRUP,PLJUMP,ANBGSB,OKARINA
+	EXTERN	PLWARP,PLBOXER,PEACHSB,OKARST,LOVEDEMO,DEFUP,EXSEST,DJMPST ;TITLSUB,TITLMAIN,
+	EXTERN	ENDING,PLMOVES,YAOBJSTS,MSCURST,FADECK,KABE1SB,BELTCK,YMCLER,PLIDBC
+;- -lavel -
+	EXTERN	VRMCL,VRMBT,BKCHG,BKCH2,BKCH3,WINDBGS,RBGST,BOMBR,BUMER,KTOBJ,GRBGCR,DJBGCR
+	EXTERN	BGUNCH,DJUNCH,ECACH,PYAAA,GBBKDT,DBBKDT,EMOVE,EFAIL,PSLBGS,NSLBGS,DJBST,GRBST,GOVBG
+	EXTERN	BLOCK,MSGEAD,GREBDT,DJEBDT,BLVRDS,BNKTR,FLSH,FUCKS,TLCHG,KEYSM,DJTKDT,POWDR
+	EXTERN	RUPY1,HART1,PRTBM,DAMPFGD,PLBGCK,PLBGC0,DJYKBK,SHOPGET
+	EXTERN	PLCUT,PLCUT2,PLCUT3,PCUTED,BG1CHGSB,PLSWIMS,FUKURO,ARIMOTO
+	EXTERN	KPWF,GMAPCL,GVCHG,VRMB2,DSZN,SMK1,OPA,DJMSCK,PLIDBC2
+	EXTERN	MJ2DT,MJ2DTH,MJ2DTL,MJ1DTL,MJ1DTH,GEBANKD,DEBANKD
+	EXTERN	PMVXD,PMVYD,PLCMDT,PLCHPD,PLCHP2,PLCHP28,PLCHP3,PLCHP38,PLCHPO
+	EXTERN	PLCHPC,PLCHSW,PLCHDB,PLCHYSW,ENIDSHL,YOSSI  ;,ZZZDT
+	EXTERN	XX,WED,WE2,NM,GPMA,KAI,C02  ;,WLF TITLBGS,
+	EXTERN	WPDJPT,WPDJPTN,WTUP2,KENBM
+;
+	KANJI
+	LIST
+	ORG	$087C
+;-----------------------------------------------------
+;========================================
+PLPTSTL
+	LD	A,$02
+	LD	($2100),A
+	CALL	PLPTST
+	JP	PBRETN
+;========================================
+LDTIM3 
+	LD	HL,ENTIM3
+	JR	LDTSUB
+;========================================
+LDTIM1 
+	LD	HL,ENTIM1
+	JR	LDTSUB
+;========================================
+LDTIM0
+	LD	HL,ENTIM0
+LDTSUB
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	RET
+;-----------------------------------------------------
+;-----------------------------------------------------
+YOSSISET
+	LD	A,YOSSI
+	CALL	ENIDSHL
+;
+	LD	A,(PLXPSL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(PLYPSL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+;	LD	A,(PLZPSL)
+;	LD	HL,ENZPSL
+;	ADD	HL,DE
+;	LD	(HL),A
+	RET
+;
+;-----------------------------------------------------
+;-----------------------------------------------------
+;-----------------------------------------------------
+NOSDST	;残念音！
+	LD	A,$1D
+	LD	(SOUND1),A	;(S)
+	RET
+;-----------------------------------------------------
+MSCHNOR
+	LD	HL,MSCHNO
+	JR	MSCHN2RS
+;	LD	A,$1C
+;	LD	($2100),A
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	LD	HL,$2100
+;	LD	(HL),$01
+;	RET
+;-----------------------------------------------------
+MSCHN2R
+	LD	HL,MSCHN2
+MSCHN2RS
+	LD	A,$1C
+	LD	($2100),A
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,$2100
+	LD	(HL),$01
+	RET
+;-----------------------------------------------------
+GKCHRV	; 楽器キャラクター RETURN SUB!
+	LD	A,$0C
+	LD	($2100),A
+;
+	LD	BC,$0040	; 個数 
+	CALL	DATA_MOV	; キャラクタ 転送
+;
+	LD	A,$01
+	LD	($2100),A
+	RET
+;-----------------------------------------------------
+BBSDST
+	LD	HL,SOUND3
+	LD	(HL),$0C	;(S)
+;
+OTOSET
+	LD	HL,OTOFLG
+	LD	(HL),$04
+	RET
+;-----------------------------------------------------
+ENHNCL
+	LD	HL,ENHNFG
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	A
+	JR	Z,EHNC10
+;
+	DEC	(HL)
+EHNC10
+	RET
+;-----------------------------------------------------
+NAZOCLR
+	PUSH	AF
+;
+	LD	A,(NAZOCL)
+	AND	A
+	JR	NZ,NZCLR10
+;
+	LD	(DJSDON),A	;中ボス用サウンドセットクリアー
+;;	LD	A,$01
+	INC	A
+	LD	(NAZOCL),A
+	LD	(IWAMSFG),A	;ヒントメッセージ！クリアー
+;
+	LD	A,(WARPFG)
+	AND	A
+	JR	NZ,NZCLR10
+;
+	LD	A,$02
+	LD	(SOUND1),A	;(S)
+NZCLR10
+	POP	AF
+	RET
+;;-----------------------------------------------
+;SPTBIT
+;	DB	%10000000
+;	DB	%01000000
+;	DB	%00100000
+;	DB	%00010000
+;	DB	%00001000
+;	DB	%00000100
+;	DB	%00000010
+;	DB	%00000001
+;;
+;SPTEST
+;	LD	A,$0E
+;	LD	($2100),A
+;;
+;	LD	E,$00
+;	LD	HL,$9800
+;	LD	BC,$4480
+;	XOR	A
+;	LD	(WORK0),A
+;;
+;	CALL	SPTSUB
+;;
+;SPT010
+;	PUSH	DE
+;	PUSH	HL
+;	PUSH	BC
+;;
+;	LD	A,(WORK0)
+;	AND	$08
+;	JR	Z,SPT020
+;;
+;	LD	A,C
+;	ADD	A,$20
+;	LD	C,A
+;SPT020
+;	LD	A,(WORK0)
+;	AND	$07
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,SPTBIT
+;	ADD	HL,DE
+;;;	LD	E,(HL)
+;;
+;	LD	A,(BC)
+;	INC	BC
+;	AND	(HL)
+;	LD	D,A
+;	LD	A,(BC)
+;	AND	(HL)
+;	LD	C,A
+;;
+;	LD	B,D
+;;
+;	LD	E,$7F
+;	OR	B
+;	JR	Z,SPT050
+;;
+;	LD	E,$7E
+;	LD	A,C
+;	AND	A
+;	JR	Z,SPT050
+;;
+;	LD	E,$7C
+;	LD	A,B
+;	AND	A
+;	JR	Z,SPT050
+;;
+;	LD	E,$7F
+;SPT050
+;	LD	A,(WORK0)
+;	INC	A
+;	LD	(WORK0),A
+;;
+;	POP	BC
+;;
+;	POP	HL
+;	LD	(HL),E
+;;
+;	LD	A,L
+;	ADD	A,$01
+;	LD	L,A
+;	AND	$0F
+;	JR	NZ,SPT060
+;
+;	LD	A,L
+;	ADD	A,$10
+;	LD	L,A
+;	LD	A,H
+;	ADC	A,$00
+;	LD	H,A
+;;
+;	INC	BC
+;	INC	BC
+;SPT060
+;	POP	DE
+;	DEC	E
+;	JR	NZ,SPT010
+;- - - - - - - - - - - - - -
+;	LD	HL,$9C00
+;	LD	BC,$44C0
+;SPTSUB
+;	LD	E,$00
+;	XOR	A
+;	LD	(WORK0),A
+;;
+;SPT210
+;	PUSH	DE
+;	PUSH	HL
+;	PUSH	BC
+;;
+;	LD	A,(WORK0)
+;	AND	$08
+;	JR	Z,SPT220
+;;
+;	LD	A,C
+;	ADD	A,$20
+;	LD	C,A
+;SPT220
+;	LD	A,(WORK0)
+;	AND	$07
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,SPTBIT
+;	ADD	HL,DE
+;;;	LD	E,(HL)
+;;
+;	LD	A,(BC)
+;	INC	BC
+;	AND	(HL)
+;	LD	D,A
+;	LD	A,(BC)
+;	AND	(HL)
+;	LD	C,A
+;;
+;	LD	B,D
+;;
+;	LD	E,$7F
+;	OR	B
+;	JR	Z,SPT250
+;
+;	LD	E,$7E
+;	LD	A,C
+;	AND	A
+;	JR	Z,SPT250
+;;
+;	LD	E,$7C
+;	LD	A,B
+;	AND	A
+;	JR	Z,SPT250
+;;
+;	LD	E,$7F
+;SPT250
+;	LD	A,(WORK0)
+;	INC	A
+;	LD	(WORK0),A
+;;
+;	POP	BC
+;;
+;	POP	HL
+;	LD	(HL),E
+;;
+;	LD	A,L
+;	ADD	A,$01
+;	LD	L,A
+;	AND	$0F
+;	JR	NZ,SPT260
+;;
+;	LD	A,L
+;	ADD	A,$10
+;	LD	L,A
+;	LD	A,H
+;	ADC	A,$00
+;	LD	H,A
+;;
+;	INC	BC
+;	INC	BC
+;SPT260
+;	POP	DE
+;	DEC	E
+;	JR	NZ,SPT210
+;;
+;	RET
+;
+;
+;
+;
+;
+;
+;
+;
+;-----------------------------------------------------
+;===============================================
+NXGOTO
+	LD	A,$30
+	LD	(SDOUTFG),A	; BGM Fade OUT 
+	JR	NXG010
+;===============================================
+NXGOTO4
+	LD	A,$30
+	LD	(SDOUTFG),A	; BGM Fade OUT 
+	JR	NXG011
+;- - - - - - - - - - - - - - - -
+NXGOTO2
+	LD	A,(NXRMMD)
+	CP	DNJ
+	JR	NZ,NXGOTO
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,NXGOTO
+;
+	LD	A,$01
+	LD	(BGMNOT),A
+NXG010
+	LD	A,$06
+	LD	(SOUND3),A	;(S)
+NXG011
+;
+NXGOTO3
+	LD	A,PINDR1
+	LD	(PLMODE),A	; Goto next room !
+;
+	XOR	A
+	LD	(SBHR),A
+	LD	(SBCNT),A
+	LD	(BIRDFG),A
+;
+	AND	A	; CLC
+	RET
+;===========================================
+DUSHCL
+	XOR	A
+	LD	(SPCTTM),A
+	LD	(SPCTWT),A
+DUSHCL2
+	XOR	A
+	LD	(DUSHCT),A
+	LD	(DUSHFG),A
+	RET
+;=========================================
+PLPSRV
+	LD	A,(PLSVXL)
+	LD	(PLXPSL),A
+;;	JR	PBC01C
+;;PBC018
+	LD	A,(PLSVYL)
+	LD	(PLYPSL),A
+;;PBC01C
+	RET
+;=============================
+EXIDSH
+	PUSH	AF
+;
+	LD	E,EXNO-1
+	LD	D,$00
+WUS010
+	LD	HL,EXMODE
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	A
+	JR	Z,WUS020
+	DEC	E
+	LD	A,E
+	CP	$FF
+	JR	NZ,WUS010
+;
+	LD	HL,EXSTCT
+	DEC	(HL)
+	LD	A,(HL)
+	CP	$FF
+	JR	NZ,WUS018
+;
+	LD	A,EXNO-1
+	LD	(EXSTCT),A
+WUS018
+	LD	A,(EXSTCT)
+	LD	E,A
+WUS020
+	POP	AF
+EXSET
+	LD	HL,EXMODE
+	ADD	HL,DE
+;;	LD	A,WTUP
+	LD	(HL),A
+;
+	LD	A,(WORK1)   ;PLYPSL)
+	LD	HL,EXYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(WORK0)  ;PLXPSL)
+	LD	HL,EXXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,EXTIM0
+	ADD	HL,DE
+;;	LD	A,$0F
+	LD	(HL),$0F ;A
+	RET
+;===================================
+KNFLSH
+	LD	A,(PKCRX1)
+	SUB	$08
+	LD	(WORK0),A
+	LD	A,(PKCRY1)
+	SUB	$08
+	LD	(WORK1),A
+FLASHST
+	LD	A,$07
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,FLSH
+	JP	EXIDSH
+;
+;;	RET
+;================================
+BGBKST	; BG bank set 
+	LD	A,$8
+	LD	($2100),A
+;;	CALL	PBSET
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,BKS011
+;
+	LD	A,(GRNDPT)
+	LD	E,A
+	LD	D,$0
+;
+	LD	HL,DBBKDT
+;
+	LD	A,(DNJNNO)
+	CP	DJROOM2
+	JR	NC,DBS990
+;
+	CP	DJROOM ;$20
+	JR	C,DBS990
+;
+	INC	H
+DBS990
+	ADD	HL,DE
+	LD	A,(BKCHNO)
+	LD	E,A
+	LD	A,(HL)
+	CP	E
+	JR	Z,BKS008	; bank change ?
+	LD	(BKCHNO),A
+	CP	$FF
+	JR	Z,BKS008	; bank change ?
+;
+;;	LD	(BKCHNO),A
+	LD	A,$1
+	LD	(BKCHFG),A
+BKS008
+	JR	BKST09
+;;	RET
+;
+;
+;
+BKS011
+	LD	A,(GRNDPT)
+	CP	$07
+	JR	NZ,BKS01122
+	INC	A
+BKS01122
+	LD	D,A
+	SRL	A
+	SRL	A
+	AND	%11111000
+	LD	E,A
+	LD	A,D ;(GRNDPT)
+	SRL	A
+	AND	%00000111
+	OR	E
+;
+	LD	E,A
+	LD	D,$0
+;
+	LD	HL,GBBKDT
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	Z,BNKS20
+;	LD	HL,DBBKDT
+;BNKS20
+	ADD	HL,DE
+	LD	A,(BKCHNO)
+	LD	E,A
+	LD	A,(HL)
+	CP	E
+	JR	Z,BKST09	; bank change ?
+	CP	$0F		; yes !
+	JR	Z,BKST09	; set ? (F):Not set
+;				; yes !
+;;	LD	A,(HL)
+	LD	(BKCHNO),A
+	LD	A,$1
+	LD	(BKCHFG),A
+BKST09
+;- - Enemy bank check - - 
+	XOR	A
+	LD	(WORK0),A
+;
+	LD	A,(GRNDPT)
+	LD	E,A
+	LD	D,$00
+	LD	HL,GREBDT
+	LD	A,(DJFLAG)
+	LD	D,A
+;;	AND	A
+;;	JR	Z,EBK010
+;;	INC	D
+	LD	A,(DNJNNO)
+	CP	DJROOM2 ;$20
+	JR	NC,EBK010
+	CP	DJROOM ;$20
+	JR	C,EBK010
+	INC	D
+EBK010
+	ADD	HL,DE
+	LD	E,(HL)
+;
+	LD	A,D
+	AND	A
+	JR	NZ,EBK0211	;地上？
+;				;YES !
+	LD	A,E
+	CP	$23
+	JR	NZ,EBK0111	;人魚？
+;				;YES ! $71
+	LD	A,(GRRMSV+$C9)
+	AND	%00100000
+	JR	Z,EBK0111	;イベント後？
+;				;YES!
+;;	LD	A,$24
+;;	LD	E,A
+	INC	E
+;
+EBK0111
+	LD	A,E
+	CP	$21
+	JR	NZ,EBK0211	;トッド？
+;				;YES ! $71
+	LD	A,(GRRMSV+$FD)
+	AND	%00100000
+	JR	Z,EBK0211	;イベント後？
+;				;YES!
+	INC	E
+EBK0211
+;;	LD	E,(HL)
+	LD	D,$00
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+;
+;;	LD	D,$0
+	LD	HL,GEBANKD
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,EBK022
+	LD	HL,DEBANKD
+EBK022
+	ADD	HL,DE
+;
+	LD	D,$00
+	LD	BC,EBANK0
+EBCH10
+	LD	E,(HL)
+	LD	A,(BC)
+	CP	E
+	JR	Z,EBCH20	; Bank chenge ?
+;				; yes !
+	LD	A,E
+	CP	$FF
+	JR	Z,EBCH20
+;
+;	CP	$71
+;	JR	NZ,EBCH111	
+;;				;yes !
+;	LD	A,(DJSVBF)
+;	AND	%00100000
+;	LD	A,$71
+;	JR	Z,EBCH111	
+;	INC	A		
+;EBCH111
+	LD	(BC),A
+;
+	LD	A,(WORK0)
+	AND	A
+	JR	Z,EBCH11	; Second set ?
+;				; yes !
+	LD	A,D
+	LD	(EBCHF2),A	; Port 2
+	LD	A,$1
+	LD	(BKCHF3),A
+	JR	EBCH20
+EBCH11
+	INC	A
+	LD	(WORK0),A
+;
+	LD	A,D
+	LD	(EBCHFG),A	; Port 1
+	LD	A,$1
+	LD	(BKCHF2),A
+;;	JR	EBCH30
+EBCH20
+	INC	HL
+	INC	BC
+	INC	D
+	LD	A,D
+	CP	$4
+	JR	NZ,EBCH10
+EBCH30
+;
+	JP  	PBRETN
+;RET
+;
+;
+CARITMD	EQU	$0C	; Ken chari time
+;====================================================
+;= すべての始まり！				    =
+;====================================================
+PLAY
+;;	LD	A,(KEYA1)
+;;	CP	%11110000
+;;	JR	NZ,PLAY001
+;
+PLAY001
+	LD	A,(GMMODE)
+	CP	GMAP 
+	JR	C,GPM900	;ゲーム中？
+;
+	CP	GPLAY	
+	JR	NZ,PLAY005
+;
+	LD	A,(ITMODE)
+	CP	GPMA
+	JR	NZ,GPM900
+;
+PLAY005
+	LD	A,(SBHR)
+	CP	$04
+	JR	NZ,GPM900
+;				; YES !
+	LD	A,(MSGEFG)
+	LD	HL,ITEMNOT
+	OR	(HL)
+	LD	HL,SCRLFG
+	OR	(HL)
+	JR	NZ,GPM900
+;				; YES !
+	LD	A,(KEYA1)
+	CP	%11110000
+	JR	NZ,GPM900	;強制セーブモード?
+;
+	XOR	A		;YES !
+	LD	(SBHR),A
+	LD	(SBCNT),A
+	LD	(MSGEFG),A
+;
+	LD	(ITMODE),A
+	LD	A,TSVE
+	LD	(GMMODE),A
+;
+;;	RET
+;---------------------------------
+GPM900
+	LD	A,(GMMODE)
+;
+	RST	0
+	DW	OPNING
+	DW	ENDINGS ;TITLE
+	DW	PLSLCT
+	DW	NMREGI
+	DW	NMCLER
+	DW	NMCOPY
+	DW	TSAVE	; Hot save mode !
+	DW	GRMAP	; Ground map mode !
+	DW	PEACHS	; ピーチ写真 !
+	DW	LOVEDM	; 海岸デモ !
+	DW	KABE1S	; クジラ壁画!
+	DW	GMPLAY  ; GAME MAIN !!
+;
+OPING	EQU	0
+ENDG	EQU	1 
+TITL	EQU	1 ;(いまはもうない）
+PSLCT	EQU	2
+NMREG	EQU	3
+NMCLR	EQU	4
+NMCPY	EQU	5
+TSVE	EQU	6
+GMAP	EQU	7
+PEACH	EQU	8
+LOVED	EQU	9
+KABE1	EQU	$0A
+GPLAY	EQU	$0B
+;****************************************
+KABE1S
+;;	LD	A,$1
+;;	CALL	PBSET
+;
+	CALL	KABE1SB
+;
+	JP  	MSSUBS
+;****************************************
+PEACHS
+;;	LD	A,$1
+;;	CALL	PBSET
+;
+	CALL	PEACHSB
+;
+	JP  	MSSUBS
+;****************************************
+LOVEDM
+;;	LD	A,$1
+;;	CALL	PBSET
+;
+	CALL	LOVEDEMO
+;
+	JP  	MSSUBS
+;****************************************
+GRMAP
+;;	LD	A,$1
+;;	CALL	PBSET
+	CALL	GRMAPSB
+;
+	JP  	MSSUBS
+;;	RET
+;****************************************
+TSAVE
+;;	LD	A,$1
+;;	CALL	PBSET
+	JP  	TSAVESB
+;;	RET
+;****************************************
+;*      Opening                         *
+;****************************************
+OPNING
+;;	LD	A,$01
+;;	CALL	PBSET
+;
+	JP  	OPENING
+;****************************************
+;*      Ending                          *
+;****************************************
+ENDINGS
+	LD	A,$17
+	CALL	PBSET
+;
+	CALL  	ENDING
+;
+	JP  	MSSUBS
+;RET
+;;****************************************
+;;*      TITLE                           *
+;;****************************************
+;TITLE
+;	LD	A,$01
+;	CALL	PBSET
+;;
+;	JP  	TITLMAIN
+;
+;;	RET
+;=============================
+ENEMYL
+	LD	A,$03
+	LD	($2100),A
+	LD	A,$17
+ENL10
+	PUSH	AF
+	CALL	ENEMY
+;;	LD	A,$17
+	POP	AF
+	JP  	PBSET
+;=============================
+ENEMYL1
+	LD	A,$03
+	LD	($2100),A
+	LD	A,$01
+	JR	ENL10
+;=============================
+ENEMYL2
+	LD	A,$03
+	LD	($2100),A
+	LD	A,$02
+	JR	ENL10
+;****************************************
+;*      Player select                   *
+;****************************************
+PLSLCT
+;;	LD	A,$1
+;;	CALL	PBSET
+;
+	JP  	PLSLCTS
+;;	LD	A,$1
+;;	LD	($2100),A
+;;	RET
+;****************************************
+;*      NAME REGIST                     *
+;****************************************
+NMREGI
+;;	LD	A,$1
+;;	CALL	PBSET
+;
+	JP  	NMREGIS
+;;	LD	A,$1
+;;	LD	($2100),A
+;;	RET
+;****************************************
+;*      NAME CLEAR                     *
+;****************************************
+NMCLER
+;;	LD	A,$1
+;;	CALL	PBSET
+	JP  	NMCLERS
+;****************************************
+;*      NAME COPY                     *
+;****************************************
+NMCOPY
+;;	LD	A,$1
+;;	CALL	PBSET
+	JP  	NMCOPYS
+;;	RET
+;****************************************
+;*       GAME Play      	        *
+;****************************************
+GMPLAY ;PLINIT
+	LD	A,$14
+	LD	($2100),A
+	CALL	FADECK
+	CALL	EXSEST	;特殊地形SE set
+;
+	LD	A,$01
+	CALL	PBSET
+	JP  	GPSUB
+;;	RET
+;****************************************
+;*       GAME Play  Main                *
+;****************************************
+GPMAIN   ;PLAY00
+	LD	A,$02
+	CALL	PBSET	;For exstra sub!
+;
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,PLY0F0
+;
+	LD	HL,DJMSTM
+	LD	A,(HL)
+	AND	A
+	JR	Z,PLYD00
+;
+	LD	A,(WNDYPS)
+	CP	$80
+	JR	NZ,PLYD00
+;
+	LD	A,(WNDFLG)
+	AND	A
+	JR	NZ,PLYD00
+;
+	DEC	(HL)
+	JR	NZ,PLYD00
+;
+	LD	A,$01
+	LD	($2100),A
+	CALL	DJMSCK	;ダンジョン案内メッセージセット!
+	CALL	PBRETN
+PLYD00
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,PLY0F0
+;
+	LD	A,(DJCLTM)
+	AND	A
+	JR	Z,PLY0F0
+;
+	LD	HL,PLSTOP
+	LD	(HL),$02
+;
+	DEC	A
+	LD	(DJCLTM),A
+	JR	NZ,PLY0F0
+;
+	JP	NXGOTO
+;
+PLY0F0
+	LD	HL,PLFLSH
+	LD	A,(HL)
+	AND	A
+	JR	Z,PLY000
+	DEC	(HL)
+PLY000
+;
+;;;	CALL	RNDSUB
+;
+	LD	A,(PLXPSL)
+	LD	(PLSVXL),A
+	LD	A,(PLYPSL)
+	LD	(PLSVYL),A
+	LD	HL,PLZPSL
+	SUB	(HL)
+	LD	(PLDSYP),A
+;
+;	XOR	A
+;	LD	(PKCRX1),A
+;	LD	(PLDSXD),A
+;	LD	(PLDSYD),A
+;;
+;	LD	HL,PLFLPL
+;	RES	7,(HL)
+;	LD	HL,PLFLPR
+;	RES	7,(HL)
+;
+;	LD	A,(FRCNT)
+;	AND	$01
+;	JR	NZ,PLYFE0
+;;
+;	LD	HL,PLDSYD
+;	LD	A,(HL)
+;	AND	A
+;	JR	Z,PLYFE0
+;;
+;	AND	%10000000
+;	JR	Z,PLYFF0
+;	INC	(HL)
+;	INC	(HL)
+;PLYFF0
+;	DEC	(HL)
+;PLYFE0
+;
+;;K	LD	A,$02
+;;K;;	LD	($2100),A
+;;K	CALL	PBSET
+;
+	CALL	WINDOW	; Item window 
+;
+	XOR	A
+	LD	(PKCRX1),A
+	LD	(PLDSXD),A
+	LD	(PLDSYD),A
+;
+	LD	HL,PLFLPL
+	RES	7,(HL)
+	LD	HL,PLFLPR
+	RES	7,(HL)
+;
+	CALL	DOORSUB	; Dandyon door open sub !
+;;	LD	A,$01
+;;	LD	($2100),A
+;
+	LD	A,$2
+	CALL	PBSET
+	CALL	SCROLL	; BG write & scroll
+;
+	CALL	PLAYER	; Player
+;
+	LD	A,(PLCAMD)
+	LD	(WPLCAMD),A
+;
+	XOR	A
+;;;	LD	(PRTBMFG),A	; ROT  shot falg clear !
+	LD	(BOMBFG),A	; Bomber  shot falg clear !
+	LD	(BUMEFG),A	; Bomber  shot falg clear !
+	LD	(PFUCKFG),A	; Bomber  shot falg clear !
+	LD	(PLCAMD),A	; Player cach flag 
+;;	LD	(LIKEFG),A	; LIKE LIKE CACH flag 
+	LD	(SLIMCNT),A	; Boss small slime set count
+;
+	LD	A,(PLOSHI)
+	AND	A
+	JR	Z,PLY100
+	DEC	A
+	LD	(PLOSHI),A	; Player oshi flag 
+PLY100
+;	LD	A,$2
+;	CALL	PBSET
+;	CALL	SCROLL	; BG write & scroll
+;
+	LD	A,$19
+	CALL	PBSET
+;
+	CALL	BELTCK	; ベルトコンベアー転送計算！(IN ENMY7)
+;
+;;	LD	A,$03
+;;	CALL	PBSET
+;
+	CALL	ENEMY	; Enemy
+;
+	LD	A,$2
+	CALL	PBSET
+;
+	CALL	EXSTRA	; Exstra 
+;
+;;	CALL	SCROLL	; BG write & scroll
+;
+;;	LD	A,$14
+;;	CALL	PBSET
+;;	CALL	TILTCK
+;
+	LD	HL,VRAMD+1
+	LD	A,(FRCNT)
+	AND	$3
+	OR	(HL)
+	JR	NZ,LFU030
+;
+	LD	A,(PLMODE)
+	CP	PMOVE+2
+	JR	NC,LFU030
+;
+	LD	C,$01
+	LD	B,$00
+	LD	E,$00
+;
+	LD	A,(FRCNT)
+	AND	%00000100
+	JR	Z,LFU020
+;
+	DEC	C
+	DEC	E
+LFU020
+;;	LD	A,$02
+;;	CALL	PBSET
+;
+	CALL	ITEMDP2		; BG chenge
+;
+LFU030
+	LD	A,$14
+	CALL	PBSET
+	CALL	TILTCK
+;;LFU030
+MSSUBS
+	LD	A,$0F
+;;	LD	A,$0D
+	CALL	PBSET	;文字キャラクターバンク
+;
+	CALL	MESEGE
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%
+;TOURCK
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	Z,TUCK20
+;;
+;	LD	A,(YKFLAG)
+;	AND	A
+;	JR	NZ,TUCK20
+;;
+;	LD	A,(TOUROU)
+;	AND	A
+;	LD	A,$05 ;1
+;	JR	Z,TUCK10	; Tourou room ?
+;;				; yes ! dark bg set !
+;	LD	A,$07 ;3
+;TUCK10
+;	CALL	TOURST
+;TUCK20
+;	RET
+;****************************************
+;*       PLAYER		                *
+;****************************************
+DMMSDT
+	DB	$08,$0E,$99,$28,$EC  ;,$8E
+;
+;KPWFSXD
+;	DB	$E4,$14,$E4,$14
+;KPWFSYD
+;	DB	$D4,$D4,$04,$04
+;;
+PLAYER	
+;	LD	A,(KEYA1)
+;	CP	%00110001
+;	JR	NZ,PTEST0
+;;
+;	LD	A,(DEMOFG)
+;	AND	A
+;	JR	NZ,PTEST0
+;;
+;	LD	E,$3
+;	LD	D,$00
+;PT0090
+;	PUSH	DE
+;;
+;	LD	HL,KPWFSXD
+;	ADD	HL,DE
+;	LD	A,(PLXPSL)
+;	ADD	A,(HL)
+;	LD	(WORK0),A
+;;
+;	LD	HL,KPWFSYD
+;	ADD	HL,DE
+;	LD	A,(PLYPSL)
+;	ADD	A,(HL)
+;	LD	(WORK1),A
+;;
+;	LD	A,KPWF
+;	CALL	EXIDSH
+;;
+;	LD	HL,EXTIM0
+;	ADD	HL,DE
+;	LD	(HL),$18+$A
+;;
+;	LD	HL,EXSTAT
+;	ADD	HL,DE
+;	POP	DE
+;	LD	(HL),E
+;;
+;	DEC	E
+;	LD	A,E
+;	CP	$FF
+;	JR	NZ,PT0090
+;;
+;	LD	A,$01
+;	LD	(DEMOFG),A
+;	LD	A,$30
+;	LD	(DEMOTM),A
+;;
+;	RET
+;==================================
+;PTEST0
+	LD	A,(PLYPSL)
+	LD	HL,PLZPSL
+	SUB	(HL)
+	LD	(PLYPS2),A
+;
+	LD	A,(DEMOFG)
+	AND	A
+	JR	Z,PY1080
+;
+	LD	A,(MSGEFG)
+	AND	A
+	JR	NZ,PY1010
+;
+	LD	HL,DEMOTM
+	DEC	(HL)
+	LD	A,(HL)
+	CP	$02
+	JR	NZ,PY100E
+;
+	LD	A,(DEMOFG)
+;	CP	$02
+;	LD	A,$08	; I get a power chip !
+;	JR	NZ,DM0010
+;	LD	A,$FC	; How can I use this mushroom ? 
+;DM0010
+	LD	E,A
+	LD	D,$00
+	LD	HL,DMMSDT-1
+	ADD	HL,DE
+	LD	A,(HL)
+	CALL	MSGCHK
+;
+	LD	A,$01
+PY100E
+	AND	A
+	JR	NZ,PY1010
+;
+	XOR	A
+	LD	(DEMOFG),A
+	LD	(ENSTFG),A
+;
+;;	CALL	BGMSET	;(S)
+;
+	JR	PY1080
+PY1010
+	LD	A,(DEMOFG)
+	LD	(ENSTFG),A
+	DEC	A
+	RST	0
+	DW	KNPWUPS ;1 剣パワーアップデモ
+	DW	ITEMUP	;2 何に使うかわからんアイテムデモ(きのこ）
+	DW	PWDRUP	;3 魔法の粉持ち上げデモ！ 
+	DW	ITEMUP	;4 何に使うかわからんアイテムデモ（かいがら）
+	DW	DEFUP	;5 木のみ守りアップ！
+;;;	DW	FUEUP	;6 オカリナアップ！
+;========================================
+PY1080
+	LD	A,(KEYA1)
+	AND	%10110000
+	JR	NZ,GMP0000
+;
+	LD	A,(KEYA1)
+	AND	%01000000
+	JR	Z,GMP0000
+;
+	LD	A,(GMPTIM)
+	INC	A
+	LD	(GMPTIM),A
+	CP	$04
+	JR	C,GMP00001
+;
+	LD	A,(PLSTOP)
+	CP	$02
+	JR	Z,GMP0000
+;
+	LD	A,(PLCHPT)
+	CP	$FF
+	JR	Z,GMP0000
+;
+	LD	A,(PLMODE)
+	CP	PMOVE+2
+	JR	NC,GMP0000
+;
+;;;	LD	HL,DJFLAG
+	LD	HL,ITEMNOT
+	LD	A,(MSGEFG)
+	OR	(HL)
+;;	AND	A
+	JR	NZ,GMP0000
+;
+	XOR	A
+	LD	(SBHR),A
+	LD	(SBCNT),A
+;
+	LD	(ITMODE),A
+	LD	A,GMAP
+	LD	(GMMODE),A
+;
+	LD	A,$02
+	LD	($2100),A
+	CALL	PLIDBC2
+	CALL	PLCSET
+	CALL	ENEMY
+;
+	POP	AF
+;==============================
+	RET
+GMP0000
+	XOR	A
+	LD	(GMPTIM),A
+GMP00001
+;=================================
+	LD	A,(PLTIM0)
+	AND	A
+	JR	Z,PLAYER00
+;
+	DEC	A
+	LD	(PLTIM0),A
+PLAYER00
+	LD	A,(KNKNTM)
+	AND	A
+	JR	Z,PLAYER01
+;
+	DEC	A
+	LD	(KNKNTM),A
+PLAYER01
+	LD	A,(MSGEFG)
+	AND	A
+	JP	NZ,PLWPCS
+;;	JP	NZ,PL0B8
+;
+	LD	A,(SCRLFG)
+	AND	A
+	JP	NZ,PL0B0
+;
+	LD	A,(PLMODE)
+	CP	POVER
+	JR	Z,PLAYER10
+;
+	LD	A,(HARTCT)
+	LD	HL,SHOPFG
+	OR	(HL)
+	LD	HL,WNDFLG
+	OR	(HL)
+	JR	NZ,PLAYER08
+;
+	LD	A,POVER
+	LD	(PLMODE),A
+	LD	A,$7F+$40
+	LD	(PLTIM0),A
+	LD	A,$10
+	LD	(FADECT),A
+;
+	XOR	A
+	LD	(PLFLSH),A
+	LD	(PLSTAT),A
+;
+	CALL	SOUNDCLR	;(S)
+;
+	LD	A,$08
+	LD	(SOUND2),A	;(S)
+PLAYER08
+	LD	A,(PLMODE)
+PLAYER10
+	RST	0
+	DW	PLMOVE
+	DW	PLSWIMS	; Swiming !
+	DW	PLTOBIS	; Tobiori 
+	DW	PLINDR1 ; In room  1
+	DW	PLINDR2 ;          2
+;;	DW	PLOTDR1	; Out room 1 
+;;	DW	PLOTDR2	; Out room 2
+	DW	KURDORS	; Kurukuru door !
+	DW	PLFOLES	; Fole fall !
+	DW	PLOVER	; Game over
+	DW	PLOBORS	; Mizu obore
+	DW	PLWARPS	; 固定ワープ
+	DW	PLBOXER	; ボクサーパンチぶっ飛び！
+;
+;;	DW	PLINDR	; In door 
+;;	DW	PLOUTDR	; Out door 
+;- - - - - - - - - - - - - - - - - - -
+PMOVE	EQU	$0
+PSWIM	EQU	$1
+PTOBI	EQU	$2
+PINDR1	EQU	$3
+PINDR2	EQU	$4
+POTDR1	EQU	3  ;$5
+POTDR2	EQU	4  ;$6
+KURUD	EQU	5  ;$7
+PFOLE	EQU	6  ;$8
+POVER	EQU	7  ;$8
+POBOR	EQU	8
+PWARP	EQU	9
+PBOXER	EQU	$A
+; - - - In scroll - - - - - -
+PL0B0
+;========================================
+	CALL	PLWPCS		; Wepon character set
+	JP   	PLCSET
+;PL0B8
+;	JP  	PLWPCS		; Wepon character set
+;=============================
+PLWARPS
+	LD	A,$19
+	CALL	PBSET
+;;	LD	($2100),A
+;
+	JP	PLWARP
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Player SWIM  			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLSWIM
+;;;	LD	A,$02
+;;;	CALL	PBSET
+;;
+;	JP	PLSWIMS
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Player obore 			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLOBOR
+;;;	LD	A,$02
+;;;	CALL	PBSET
+;;
+;	JP	PLOBORS
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;;%	Ken power up demo		     %
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;KNPWUP
+;	LD	A,$02
+;	CALL	PBSET
+;;
+;	JP	KNPWUPS
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Game over  			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PLOVER
+	LD	A,$01
+	CALL	PBSET
+	JP	PLOVERS
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Fole down 			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLFOLE
+;;;	LD	A,$02
+;;;	CALL	PBSET
+;	JP	PLFOLES
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	回転ドア			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;KURUDOR
+;;;	LD	A,$02
+;;;	CALL	PBSET
+;	JP	KURDORS
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	歩く				     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PLMOVE
+	LD	A,$02
+	CALL	PBSET
+;
+	CALL	PLMOVES
+	RET
+;
+;---------------------------------
+PKEN	EQU	$01
+PBOMB	EQU	$02
+PBULE	EQU	$03
+PTATE	EQU	$04
+PYAST	EQU	$05
+PFUCK	EQU	$06
+PROD	EQU	$07
+PSHSE	EQU	$08
+POKAR	EQU	$09
+PHANE	EQU	$0A
+PSKOP	EQU	$0B
+PMGIC	EQU	$0C
+PBUME	EQU	$0D
+;- - - - - - - - - - - - - - - - - 
+PLTOOL
+	LD	A,(SHOPFG)
+	LD	HL,ITEMNOT
+;;	AND	A
+	OR	(HL)
+	LD	HL,PFUCKFG
+	OR	(HL)
+	RET	NZ
+;
+;	LD	A,(PLCHPT)
+;	INC	A
+;	RET	Z
+;
+	LD	A,(DUSHFG)
+	AND	A
+	JR	Z,TOL158
+;
+	LD	A,(ITEMA)
+	CP	PKEN
+	JR	Z,TOL120
+	LD	A,(ITEMB)
+	CP	PKEN
+	JR	Z,TOL120
+;
+	LD	A,(ITEMA)
+	CP	PTATE
+	JR	Z,TOL110
+	LD	A,(ITEMB)
+	CP	PTATE
+	JR	NZ,TOL150
+;
+TOL110
+	CALL	TATEST
+	JR	TOL150
+TOL120
+	LD	A,(PCUTFG)
+	DEC	A
+	CP	$04
+	JR	C,TOL150
+;
+	LD	A,$4+1
+	LD	(PCUTFG),A
+	LD	(WCUTFG),A	; Ken kamae set !
+TOL150
+	JR	TOL160
+;=============================================
+TOL158
+;;	LD	A,(PLSTOP)
+;;	AND	A
+;;	JP	NZ,PLTL120
+;
+	XOR	A
+	LD	(TATEON),A
+	LD	(TATEFG),A
+;
+TOL160
+	LD	A,(SLIMFG)
+	AND	A
+	JP	NZ,PLTL20	;スライムひっついた？
+;				;NO.
+;	LD	A,(SHOPFG)
+;	CP	$02
+;	JP	Z,PLTL20
+;
+;;	LD	HL,SHOPFG
+	LD	A,(PLCAMD)
+	AND	A ;OR	(HL) ;AND	A
+	JP	NZ,PLTL20
+;
+	LD	A,(PCUTFG)
+	AND	A
+	JR	Z,PLTL1A
+;
+	CP	$03
+	JR	NZ,PLTL1A
+;
+	LD	A,(PCUTTM)	; yes !
+	CP	$03
+	JR	NC,PLTL1B
+;
+PLTL1A
+	LD	A,(PLSTOP)
+	AND	A
+	JP	NZ,PLTL20
+PLTL1B
+;===Level input====
+	LD	A,(ITEMB)
+	CP	PSHSE
+	JR	NZ,PLTL015
+;
+	LD	A,(KEYA1)
+	AND	%00100000
+	JR	Z,PLTL01
+;
+	CALL	DUSHST
+	JR	PLTL015
+;-- - - - - - - - - - - - - -
+PLTL01
+	XOR	A
+	LD	(DUSHCT),A
+PLTL015
+	LD	A,(ITEMA)
+	CP	PSHSE
+	JR	NZ,PLTL0C
+;
+	LD	A,(KEYA1)
+	AND	%00010000
+	JR	Z,PLTL08
+;
+	CALL	DUSHST
+	JR	PLTL0C
+PLTL08
+	XOR	A
+	LD	(DUSHCT),A
+PLTL0C
+	LD	A,(ITEMA)
+	CP	PTATE
+	JR	NZ,PLTL0E
+;
+	LD	A,(TATLEV)
+	LD	(TATEFG),A
+;
+	LD	A,(KEYA1)
+	AND	%00010000
+	JR	Z,PLTL0E
+;
+	LD	A,(MSCRFG)
+;;;	AND	A
+	CP	$01
+	JR	Z,PLTL0E
+	CP	$02
+	JR	Z,PLTL0E
+;
+	CALL	TATEST
+PLTL0E
+	LD	A,(ITEMB)
+	CP	PTATE
+	JR	NZ,PLTL0F
+;
+	LD	A,(TATLEV)
+	LD	(TATEFG),A
+;
+	LD	A,(KEYA1)
+	AND	%00100000
+	JR	Z,PLTL0F
+;
+	CALL	TATEST
+PLTL0F
+;===Triger input====
+	LD	A,(KEYA2)
+	AND	%00100000
+	JR	Z,PLTL10
+;
+	LD	A,(MSCRFG)
+	CP	$02
+	JR	Z,PLTL10	; タカラ＆カンバン ?
+;				; no !
+;;	LD	E,A
+	LD	A,(ITEMB)
+	CALL	TLCHEK
+;-- - - - - - - - - - - - - -
+PLTL10
+	LD	A,(KEYA2)
+	AND	%00010000
+	JR	Z,PLTL201
+;
+	LD	A,(MSCRFG)
+	CP	$01
+	JR	Z,PLTL201	; Peaple cros ?
+	CP	$02
+	JR	Z,PLTL201	; Peaple cros ?
+;				; no !
+;;	LD	E,A
+	LD	A,(ITEMA)
+	CALL	TLCHEK
+;
+PLTL201
+	LD	A,(KEYA1)
+	AND	%00100000
+	JR	Z,PLTL110
+;
+	LD	A,(ITEMB)
+	CALL	TLCHEK2
+PLTL110
+	LD	A,(KEYA1)
+	AND	%00010000
+	JR	Z,PLTL120
+;
+	LD	A,(ITEMA)
+	CALL	TLCHEK2
+PLTL120
+	RET
+;=========================================
+;-- For triger input check - -
+TLCHEK
+;;	CP	$00
+;;	JP	Z,NOSDST	;(S)
+;	CP	PKEN
+;	JP	Z,PCUTST
+;
+	LD	C,A
+;
+;	LD	A,(SHOPFG)
+;	AND	A
+;	JR	NZ,PLTL120
+;;
+;	LD	A,C
+;
+	CP	PKEN
+	JP	Z,PCUTST
+	CP	PTATE
+	JP	Z,TATESDS
+	CP	PBOMB
+	JP	Z,BOMBRST
+	CP	PBULE
+	JP	Z,BULESST
+	CP	PYAST
+	JP	Z,PYAAAST
+	CP	PBUME
+	JP	Z,BUMERST
+	CP	PFUCK
+	JP	Z,PFUCKST
+	CP	PHANE
+	JP	Z,JUMPST
+	CP	POKAR
+	JP	Z,OKARST
+	CP	PMGIC
+	JP	Z,MGICPW
+	CP	PSKOP  ;MEMO
+	JP	Z,ANAHST ;MEMOOK
+	CP	PROD
+	JR	NZ,PLTL20
+;
+;;	CALL	TOURST
+;
+;	LD	A,(CLC20)
+;	CP	$FF
+;	JR	NZ,PRDS10
+;;	CP	$20
+;;	JR	C,PLTL20	; Ken power chip >= 20 ?
+;				
+	LD	HL,PCUTFG	; Yes ! Rod start !
+	LD	A,(POWDRTM)
+	OR	(HL)
+	JR	NZ,PLTL20
+;
+	LD	A,(BUMEFG)
+;;	LD	A,(PFUCKFG)
+	CP	$02
+	JR	NC,PLTL20
+;
+	LD	A,$0E+$80
+	LD	(POWDRTM),A
+PLTL20
+	RET
+;PRDS10
+;	LD	A,$04
+;	CALL	CACHDMS	;なんにつかうにゃろう！
+;	RET
+;=========================================
+TATESDS
+	LD	A,(PLOSHI)
+	AND	A
+	RET	NZ
+;
+	LD	A,$16
+	LD	(SOUND3),A	;(S)
+;
+;	LD	A,$01
+;	LD	(BKCHF2),A
+;	LD	(BKCHF3),A
+	RET
+;=========================================
+ANAHST  ;MEMOOK
+;
+;	LD	A,(BGCKOF)
+;	XOR	$10
+;	LD	(BGCKOF),A
+;
+	LD	A,(ANAHFG)
+;;	AND	A
+	LD	HL,PLJPFG
+	OR	(HL)
+	RET	NZ
+;;	JR	NZ,ANAHS10
+;
+	CALL	ANBGSB		;掘る前BGチェック！
+	JR	NC,ANAHS08	;掘れない？
+;				;YES !
+	LD	A,$07		
+	LD	(SOUND1),A	;(S) カッキーン!
+	JR	ANAHS0C
+;
+ANAHS08
+	LD	A,$0E
+	LD	(SOUND3),A	;(S)
+ANAHS0C
+	LD	A,$01
+	LD	(ANAHFG),A
+;
+	XOR	A
+	LD	(ANAHTM),A
+ANAHS10
+	RET
+;=========================================
+;OKARST
+;	LD	A,(OKARFG)
+;	AND	A
+;	JR	NZ,OKRS10
+;;
+;	LD	A,(ONPUFG)
+;	AND	$03
+;	JR	Z,OKRS10
+;;
+;	LD	A,(FUESLPT)
+;	CP	$01
+;	JR	Z,OKS0090
+;
+;	LD	A,$01
+;	LD	(OKARFG),A
+;;
+;	LD	A,$1E
+;	LD	(SOUND4),A	;(S)
+;OKRS10
+;	RET
+;;
+;OKS0090
+;	LD	A,$01
+;	LD	(WAVFLG),A
+;	XOR	A
+;	LD	(WAVTIM),A
+;;
+;	LD	A,(DJFLAG)
+;	AND	A
+;	RET	NZ
+;;
+;	CALL	NXGOTO4
+;;
+;	RET	
+;
+;	LD	C,ENNO-1
+;	LD	B,$0
+;OKS008
+;	LD	HL,ENMOD0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	%10000000
+;	JR	NZ,OKS010
+;;
+;	LD	HL,ENMODE
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	CP	EMOVE
+;	JR	C,OKS010
+;
+;;	LD	A,EFAIL
+;	LD	(HL),EFAIL ;A
+;
+;;	LD	A,$1F
+;	LD	HL,ENTIM4
+;	ADD	HL,BC
+;	LD	(HL),$1F ;A
+;;
+;	LD	HL,ENMOD0
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	AND	%11110000
+;	OR	$2
+;	LD	(HL),A
+;OKS010
+;	DEC	C
+;	LD	A,C
+;	CP	$FF
+;	JR	NZ,OKS008
+;;
+;	RET
+;=========================================
+PFUCKST
+;;	JP	BUMERST
+;
+	LD	A,(PFUCKFG)
+	AND	A
+	RET	NZ
+;;	JR	NZ,PFS900
+;
+;;	LD	A,$3
+;;	CALL	PBSET
+	CALL	FUCKSST
+;
+;;	LD	A,$A
+;;	LD	(PLWKCT),A
+PFS900
+	RET
+;=========================================
+;-- For revel input check - -
+TLCHEK2
+	CP	PKEN
+	RET	NZ
+;;	JP	Z,PCUTST2
+;;	RET
+;------------------------------
+PCUTST2
+;;	LD	HL,KENON
+;;	INC	(HL)
+;
+;;	LD	HL,PLOSHI
+	LD	HL,PCUTFG
+	LD	A,(MSCRFG)
+	AND	$03
+	OR	(HL)
+;;	AND	A
+;;	JR	NZ,PCS230
+	RET	NZ
+;
+	LD	A,(PCUTOF)
+	AND	A
+	RET	NZ
+;;	JR	NZ,PCS230
+;
+	XOR	A
+	LD	(KENOFF),A
+;
+	LD	A,$4+1
+	LD	(PCUTFG),A
+	LD	(KENTAT),A
+PCS230
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				  %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TTCRX1
+	DB	$10,$00,$08,$08
+TTCRX2
+	DB	$03,$03,$08,$08
+TTCRY1
+	DB	$08,$08,$00,$0D
+TTCRY2
+	DB	$08,$08,$03,$04
+;---------------------------------------
+TATEST
+	LD	A,$1
+	LD	(TATEON),A
+;
+	LD	A,(TATLEV)
+	LD	(TATEFG),A
+TATEST2
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$0
+;
+	LD	HL,TTCRX1
+	ADD	HL,DE
+;
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	(PKCRX1),A
+;
+	LD	HL,TTCRX2
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PKCRX2),A
+;
+	LD	HL,TTCRY1
+	ADD	HL,DE
+;
+	LD	A,(PLYPS2)
+	ADD	A,(HL)
+	LD	(PKCRY1),A
+;
+	LD	HL,TTCRY2
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PKCRY2),A
+;
+	XOR	A
+	LD	(KENTAT),A
+;
+	RET
+;###############################################
+;#					       #
+;###############################################
+;BBSTXS
+;	DB	$04,$FC,$00,$00
+;BBSTYS
+;	DB	$00,$00,$FC,$04
+BBSTXP	
+	DB	$08,$F8,$00,$00	
+BBSTYP	
+	DB	$00,$00,$FD,$04	
+;- - - - - - - - - - - - - - - - - - - -
+BOMBRST
+	LD	A,(BOMBFG)
+	CP	$1  ;2
+	RET	NC
+;;	JP	NC,BBS090	; Already shot ?
+;				; no
+	LD	A,(BOMBCT)
+	AND	A
+	JP	Z,NOSDST
+;;	JP	Z,BBS090
+;
+	SUB	$1
+	DAA
+	LD	(BOMBCT),A
+;
+	LD	A,BOMBR
+	CALL	PLSHST
+	RET	C
+;;	JP	C,BBS090
+;
+	LD	HL,ENTIM1
+	ADD	HL,DE
+	LD	(HL),$10	; CACH protect !!
+;
+	LD	A,(BMYATM)
+	AND	A
+	JP	Z,BBST001	; Bomb alow chance ?
+;				; Yes !
+	XOR	A
+	LD	(BMYATM),A
+;
+	LD	A,(YAINDX)	; Old alow -> Bomb alow chenge !
+	LD	C,A
+	LD	B,D
+	LD	HL,ENSTAT
+	ADD	HL,BC
+	LD	(HL),$01
+	RET
+;
+BYTM	EQU	$06	; Bomb alow chance time !
+;
+BBST001
+	LD	A,BYTM ;$06
+	LD	(BMYATM),A
+;
+	LD	A,E
+	LD	(BMINDX),A
+;
+	LD	A,$0C
+	LD	(POWDRTM),A
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+;;	LD	A,$FF
+	LD	(HL),$A0  ;$FF  ;A
+;
+	LD	HL,ENCHPT
+	ADD	HL,DE
+;;	XOR	A
+	LD	(HL),D ;$00 ;A
+;
+	LD	HL,ENTIM4
+	ADD	HL,DE
+	LD	(HL),$3 ; Water up protect
+;
+;K	LD	A,(YKFLAG)
+;K	AND	A
+;K	JR	NZ,BBS0888
+;;K
+;K	LD	HL,ENZSPD
+;K	ADD	HL,DE
+;K	LD	(HL),$10  ;A
+BBS088
+;K	LD	A,(PLCBFG)
+;K	AND	A
+;K	JR	NZ,BBS089
+;
+BBS0888
+;K	LD	A,$08
+;K	LD	(SOUND1),A	;(S) Bomb Shot !
+;
+;K	LD	A,(KEYA1)
+;K	AND	%00001111
+;K	JR	NZ,BBS090
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	NZ,BBS089
+;
+	LD	A,$09
+	LD	(SOUND1),A	;(S) Bomb set !
+	JR	BBS08C
+;
+BBS089
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),D
+BBS08C
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),D
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),D	
+;
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),D
+;
+	LD	A,(PLCMKI)
+	LD	C,A
+	LD	B,D
+	LD	HL,BBSTXP
+	ADD	HL,BC
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,BBSTYP
+	ADD	HL,BC
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+;	LD	A,(PLCMKI)
+;	LD	C,A
+;	LD	B,D
+;	LD	HL,BBSTXS
+;	ADD	HL,BC
+;	LD	A,(HL)
+;;
+;	LD	HL,ENXSPD
+;	ADD	HL,DE
+;	LD	(HL),A
+;;
+;	LD	HL,BBSTYS
+;	ADD	HL,BC
+;	LD	A,(HL)
+;	LD	HL,ENYSPD
+;	ADD	HL,DE
+;	LD	(HL),A
+;;
+BBS090
+	RET
+;###############################################
+;#					       #
+;###############################################
+BULESST
+;;	IN   CALL BGCACH
+	RET
+;
+BRSXSD
+	DB	$18,$E8,$00
+BRSYSD
+	DB	$E8,$18,$00
+;
+BUMERST
+	LD	A,(BUMEFG)
+	AND	A
+	RET	NZ
+;;	JR	NZ,BRS090	; Already shot ?
+;				; no
+	LD	A,BUMER
+	CALL	PLSHST
+	RET	C
+;;	JR	C,BRS090
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+;;	LD	A,$28
+	LD	(HL),$28  ;A
+;
+	LD	C,$4
+	LD	B,$0
+	LD	A,(KEYA1)
+BRS080
+	SRL	A
+	JR	NC,BRS070
+;
+	INC	B
+BRS070
+	DEC	C
+	JR	NZ,BRS080
+;
+	LD	A,B
+	CP	$2
+	JR	C,BRS090
+;
+	LD	A,(KEYA1)
+	AND	%00000011
+	LD	C,A
+	LD	B,$0
+	LD	HL,BRSXSD-1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(KEYA1)
+	SRL	A
+	SRL	A
+	AND	%00000011
+	LD	C,A
+	LD	B,$0
+	LD	HL,BRSYSD-1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),A
+BRS090
+	RET
+;###############################################
+;#					       #
+;###############################################
+PYSXAD
+	DB	$00,$00,$00,$00
+;;	DB	$08,$F8,$00,$00
+PYSYAD
+	DB	$00,$00,$00,$00
+;;	DB	$00,$00,$F8,$08
+PYSXSD
+	DB	$20,$E0,$00,$00
+PYSYSD
+	DB	$00,$00,$E0,$20
+PYSXS2
+	DB	$30,$D0,$00,$00
+	DB	$40,$C0,$00,$00
+PYSYS2
+	DB	$00,$00,$D0,$30
+	DB	$00,$00,$C0,$40
+;- - - - - - - - - - - - - - - - -
+PYAAAST
+	LD	A,(PYAATM)
+	AND	A
+	RET	NZ
+;;	JR	NZ,PYST900
+;
+	LD	A,(BUMEFG)
+;;	LD	A,(PYAATM)
+;;	AND	A
+	CP	$02
+	JR	NC,PYST900
+;
+	LD	A,$10
+	LD	(PYAATM),A
+;
+	LD	A,(YAAACT)
+	AND	A
+	JP	Z,NOSDST
+;;;	JR	Z,PYST900
+;
+	SUB	$1
+	DAA
+	LD	(YAAACT),A
+;
+	CALL	PLCMST	;PLCMKI set
+;
+	LD	A,PYAAA
+	CALL	PLSHST
+	RET	C
+;;	JR	C,PYST900
+;
+	LD	A,E
+	LD	(YAINDX),A
+;
+	LD	A,(BMYATM)
+	AND	A
+	JR	Z,PYST001	; Bom alow chance ?
+;				; Yes !
+	LD	A,(BMINDX)
+	LD	C,A
+	LD	B,D
+	LD	HL,ENMODE
+	ADD	HL,BC
+	LD	(HL),B		; Old bomb clear !
+;
+	LD	HL,ENSTAT
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	XOR	A
+	JR	PYST002
+;- - - - - - - - - - - - - - -
+PYST001
+	LD	A,$0A
+	LD	(SOUND3),A	;(S)
+;
+	LD	A,BYTM ;$04
+PYST002
+	LD	(BMYATM),A
+;
+	LD	A,(PLCMKI)
+	LD	C,A
+	LD	B,$00
+;-------------------------------
+TLSDST
+	LD	A,(POWRFG)
+;;	AND	A
+	CP	$01
+	JR	NZ,PYST800
+;
+	LD	A,C
+	ADD	A,$4
+	LD	C,A
+PYST800
+	LD	HL,PYSXS2
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,PYSYS2
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),A
+PYST900
+	RET
+;===================================
+PLSHST
+;	PUSH	AF
+;	LD	A,$03
+;	CALL	PBSET
+;;
+;	POP	AF
+;
+	CALL	ENIDSHL
+	RET	C
+;;	JR	C,PYS090
+;
+	LD	A,$0C
+	LD	(POWDRTM),A
+;
+	PUSH	BC
+;
+	LD	A,(PLCMKI)
+	LD	C,A
+	LD	B,$00
+;
+	LD	HL,PYSXAD
+	ADD	HL,BC
+;
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,PYSYAD
+	ADD	HL,BC
+;
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(PLZPSL)
+	INC	A
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,PYSXSD
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENXSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,PYSYSD
+	ADD	HL,BC
+;
+	LD 	A,(HL)
+	LD	HL,ENYSPD
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD 	A,(PLCMKI)
+	LD	HL,ENCHPT
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENMUKI
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENSHMK
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENBCOF
+	ADD	HL,DE
+	LD	(HL),$01
+;
+	POP	BC
+;
+	SCF
+	CCF	; CLC
+PYS090
+	RET
+;===========================================
+PWSXAD
+	DB	$0E,$F2,$00,$00
+PWSYAD
+	DB	$00,$00,$F4,$0C
+MGICPW
+	LD	A,(POWDRTM)
+	AND	A
+	RET	NZ
+;;	JR	NZ,PWS090
+;
+	LD	A,(KINOKFG)
+	AND	A
+	JR	Z,MGP100	; きのこ持っている？
+;-----------------------------------------
+	LD	A,(PLZPSL)
+	AND	A
+	RET	NZ
+;
+	LD	A,$02
+CACHDMS
+	LD	(DEMOFG),A
+;				; Yes !
+	LD	A,$2A
+	LD	(DEMOTM),A	; なんにもつかえないデモ
+	RET
+;
+MGP100
+	LD	A,(TUBOCT)
+	AND	A
+	JP	Z,NOSDST
+;;	RET	Z
+;;	JR	Z,PWS090
+;
+;;	LD	A,$03
+;;	CALL	PBSET
+;
+	LD	A,POWDR
+	CALL	ENIDSHL
+	RET	C
+;;	JR	C,PWS090
+;
+	LD	A,$05
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,$0E
+	LD	(POWDRTM),A
+;
+	LD	A,(TUBOCT)
+;;	DEC	A
+	SUB	$01
+	DAA
+	LD	(TUBOCT),A
+	JR	NZ,MGCL20	;なくなった？
+;
+;;	LD	A,$0B
+;;	LD	(CHTRF2),A				
+;
+	LD	HL,ITEMB	;アイテム枠から消去！
+;
+	LD	A,(HL)
+	CP	PMGIC
+	JR	NZ,MGCL10
+	LD	(HL),$00
+MGCL10
+	INC	HL
+	LD	A,(HL)
+	CP	PMGIC
+	JR	NZ,MGCL20
+	LD	(HL),$00
+MGCL20
+	PUSH	BC
+;
+	LD	A,(PLCMKI)
+	LD	C,A
+;
+	LD	HL,PWSXAD
+	ADD	HL,BC
+;
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,PWSYAD
+	ADD	HL,BC
+;
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	A,(PLZPSL)
+	LD	HL,ENZPSL
+	ADD	HL,DE
+	LD	(HL),A
+;
+	LD	HL,ENTIM0
+	ADD	HL,DE
+	LD	(HL),$17
+;
+	POP	BC
+PWS090
+	RET
+;===========================================
+PLDSJX
+	DB	$1C,$E4,$00,$00	;ダッシュジャンプスピード
+PLDSJY
+	DB	$00,$00,$E4,$1C
+;
+JUMPST
+	LD	A,(WHASGFG)
+	CP	$07
+	RET	Z
+;;	JR	Z,JPS010	;穴落ちピンチ？
+;
+	LD	A,(PLJPFG)
+	AND	A
+	RET	NZ
+;;	JR	NZ,JPS010
+;
+	LD	A,$1
+	LD	(PLJPFG),A
+;
+	XOR	A
+	LD	(PLJCPT),A
+	LD	(PLJCCT),A
+;
+	LD	A,$0D
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	Z,JS0010
+;
+	CALL	JS0010
+;;	LD	A,(PLZSPD)
+;;	CPL
+;;	INC	A
+	LD	A,(KEYA1)
+	AND	$03
+	LD	A,$EA
+	JR	Z,YJS010
+	LD	A,$E8
+YJS010
+	LD	(PLYSPD),A
+;
+	XOR	A
+	LD	(PLZSPD),A
+;
+	CALL	MVCALC
+	LD	A,$02
+	CALL	PBSET
+	CALL	PLBGCK
+;
+	RET
+JS0010
+;;	LD	A,(POWRFG)
+;;	AND	A
+	LD	A,$20
+;;	JR	Z,JS0011
+;;	LD	A,$28
+;;JS0011
+	LD	(PLZSPD),A
+;
+	LD	A,(DUSHFG)
+	AND	A
+	RET	Z
+;;	JR	Z,JPS010	;ダッシュジャンプ？
+;
+;;	CALL	DUSHCL		; yes !
+;
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,B
+	LD	HL,PLDSJX
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLXSPD),A
+;	
+	LD	HL,PLDSJY
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLYSPD),A
+JPS010
+	RET
+;=====================================================
+KENSDD	;剣振りサウンド ランダム セット！
+	DB	$02,$14,$15,$18
+;
+PCUTST
+	LD	A,(CARITM)
+	LD	HL,SPCTTM
+	OR	(HL)
+	RET	NZ
+;
+;	JR	NZ,PCUT10
+;
+;	LD	A,(PCUTFG)
+;	AND	A
+;	JR	Z,PCUT23
+;;
+;	LD	E,A
+;;
+;	CP	$03
+;	JR	NZ,PCUT10	; Last pause ?
+;;
+;	LD	A,(PCUTTM)	; yes !
+;	CP	$05
+;	JR	NC,PCUT10
+;;
+;	LD	A,(PLOSHI)
+;	AND	A
+;	JR	NZ,PCUT10
+;PCUT23
+	LD	A,$03  ;(PCTTMD)
+	LD	(PCUTTM),A
+;
+	LD	A,$01
+	LD	(PCUTFG),A
+	LD	(KENTAT),A
+;
+	XOR	A
+	LD	(PCUTOF),A	; Oshippanashi reset
+;;	XOR	A
+	LD	(KENOFF),A
+;
+;;	LD	A,$02
+	CALL	RNDSUB
+	AND	$03
+	LD	E,A
+	LD	D,$00
+	LD	HL,KENSDD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(SOUND3),A	;(S)
+;
+	CALL	PLCMST
+;
+	LD	A,(PLJPFG)
+	AND	A
+	JR	NZ,PCUT10
+;
+	CALL	DUSHCL
+	CALL	PLSDCL
+PCUT10
+	LD	A,(BUMEFG)
+	AND	A
+	RET	NZ
+;
+	LD	A,(HARTFUL)
+	AND	A
+	RET	Z
+;
+	LD	A,(KENLEV)
+	CP	$02
+	RET	NZ
+;
+	LD	A,KENBM
+	CALL	PLSHST	
+;
+	XOR	A
+	LD	(POWDRTM),A
+	RET
+;=====================================================
+;=================================
+PLCMST
+	LD	A,(KEYA1)
+	AND	$0F
+	LD	E,A
+	LD	D,$00
+;
+	LD	HL,PLCMDT
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	$0F
+	JR	Z,PCSST00
+;
+	LD	(PLCMKI),A
+PCSST00
+	RET
+;;============================================
+;;=	穴堀り				    =
+;;============================================
+;ANAHORI
+;	LD	A,$02
+;	LD	($2100),A
+;	CALL	ANAHORIS
+;	RET
+;=======================================
+;============================================
+;=					    =
+;============================================
+KNBGXD
+	DB	$16,$FA,$08,$08	; For normal cut
+;;;		  0   1   2   3   4   5   6   7
+	DB	$16,$16,$08,$FA,$FA,$FA,$08,$16	; For spin cut !
+KNBGYD
+	DB	$08,$08,$FA,$16
+	DB	$08,$16,$16,$16,$08,$FA,$FA,$FA
+;
+KNBGCK
+	CALL	KNBGCKL
+	LD	A,$02
+	JP	PBSET
+;=====================================
+KNBGCKL
+	LD	A,(KNBGTM)
+	AND	A
+;;	JP	NZ,KBCK90
+	RET	NZ
+;
+;;	LD	A,(DJFLAG)
+;;	AND	A
+;;	JP	NZ,KBCK90
+;
+;	LD	A,(CARITM)
+;	AND	A
+;	JR	Z,KBCKF0
+;;
+;	CP	$09
+;	JR	NZ,PCED10
+;KBCKF0
+	LD	A,(DUSHFG)
+	AND	A
+	JR	NZ,KBCKF0
+;
+	LD	A,(WCUTFG)
+	CP	$4+1
+	RET	Z   ;JR	Z,PCED10	; ken kamae ?
+;
+KBCKF0
+	LD	A,(SPCTTM)
+	AND	A
+	JR	Z,KBCK02	; spin cut ?
+;				; yes !
+	LD	A,(PKENPT)
+	ADD	A,$4
+	JR	KBCK03
+KBCK02
+	LD	A,(PLCMKI)
+KBCK03
+	LD	E,A
+	LD	D,$00
+;
+	LD	HL,KNBGXD
+	ADD	HL,DE
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	SUB	$08
+	AND	$F0
+	LD	(OBJXP),A
+;
+	SWAP	A
+	LD	C,A
+;
+	LD	HL,KNBGYD
+	ADD	HL,DE
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	SUB	$10
+	AND	$F0
+	LD	(OBJYP),A
+;
+	OR	C
+	LD	E,A
+	LD	HL,BGUNDT+$11
+	ADD	HL,DE
+	LD	A,H
+	CP	$D7
+	RET	NZ
+;;	JP	NZ,KBCK90
+	PUSH	DE
+	LD	A,(HL)
+	LD	(UNITNO),A
+	LD	E,A
+	LD	A,(DJFLAG)
+	LD	D,A
+	CALL	BGCRRD
+;;	LD	HL,GRBGCR
+;;	ADD	HL,DE
+;;	LD	A,(HL)
+	POP	DE
+	CP	$D0
+	JP	C,KBGFL10
+	CP	$D3+1
+	JP	C,KBGFLS
+;
+KBGFL10
+	CP	$90
+	JP	NC,KBGFLS
+	CP	$01
+	JP	Z,KBGFLS	;かたいとこで火花が出る！
+;
+	LD	C,$00
+;
+	LD	A,(DJFLAG)
+	AND	A
+	LD	A,(UNITNO)
+	JR	Z,KBCK033
+;;	JP	NZ,KBCK90
+	CP	DSKEB
+	JR	Z,KBCK05
+	RET
+;;	JP	KBCK90
+;
+KBCK033
+	INC	C
+	CP	ANFLW
+	JR	Z,KBCK05
+	CP	FLW00
+	JR	Z,KBCK05
+	CP	KUSA2
+	RET	NZ
+;;	JP	NZ,KBCK90
+;
+	LD	C,$FF
+KBCK05
+	LD	A,C
+	LD	(ENCHPT2),A	; Kusa or ishi !!
+;
+;KK	PUSH	BC
+;;	LD	A,(UNITNO)
+;;	LD	(WORK0),A
+	CALL	BG1CHG
+;KK	POP	BC
+;
+	LD	A,(DUSHFG)
+	AND	A
+	JR	NZ,KBCK08
+;
+	LD	A,(WCUTFG)
+	CP	$4+1
+	JR	NZ,KBCK08
+;
+	XOR	A
+	LD	(SPCTWT),A	; Spin cut wait time reset
+;;;	LD	(EXMODE),A	; Ken flash reset !
+;
+	LD	A,CARITMD
+;;;	LD	(CARITM),A
+;KK	JR	KBCK07
+KBCK06
+;KK	LD	A,C
+;KK	CP	$00
+;KK	JR	NZ,KBCK08
+;;KK
+;KK	LD	A,$02
+;KKKBCK07
+	LD	(CARITM),A
+KBCK08
+;-- Kusa break --
+	LD	A,KTOBJ
+	CALL	PLSHST
+	JR	C,KBCK80
+;
+	XOR	A
+	LD	(POWDRTM),A	
+;
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(OBJXP)
+	ADD	A,$8
+	LD	(HL),A
+;
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(OBJYP)
+	ADD	A,$10
+	LD	(HL),A
+;
+;;	LD	HL,ENTIM0
+;;	ADD	HL,DE
+;;	LD	(HL),$1F ;A
+;
+	LD	HL,ENCHPT
+	ADD	HL,DE
+;;	LD	A,$1
+	LD	A,(ENCHPT2)
+	LD	(HL),A ;$01  ;A
+;
+	PUSH	DE
+	POP	BC
+	CALL	KTFLSTL	
+KBCK80
+	CALL	RNDSUB
+	AND	$07
+	RET	NZ
+;;	JR	NZ,KBCK90
+;
+	LD	A,(UNITNO)
+	CP	ANFLW
+	RET	Z
+;;	JR	Z,KBCK90
+;
+	CALL	RNDSUB
+	RRA
+	LD	A,RUPY1
+	JR	NC,KBCK88
+	LD	A,HART1
+KBCK88
+	CALL	ENIDSHL  ;PLSHST
+	RET	C
+;;	JR	C,KBCK90
+;
+	LD	HL,ENXPSL
+	ADD	HL,DE
+	LD	A,(OBJXP)
+	ADD	A,$8
+	LD	(HL),A
+;
+	LD	HL,ENYPSL
+	ADD	HL,DE
+	LD	A,(OBJYP)
+	ADD	A,$10
+	LD	(HL),A
+;
+	LD	HL,ENTIM3
+	ADD	HL,DE
+	LD	(HL),$80 ;A
+;
+	LD	HL,ENTIM1
+	ADD	HL,DE
+	LD	(HL),$18  ;A
+;
+	LD	HL,ENZSPD
+	ADD	HL,DE
+	LD	(HL),$10
+;
+;	XOR	A
+;	LD	HL,ENXSPD
+;	ADD	HL,DE
+;	LD	(HL),A
+;	LD	HL,ENYSPD
+;	ADD	HL,DE
+;	LD	(HL),A
+;	LD	HL,ENCHPT
+;	ADD	HL,DE
+;	LD	(HL),A
+KBCK90
+	RET
+;
+;================================
+;----------------------------------------
+PKFLXD
+	DB	$12,$EE,$FC,$04
+PKFLYD
+	DB	$04,$04,$EE,$12
+;---------------------------------
+KBGFLS
+;;	RET
+	LD	C,A
+;
+	LD	A,(CARITM)
+	AND	A
+	RET	Z
+;;	JR	Z,KBFS10
+;
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$00
+	LD	HL,PKFLXD
+	ADD	HL,DE
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	(WORK0),A
+	LD	HL,PKFLYD
+	ADD	HL,DE
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	LD	(WORK1),A
+;
+	LD	A,$4
+	LD	(OTOFLG),A
+;
+	CALL	FLASHST
+;
+	LD	A,$10
+	LD	(KNBGTM),A	; Protect !!
+;
+	LD	A,C
+	AND	$F0
+	CP	$90
+	JR	Z,KBFS08
+;
+	LD	A,$07
+	LD	(SOUND1),A	;(S)
+KBFS10
+	RET
+KBFS08
+	LD	A,$17
+	LD	(SOUND3),A	;(S)
+	RET
+;============================================
+;=					    =
+;============================================
+DUSXSD
+	DB	$20,$E0,$00,$00
+DUSYSD
+	DB	$00,$00,$E0,$20
+;- - - - - - - - - - - - - - - - - 
+DUSHST
+	LD	A,(YKFLAG)
+	AND	A
+	JR	Z,DUSS08	
+;
+	LD	A,(PLSTAT)
+	AND	A
+	RET	NZ
+;;	JR	NZ,DUSS10	; Yokogamen swim & climb -> not dush !
+;
+	LD	A,(PLCMKI)
+	AND	%00000010
+	RET	NZ
+;;	JR	NZ,DUSS10	;上下向きはダッシュ無し！
+;
+DUSS08
+	LD	A,(DUSHFG)
+	AND	A
+	RET	NZ
+;;	JR	NZ,DUSS10
+;
+	LD	A,(PLZPSL)
+	LD	HL,PLJPFG
+	OR	(HL)
+	RET	NZ
+;;	JR	NZ,DUSS10
+;
+	LD	A,(PLWKCT)
+	ADD	A,$2
+	LD	(PLWKCT),A	; Move count clear !
+;
+	CALL	DSSDST
+;
+;	LD	A,(FRCNT)
+;	AND	$07
+;	JR	NZ,DSS900
+;;
+;	LD	A,$03
+;	LD	(SOUND3),A	;(S)
+;DSS900
+	LD	A,(DUSHCT)
+	INC	A
+	LD	(DUSHCT),A
+	CP	$20
+	RET	NZ
+;;	JR	NZ,DUSS10
+;
+	LD	(DUSHFG),A
+;
+	XOR	A
+	LD	(SPCTTM),A
+	LD	(SPCTWT),A
+;
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$0
+	LD	HL,DUSXSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLXSPD),A
+;
+	LD	HL,DUSYSD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLYSPD),A
+;
+;	LD	A,$4+1
+;	LD	(PCUTFG),A
+;	LD	(WCUTFG),A	; Ken kamae set !
+;
+	XOR	A
+	LD	(KENOFF),A
+DUSS10
+	RET
+;----------------------
+DSSDST
+	LD	A,(FRCNT)
+	AND	$07
+	LD	HL,PLZPSL
+	OR	(HL)
+	LD	HL,PLSTOP
+	OR	(HL) ;AND	A
+	LD	HL,PLJPFG
+	OR	(HL) ;AND	A
+	RET	NZ
+;;	JR	NZ,DSSS10
+;
+;;	LD	A,(FRCNT)
+;;	AND	$07
+;;	JR	NZ,DSSS01
+;;;
+;;	LD	A,$07
+;;	LD	(SOUND3),A	;(S)
+;;DSSS01
+;	LD	A,(FRCNT)
+;	AND	$07
+;	RET	NZ
+;
+	LD	A,(PLXPSL)
+	LD	(WORK0),A
+;
+	LD	A,(FTBGNO)
+	CP	$05
+	JR	Z,DSSS20	
+;
+	LD	A,$07
+	LD	(SOUND3),A	;(S)
+;
+	LD	A,(PLYPSL)
+	ADD	A,$06
+	LD	(WORK1),A
+;
+	LD	A,DSZN
+	JP  	EXIDSH
+;
+DSSS20
+	LD	A,(PLYPSL)
+	LD	(WORK1),A
+;
+	LD	A,$0E
+	LD	(SOUND1),A	;(S)
+;
+	LD	A,WTUP2
+	JP  	EXIDSH
+;-OLD - - - - - - - - - - - - - - - - 
+;DUSHST
+;	LD	A,(DUSHTM)
+;	AND	A
+;	JR	Z,DUSS08
+;	DEC	A
+;	LD	(DUSHTM),A
+;DUSS08
+;	LD	A,(DUSHFG)
+;	AND	A
+;	JR	NZ,DUSS10
+;;
+;	LD	A,(PLZPSL)
+;	AND	A
+;	JR	NZ,DUSS10
+;;
+;	LD	A,(KEYA2)
+;	AND	$0F
+;	JR	Z,DSS010	; Triger in ?
+;;				; yes !
+;	LD	E,A
+;	LD	A,(DUSHTM)
+;	AND	A
+;	LD	A,E
+;	JR	Z,DSS008	; 2 times in ?
+;;				; yes !
+;	LD	HL,DUSHMK
+;	CP	(HL)
+;	JR	NZ,DSS011	; Before muki equ ?
+;;				; yes !
+;DSS008
+;	LD	(DUSHMK),A
+;;
+;	LD	A,(DUSHTM)
+;	ADD	A,$0C
+;	LD	(DUSHTM),A
+;DSS010
+;	LD	A,(DUSHTM)
+;	CP	$10
+;	JR	C,DUSS10
+;;
+;	LD	A,(KEYA1)
+;	AND	$0F
+;	JR	NZ,DSS020
+;;
+;DSS011
+;	XOR	A
+;	LD	(DUSHCT),A
+;	JR	DUSS10
+;;- - - - - - - - - - - - - - - - - -
+;DSS020
+;	LD	A,$14
+;	LD	(DUSHTM),A
+;	LD	(PLSTOP),A
+;;
+;	LD	A,(PLWKCT)
+;	ADD	A,$2
+;	LD	(PLWKCT),A	; Move count clear !
+;;
+;	LD	A,(DUSHCT)
+;	INC	A
+;	LD	(DUSHCT),A
+;	CP	$10
+;	JR	NZ,DUSS10
+;;
+;	LD	(DUSHFG),A
+;;
+;	LD	A,(PLCMKI)
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,DUSXSD
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	LD	(PLXSPD),A
+;;
+;	LD	HL,DUSYSD
+;	ADD	HL,DE
+;	LD	A,(HL)
+;	LD	(PLYSPD),A
+;;
+;	LD	A,$4+1
+;	LD	(PCUTFG),A
+;	LD	(WCUTFG),A	; Ken kamae set !
+;;
+;	XOR	A
+;	LD	(DUSHTM),A
+;DUSS10
+;	RET
+;------------------------
+PLSDCL
+	XOR	A
+	LD	(PLXSPD),A
+	LD	(PLYSPD),A
+	RET
+;===================================
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Sword C set				 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;
+PLWPCS
+	CALL	PLCTBC	; Center BG check (Sadow etc set)
+;
+PLWPCS2
+	LD	A,(PLMODE)
+	CP	PSWIM
+	RET	Z
+;
+	LD	A,(WCUTFG)
+;;	LD	A,(PCUTFG)
+	AND	A
+	JR	Z,PWPC90
+;
+	LD	BC,OAM+$10
+;
+	LD	A,(PLYPS2)
+	LD	HL,PLDSYD
+	ADD	A,(HL)
+	LD	(WORK0),A
+	LD	A,(PLXPSL)
+	LD	(WORK1),A
+;
+	LD	HL,WORK3
+	LD	(HL),$00
+;
+	LD	A,(SPCTWT)
+	CP	$28
+	JR	C,PWPC8A	; Spin cut chance ?
+;				; yes !
+	LD	A,(FRCNT)
+;;	RLA
+	RLA
+	RLA
+	AND	%00010000
+	LD	(HL),A
+PWPC8A
+	LD	A,(PKENYD)
+	LD	H,A
+	LD	A,(PKENXD)
+	LD	L,A
+;
+	LD	A,(PKENPT)
+	LD	(WORK2),A
+;
+	LD	A,(PLYPSL)
+	CP	$88
+	RET	NC
+;
+	JP	KNCSET
+PWPC90
+	LD	A,(POWDRTM)
+	PUSH	AF
+	BIT	7,A
+	JP	Z,PWPC92	; Rot ?
+;				; yes !
+	LD	A,$02
+	CALL	PBSET
+	CALL	PLROTCS
+;
+	LD	A,(POWDRTM)
+	AND	$7F
+	CP	$0C
+	JR	NZ,PWPC92
+;
+	LD	HL,MSGEFG
+	LD	A,(SCRLFG)
+	OR	(HL)
+	JR	NZ,PWPC92
+;
+;	LD	A,(PFUCKFG)
+;;;	LD	A,(PRTBMFG)
+;	CP	$01    ;
+;	JR	NC,PWPC92	; Max 1 of !!
+;
+;;	LD	A,(RODCT)
+;;	AND	A
+;;	JR	NZ,PWPC911
+;;;
+;;	CALL	NOSDST	;(S)
+;;	JR	PWPC92
+;;PWPC911
+;;;
+;;	SUB	$1
+;;	DAA
+;;	LD	(RODCT),A
+;
+	CALL	PLCMST	;PLCMKI set
+;
+	LD	A,PRTBM
+	CALL	PLSHST
+	JR	C,PWPC92
+;
+	LD	A,$0D
+	LD	(SOUND3),A	;(S)
+;
+	LD	A,$02
+	CALL	PBSET
+	CALL	PRTBMSTS
+PWPC92
+	POP	AF
+	LD	(POWDRTM),A	
+	RET
+;--------------------------------------------------------
+;							 |
+;	ＫＮＣＳＥＴ	；　剣 キャラセット		 |
+;							 |
+;	Input						 |
+;	BC   :Set OAM start addres			 |
+;	WORK0:Main X pos				 |
+;	WORK1:Main Y pos				 |
+;	H    :Y add value				 |							
+;	L    :X add value				 |
+;	WORK2:Ken. paturn 0-7				 |
+;							 |
+;--------------------------------------------------------
+KNCSCD
+	DB	$08,$06	;0
+	DB	$0C,$0A	;1
+	DB	$FF,$04	;2
+	DB	$0A,$0C	;3
+	DB	$06,$08	;4
+	DB	$0A,$0C	;5
+	DB	$FF,$04	;6
+	DB	$0C,$0A	;7
+KNCSAD
+	DB	$20,$20	;0
+	DB	$60,$60	;1
+	DB	$00,$00	;2
+	DB	$40,$40	;3
+	DB	$00,$00	;4
+	DB	$00,$00	;5
+	DB	$40,$40	;6
+	DB	$20,$20	;7
+;===========================================
+KNCSET
+	PUSH	HL
+;
+	LD	A,(WORK0)
+	ADD	A,H
+	LD	(BC),A		; Y left
+	INC	BC
+	LD	A,(WORK1)
+	ADD	A,L
+	LD	(BC),A		; X left
+	INC	BC
+;
+	LD	HL,KNCSCD
+	LD	A,(WORK2)
+	SLA	A
+	LD	E,A
+	LD	D,$0
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(BC),A		; Chr left
+	CP	$FF
+	JR	NZ,KNC010	; Not chr ?
+;				; yes ! clear
+	DEC	BC
+	LD	A,$F0
+	LD	(BC),A
+	INC	BC
+KNC010
+	INC	BC
+	LD	HL,KNCSAD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,WORK3	; Color
+	OR	(HL)
+	LD	(BC),A		; Atr left
+	INC	BC
+;
+	POP	HL
+;
+	LD	A,(WORK0)
+	ADD	A,H
+	LD	(BC),A		; Y pos right
+	INC	BC
+	LD	A,(WORK1)
+	ADD	A,L
+	ADD	A,$08
+	LD	(BC),A		; X pos right
+	INC	BC
+;
+	LD	HL,KNCSCD+1
+;;	LD	A,(KENPT)
+;;	SLA	A
+;;	LD	E,A
+;;	LD	D,$0
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(BC),A		; Chr right
+	INC	BC
+	LD	HL,KNCSAD+1
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,WORK3	; Color
+	OR	(HL)
+	LD	(BC),A		; Atr right
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				         %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TLCRXD
+	DB	$10,$F0,$08,$08
+TLCRYD
+	DB	$0C,$0C,$F0,$10
+;- - - - - - - - - - - - - - - - - - - - - -
+TLCRST
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$0
+;
+	LD	HL,TLCRXD
+	ADD	HL,DE
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	LD	(TLCRXL),A
+;
+	LD	HL,TLCRYD
+	ADD	HL,DE
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	LD	(TLCRYL),A
+;
+	LD	A,$02
+	LD	(TLCRTM),A
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Player in door & window close		 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;SVDAD
+;	DW	SAVEI1
+;	DW	SAVEI2
+;	DW	SAVEI3
+;- - - - - - - - - - - - - -
+PLINDR1
+	CALL	PLIDBC
+;
+;	CALL	PLSDCL
+;
+;	LD	A,(MSGEFG)
+;	AND	A
+;	JR	Z,PIDR090	;マリンと一緒？
+;;				;YES !
+;	LD	(PIMODE),A
+;	RET
+;PIDR090
+	LD	A,(PIMODE)
+	AND	A
+	JR	Z,PIDR0A0
+;
+	XOR	A
+	LD	(PIMODE),A
+;
+	JP	NXGOTO
+PIDR0A0
+	CALL	FDIN
+;
+	XOR	A
+	LD	(TILTCT),A
+;
+	INC	A
+	LD	(ENSTFG),A
+;
+	LD	A,(SBHR)
+	CP	$4
+	JP	NZ,PLID1F0
+;
+	XOR	A
+	LD	(SCCH),A
+	LD	(SCCV),A
+	LD	(DJMSTM),A	;ダンジョン案内メッセージ！
+;
+	LD	E,ENNO
+	LD	HL,ENMODE	;敵全部クリアー
+PID1020
+	LD	(HLI),A
+	DEC	E
+	JR	NZ,PID1020
+;
+	LD	A,(SHOHFG)
+	AND	A
+	JR	Z,PID009	; Shop manbiki ?
+;			; yes !
+	PUSH	AF
+;
+	LD	A,$4
+	CALL	PBSET
+;
+	POP	AF
+	CALL	SHOPGET	; Seiko
+;
+	LD	HL,MANBICT
+	INC	(HL)
+	LD	HL,MANBIKI
+	INC	(HL)
+;
+	LD	A,$01
+	LD	(MANBIKIF),A
+	XOR	A
+	LD	(PLCHPT),A
+PID009
+	LD	A,(YKFLAG)
+	LD	(WORKD),A
+;
+	LD	A,GPLAY  ;INIT
+	LD	(GMMODE),A
+;
+	XOR	A
+	LD	(ITMODE),A
+	LD	(FADEON),A
+;
+	LD	(YKFLAG),A
+;- - - - - - - - - - - - - - - - -
+	LD	HL,NXRMMD
+	LD	A,(DJFLAG)
+	LD	(WORKF),A
+	AND	A
+	JR	NZ,PID00C	; Many door ?
+;
+	LD	HL,DRPSBF
+;
+	LD	C,$00
+SSS3
+	LD	A,(PLXPSL)
+	SWAP	A
+	AND	$0F
+	LD	E,A
+	LD	A,(PLYPSL)
+	SUB	$08
+	AND	$F0
+	OR	E
+	CP	(HL)
+	JR	Z,SSSW
+;
+	INC	HL
+	INC	C
+	LD	A,C
+	CP	$04
+	JR	NZ,SSS3
+;
+SSSW
+	LD	A,C
+	SLA	A
+	SLA	A
+	ADD	A,C	;*5
+	LD	E,A
+	LD	D,$00
+;
+	LD	HL,NXRMMD
+	ADD	HL,DE		; Yes !
+;
+PID00C
+	PUSH	HL
+;
+	LD	A,(HLI)
+	LD	(DJFLAG),A
+	CP	$02
+	JR	NZ,PID010
+;
+	LD	(YKFLAG),A
+	DEC	A	;(A)
+	LD	(DJFLAG),A
+;
+	LD	A,$01
+	LD	(PLSTAT),A	;ハシゴ登り！
+PID010
+	LD	A,(HLI)
+	LD	(DNJNNO),A
+;
+	LD	A,(DJFLAG)
+	AND	A
+	LD	A,(HLI)
+	LD	(GRNDPT),A
+	JR	NZ,PLID180
+;
+	LD	A,(WORKF)
+	AND	A
+	JR	Z,PID012	;ダンジョンから地上？
+;				;YES !
+	XOR	A
+	LD	(POWRFG),A
+PID012
+	JR	PLID1A0
+;-----------------------------
+PLID180
+	LD	C,A
+;
+	LD	A,$14
+;;	LD	A,$0A
+	CALL	PBSET
+;
+	PUSH	HL
+;
+	LD	A,(DNJNNO)
+	SWAP	A
+	LD	E,A
+	LD	D,$00
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	LD	HL,DJRMDT
+	ADD	HL,DE
+;
+	LD	A,(DNJNNO)
+	CP	$06
+	JR	NZ,DICK10	;レベル７？
+;				;YES!
+	LD	A,(WARPSV+$06)
+	AND	%00000100
+	JR	Z,DICK10	;はしら落ちた？
+;
+	LD	HL,D7DAT2	;YES !
+DICK10
+	LD	E,$00
+PLID188
+	LD	A,(HLI)
+	CP	C
+	JR	Z,PLID190
+	INC	E
+	LD	A,E
+	CP	$40
+	JR	NZ,PLID188
+PLID190
+	LD	A,E
+	LD	(DNJNPT),A
+;
+;;	POP	HL
+;
+	LD	A,(WORKF)
+	AND	A
+	JR	NZ,PLID19F	;地上からダンジョン？
+;				;YES !
+	XOR	A
+	LD	(POWRFG),A
+;
+	LD	A,(DNJNNO)
+	CP	DJMAX
+	JR	NC,PLID19F
+;
+	LD	A,$02
+	CALL	PBSET
+	CALL	DJMPST	;マップバッフアーセット
+;
+	LD	A,$30
+	LD	(DJMSTM),A	;ダンジョン案内メッセージセット！
+;
+;;	LD	A,$01
+;;	LD	($D3DB),A	
+;
+	XOR	A
+	LD	(ONOFFG),A
+	LD	(ONOFTM),A	; On off block time reset !
+PLID19F
+	POP	HL
+PLID1A0
+	LD	A,(HLI)
+	LD	(WPLXPSL),A
+	LD	A,(HL)
+	LD	(WPLYPSL),A
+;
+	POP	HL
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	NZ,PLID1F00
+	LD	A,(WORKD)
+	AND	A
+	JR	NZ,PLID1F0	; Yoko gamen not save !
+;
+;;
+;	LD	A,(WORKF)
+;	AND	A
+;	JR	NZ,PLID1F0	;地上からダンジョン？
+;				;YES !
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,DID010
+;				;YES !
+	LD	A,(DNJNNO)
+	CP	DJMAX
+	JR	NC,DID010	;決闘ダンジョン？
+;				;YES !
+	LD	E,A	;入り口！
+	SLA	A
+	SLA	A
+	ADD	A,E
+	LD	E,A
+	LD	D,$00
+	LD	HL,WPDJPT
+	ADD	HL,DE
+;
+;;	LD	A,$01
+	LD	A,$14
+	LD	($2100),A
+;
+	CALL	DID010
+;
+	PUSH	DE
+	LD	A,(DNJNNO)
+	LD	E,A
+	LD	D,$00
+	LD	HL,WPDJPTN	;入り口ダンジョンポイント！
+	ADD	HL,DE
+	LD	A,(HL)
+	POP	DE
+	LD	(DE),A	;DNJNPT
+	RET
+;-------------------------------------
+DID010
+	LD	A,$00
+;;	LD	(BSFLFG2),A
+;
+	LD	(WORK0),A
+	LD	DE,CONTBF	; Continue start pos save buffer
+PID00D
+	LD	A,(HLI)
+	LD	(DE),A
+	INC	DE
+	LD	A,(WORK0)
+	INC	A
+	LD	(WORK0),A
+	CP	$05
+	JR	NZ,PID00D
+;
+	LD	A,(DNJNPT)
+	LD	(DE),A
+PLID1F0
+	RET
+PLID1F00
+	XOR	A
+	LD	(PLCMKI),A
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				         %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PLINDR2
+	CALL	PLIDBC
+;
+	LD	A,(OKWARPF)
+	AND	A
+	JR	Z,PLID210
+;
+	XOR	A
+	LD	(OKWARPF),A
+;
+	LD	A,$30
+	LD	(WAVTIM),A
+	LD	A,$03
+	LD	(WAVFLG),A
+;
+	LD	A,$04
+	LD	(SBHR),A
+	JR	PLID220
+;
+PLID210
+	CALL	FDOUT
+;
+	LD	A,(SBHR)
+	CP	$04
+	JR	NZ,PLID290
+;
+PLID220
+	LD	A,(WPLMODE)
+	CP	PSWIM
+	JR	Z,PLID221
+;
+	LD	A,PMOVE
+PLID221
+	LD	(PLMODE),A
+;
+	LD	A,(MANBIKIF)
+	AND	A
+	JR	Z,PLID270
+;
+	XOR	A
+	LD	(MANBIKIF),A
+;
+	LD	A,$36
+	CALL	MSGCHK
+PLID270
+;	LD	A,(FUKUROF)
+;	AND	A
+;	JR	Z,PLID290
+;;
+;	XOR	A
+;	LD	(FUKUROF),A
+;;
+;	LD	A,$80
+;	LD	(WANFLG),A	;ワンワンいなくなる！
+;;
+;	LD	A,FUKURO
+;	CALL	ENIDSHL
+;;
+;	LD	HL,ENXPSL
+;	ADD	HL,DE
+;	LD	(HL),$00
+;;
+;	LD	HL,ENYPSL
+;	ADD	HL,DE
+;	LD	(HL),$30
+PLID290
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				         %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLOTDR1
+;	CALL	FDIN
+;;
+;	LD	A,(SBHR)
+;	CP	$4
+;	JR	NZ,PLOT190
+;;
+;	LD	A,(WGRNDPT)
+;	LD	(GRNDPT),A
+;;
+;	LD	A,(YKFLAG)
+;	AND	A
+;	JR	Z,PO1010
+;;
+;	XOR	A
+;	LD	(YKFLAG),A
+;	JR	PO1020
+;PO1010
+;	XOR	A
+;	LD	(DJFLAG),A
+;PO1020
+;	LD	A,(WPLXPS2)
+;	LD	(WPLXPSL),A
+;	LD	A,(WPLYPS2)
+;	LD	(WPLYPSL),A
+;;
+;	LD	A,GPLAY  ;GINIT
+;	LD	(GMMODE),A
+;	XOR	A
+;	LD	(ITMODE),A
+;PLOT190
+;	RET
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;;%				         %
+;;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLOTDR2
+;	CALL	FDOUT
+;;
+;	LD	A,(SBHR)
+;	CP	$04
+;	JR	NZ,PLOT290
+;;
+;	LD	A,PMOVE
+;	LD	(PLMODE),A
+;PLOT290
+;	RET
+;=====================================
+FDIN
+	LD	HL,SBCNT
+	INC	(HL)
+	LD	A,(SBCNT)
+	AND	$03
+	JR	NZ,N3
+;
+	LD	HL,SBHR
+	LD	A,(HL)
+	CP	$04
+	JR	Z,PIDEND2
+	INC	(HL)
+;
+	XOR	A
+	LD	(WORK0),A
+SNUTS	
+	LD	A,(WORK0)
+	CP	$03
+	JR	Z,N3		
+;
+	LD	HL,BGPFG
+	LD	E,A
+	LD	D,$0
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	C,A
+	LD	B,$0
+LOPN
+	LD	A,C
+	AND	$03
+;;	CP	$00
+	JR	Z,N2
+	DEC	C
+N2
+	RRC	C
+	RRC	C
+	INC	B
+	LD	A,B
+	CP	$04
+	JR	NZ,LOPN
+;
+	LD	A,C
+	LD	(HL),A
+;
+	LD	HL,WORK0
+	INC	(HL)
+	JR	SNUTS
+N3
+;	RET
+;--------------------------------
+PIDEND
+;	LD	A,PMOVE
+;	LD	(PLMODE),A
+;	RET
+;---------------------------------------
+PIDEND2
+;
+;;	LD	A,(KEYA1)
+;;	AND	%00001000
+;;	JR	Z,PIE010
+;;;
+;	LD	A,(GRNDPT)
+;	LD	(WGRNDPT),A
+;;
+;	LD	A,(PLXPSL)
+;	LD	(WPLXPS2),A
+;	LD	A,(PLYPSL)
+;	LD	(WPLYPS2),A
+;;
+;	LD	A,$30
+;	LD	(WPLXPSL),A
+;	LD	A,$30
+;	LD	(WPLYPSL),A
+;;
+;	LD	A,$FF
+;	LD	(GRNDPT),A
+;;
+;	LD	A,GINIT
+;	LD	(GMMODE),A
+;	XOR	A
+;	LD	(ITMODE),A
+	RET
+;-----------------------------------
+;POUTST
+;	LD	A,GINIT
+;	LD	(GMMODE),A
+;	XOR	A
+;	LD	(ITMODE),A
+;;
+;	LD	A,(WPLXPS2)
+;	LD	(WPLXPSL),A
+;	LD	A,(WPLYPS2)
+;	LD	(WPLYPSL),A
+;PIE010
+;	RET
+;====================================================
+SBHRDT
+	DB	%00000000
+	DB	%00000001
+	DB	%00000010
+	DB	%00000011
+;
+	DB	%00000000
+	DB	%00000011
+	DB	%00000001
+	DB	%00000000
+;
+	DB	%00000000
+	DB	%00000001
+	DB	%00000010
+	DB	%00000011
+;------------------------------------------
+FDOUT
+	LD	HL,SBCNT
+	INC	(HL)
+	LD	A,(SBCNT)
+	AND	$03
+	JR	NZ,N23
+;
+	LD	HL,SBHR
+	LD	A,(HL)
+	INC	(HL)
+	CP	$04
+	JR	Z,PIDEND
+;
+	XOR	A
+	LD	(WORK0),A
+SNUTS2	
+	LD	A,(WORK0)
+	CP	$03
+	JR	Z,N23		
+;
+	LD	HL,BGPFG
+	LD	E,A
+	LD	D,$0
+	ADD	HL,DE
+	LD	A,(HL)
+	PUSH	HL
+	LD	C,A
+	LD	B,$0
+LOPN2
+	LD	A,(WORK0)
+	SLA	A
+	SLA	A
+	OR	B
+	LD	E,A
+	LD	HL,SBHRDT
+	ADD	HL,DE
+	LD	A,C
+	AND	$03
+	CP	(HL)    ;$03
+	JR	Z,N22
+	INC	C
+N22
+	RRC	C
+	RRC	C
+	INC	B
+	LD	A,B
+	CP	$04
+	JR	NZ,LOPN2
+;
+	LD	A,C
+	POP	HL
+	LD	(HL),A
+;
+	LD	HL,WORK0
+	INC	(HL)
+	JR	SNUTS2
+N23
+	RET
+;--------------------------------
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Player charactert tr. 			 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;=============================================
+PLCHNO	; Character data !!
+;		; L   R
+	DB	$00,$02	;0
+	DB	$02,$00	;1
+	DB	$10,$02	;2
+	DB	$12,$00	;3
+	DB	$04,$06	;4
+	DB	$06,$04	;5
+	DB	$08,$0A	;6
+	DB	$0C,$0E	;7
+	DB	$18,$0A	;8
+	DB	$1C,$0E	;9
+	DB	$0A,$08	;A
+	DB	$0E,$0C	;B
+	DB	$0A,$18	;C
+	DB	$0E,$1C	;D
+;
+	DB	$20,$22	;E
+	DB	$24,$26	;F
+	DB	$28,$2A	;10
+	DB	$2A,$28	;1
+	DB	$30,$32	;2
+	DB	$20,$22	;3
+	DB	$34,$36	;4
+	DB	$24,$26	;5
+	DB	$38,$3A	;6
+	DB	$28,$2A	;7
+	DB	$3A,$38	;8
+	DB	$2A,$28	;9
+	DB	$40,$40	;A
+	DB	$42,$42	;B
+	DB	$44,$46	;C
+	DB	$48,$4A	;D
+	DB	$4C,$4E	;E
+	DB	$50,$52	;F
+	DB	$4E,$4C	;20
+	DB	$52,$50	;21
+;-
+	DB	$80,$02	;22
+	DB	$82,$00	;23
+	DB	$84,$86	;24
+	DB	$88,$8A	;25
+	DB	$8C,$8E	;26
+	DB	$90,$92	;27
+	DB	$94,$96	;28
+	DB	$98,$9A	;29
+	DB	$9C,$9E	;2A
+	DB	$9A,$A2	;2B
+	DB	$A4,$08	;2C
+	DB	$A6,$0C	;2D
+	DB	$A8,$AA	;2E
+	DB	$AC,$AE	;2F
+	DB	$B0,$B2	;30
+	DB	$B4,$B6	;31
+	DB	$B0,$B2	;32
+	DB	$B4,$B6	;33
+	DB	$04,$C0	;34
+	DB	$06,$C2	;35
+;
+	DB	$5A,$58	;36
+	DB	$5E,$5C	;37
+	DB	$58,$5A	;38
+	DB	$5C,$5E	;39
+	DB	$44,$46	;3A
+	DB	$6E,$6E	;3B
+	DB	$40,$40	;3C
+	DB	$56,$56	;3D
+;
+	DB	$7A,$78	;3E
+	DB	$7E,$7C	;3F
+	DB	$78,$7A	;40
+	DB	$7C,$7E	;41
+	DB	$74,$76	;42
+	DB	$76,$74	;43
+	DB	$70,$72	;44
+	DB	$72,$70	;45
+;
+	DB	$CA,$C8	;46
+	DB	$D6,$D4	;47
+	DB	$C8,$CA	;48
+	DB	$D4,$D6	;49
+	DB	$CC,$CE	;4A
+	DB	$D8,$DA	;4B
+	DB	$C4,$C4	;4C
+	DB	$C6,$C6	;4D
+	DB	$DC,$DC	;4E ;潜り１
+	DB	$DE,$DE	;4F ;潜り２
+;- Kurukuru door - -
+	DB	$EA,$EC ;50
+	DB	$EE,$F0 ;51
+	DB	$F2,$F4 ;52
+	DB	$F6,$F6 ;53
+	DB	$F8,$FA ;54
+;- -Fall down --
+	DB	$E0,$E2	;55
+	DB	$E4,$E6	;56
+	DB	$E8,$E8	;57
+;- Yoko swim --
+	DB	$10,$12	;58
+	DB	$14,$16	;59
+	DB	$18,$1C	;5A
+	DB	$12,$10	;5B
+	DB	$16,$14	;5C
+	DB	$1C,$18	;5D
+;- -Kaiten jump - -
+	DB	$66,$68 ;5E
+	DB	$6A,$6C ;5F
+	DB	$68,$66 ;60
+	DB	$68,$66 ;61
+	DB	$6C,$6A ;62
+	DB	$66,$68 ;63
+	DB	$60,$60 ;64
+	DB	$62,$62 ;65
+	DB	$64,$64 ;66
+	DB	$62,$62 ;67
+	DB	$64,$64 ;68
+	DB	$60,$60 ;69
+;- Fail - -
+	DB	$54,$54 ;6A
+;- Ken power up demo - -
+	DB	$3C,$3E ;6B
+;- Item chach ---
+	DB	$FE,$FE ;6C
+;- Ana hori ---
+	DB	$18,$1A	;6D	
+	DB	$1C,$1E	;6E	
+	DB	$2C,$2E	;6F	
+	DB	$B8,$BA	;70	
+	DB	$2E,$2C	;71	
+	DB	$BA,$B8	;72	
+	DB	$BC,$BE	;73	
+	DB	$D0,$D2	;74	
+;- -オカリナ ふき
+	DB	$A0,$FC	;75
+	DB	$FC,$A0	;76
+;=====================================
+PLFLPD	; Flip data
+;;	DB	$20,$20	;R
+;;	DB	$00,$00	;L
+;;	DB	$00,$20	;U
+;;	DB	$00,$20	;D
+;
+	DB	$00,$00	;0
+	DB	$20,$20	;1
+	DB	$00,$00	;2
+	DB	$00,$20	;3
+	DB	$00,$00	;4
+	DB	$20,$20	;5
+	DB	$00,$00	;6
+	DB	$00,$00	;7
+	DB	$00,$00	;8
+	DB	$00,$00	;9
+	DB	$20,$20	;A
+	DB	$20,$20	;B
+	DB	$20,$20	;C
+	DB	$20,$20	;D
+;
+	DB	$00,$00	;E
+	DB	$00,$00 ;F
+	DB	$00,$00	;10
+	DB	$20,$20	;1
+	DB	$00,$00	;2
+	DB	$00,$00	;3
+	DB	$00,$00	;4
+	DB	$00,$00	;5
+	DB	$00,$00	;6
+	DB	$00,$00	;7
+	DB	$20,$20	;8
+	DB	$20,$20	;9
+	DB	$00,$20	;A
+	DB	$00,$20	;B
+	DB	$00,$00	;C
+	DB	$00,$00	;D
+	DB	$00,$00	;E
+	DB	$00,$00	;F
+	DB	$20,$20	;20
+	DB	$20,$20	;21
+;
+	DB	$00,$00	;22
+	DB	$00,$20	;23
+	DB	$00,$00	;24
+	DB	$00,$00	;25
+	DB	$00,$00	;26
+	DB	$00,$00	;27
+	DB	$00,$00	;28
+	DB	$00,$00	;29
+	DB	$00,$00	;2A
+	DB	$20,$00	;2B
+	DB	$00,$20	;2C
+	DB	$00,$20	;2D
+	DB	$00,$00	;2E
+	DB	$00,$00	;2F
+	DB	$00,$00	;30
+	DB	$00,$00	;31
+	DB	$00,$00	;32
+	DB	$00,$00	;33
+	DB	$00,$00	;34
+	DB	$20,$00	;35
+;
+	DB	$20,$20	;36
+	DB	$20,$20	;37
+	DB	$00,$00	;38
+	DB	$00,$00	;39
+	DB	$00,$00	;3A
+	DB	$00,$20	;3B
+	DB	$00,$20	;3C
+	DB	$00,$20	;3D
+;
+	DB	$20,$20	;3E
+	DB	$20,$20	;3F
+	DB	$00,$00	;40
+	DB	$00,$00	;41
+	DB	$00,$00	;42
+	DB	$20,$20	;43
+	DB	$00,$00	;44
+	DB	$20,$20	;45
+;
+	DB	$20,$20	;46
+	DB	$20,$20	;47
+	DB	$00,$00	;48
+	DB	$00,$00	;49
+	DB	$00,$00	;4A
+	DB	$00,$00	;4B
+	DB	$00,$20	;4C
+	DB	$00,$20	;4D
+	DB	$00,$20	;4E
+	DB	$00,$20	;4F
+;- - Kuru kuru door - -
+	DB	$00,$00	;50
+	DB	$00,$00	;51
+	DB	$00,$00	;52
+	DB	$00,$20	;53
+	DB	$00,$00	;54
+;- -Fall down --
+	DB	$00,$00	;55
+	DB	$00,$00	;56
+	DB	$00,$20	;57
+;- -Yoko swim --
+	DB	$00,$00	;58
+	DB	$00,$00	;59
+	DB	$00,$00	;5A
+	DB	$20,$20	;5B
+	DB	$20,$20	;5C
+	DB	$20,$20	;5D
+;- -Kaiten jump - -
+	DB	$00,$00 ;5E
+	DB	$00,$00 ;5F
+	DB	$60,$60 ;60
+	DB	$20,$20 ;61
+	DB	$20,$20 ;62
+	DB	$40,$40 ;63
+	DB	$00,$20 ;64
+	DB	$00,$20 ;65
+	DB	$00,$20 ;66
+	DB	$40,$60 ;67
+	DB	$40,$60 ;68
+	DB	$40,$60 ;69
+;- Fail - -
+	DB	$00,$20 ;6A
+;- Ken power up demo - -
+	DB	$00,$00 ;6B
+;- Item chach ---
+	DB	$00,$20 ;6C
+;- Ana hori ---
+	DB	$00,$00	;6D	
+	DB	$00,$00	;6E	
+	DB	$00,$00	;6F	
+	DB	$00,$00	;70	
+	DB	$20,$20	;71	
+	DB	$20,$20	;72	
+	DB	$00,$00	;73	
+	DB	$00,$00	;74	
+;- - Okarina - -
+	DB	$00,$00	;75
+	DB	$20,$20	;76
+;------------------------------------------
+;- Character paturn set ---
+PLPTST
+	LD	A,(PLWKCT)
+	SRA	A
+	SRA	A
+	SRA	A
+	AND	$1
+	LD	D,A
+	LD	A,(PLCMKI)
+	SLA	A
+	OR	D
+	LD	C,A
+	LD	B,$0
+;;	LD	HL,PLFLPD
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	LD	(PLFLIP),A
+;
+	LD	HL,PLCHSW
+	LD	A,(PLMODE)
+	CP	PSWIM
+	JR	NZ,PLMAF0
+;
+	LD	A,(PLSTAT)
+	AND	A
+	JR	Z,PLMAE8
+;
+	LD	HL,PLCHDB
+PLMAE8
+	JR	PLMA10
+;--------------------------------
+PLMAF0
+	LD	A,(YKFLAG)
+	AND	A
+	JR	Z,PLMAF1
+;
+	LD	A,(PLSTAT)
+	CP	$02
+	JR	NZ,PLMAF1
+;
+	LD	HL,PLCHYSW
+	JR	PLMA10
+PLMAF1
+	LD	A,(PLCAMD)
+	CP	$1
+	JR	Z,PLMA0C
+;
+	LD	A,(IKADAON)
+	AND	A
+	JR	NZ,PLMAF2
+;
+	LD	A,(PLOSHI)
+	AND	A
+	JR	NZ,PLMA08
+;
+PLMAF2
+	LD	A,(TATEFG)
+	AND	A
+	JR	NZ,PLMA00
+;
+	LD	HL,PLCHPD
+	JR	PLMA10
+PLMA00
+	LD	HL,PLCHP2
+	CP	$2
+	JR	NZ,PLMA02	;Big tate ?
+;				;yes !
+	LD	HL,PLCHP3
+PLMA02
+	LD	A,(TATEON)
+	AND	A
+	JR	Z,PLMA03	; Tate using ?
+;				; yes !
+	LD	A,L
+	ADD	A,$8
+	LD	L,A
+;
+	LD	A,H
+	ADC	A,$0
+	LD	H,A
+PLMA03
+	JR	PLMA10
+PLMA08
+	LD	HL,PLCHPO
+	JR	PLMA10
+PLMA0C
+	LD	HL,PLCHPC
+PLMA10
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(PLCHPT),A
+	RET
+;============================================
+;TOURST
+;;;;;	LD	A,$01
+;	LD	(CHTRF2),A ;TOURFG),A
+;;
+;	LD	A,$01
+;;	LD	($2100),A
+;
+;;	LD	A,(DNJNNO)
+;;;;	SLA	A
+;	LD	E,A
+;	LD	D,$00
+;;	LD	HL,DJYKBK
+;	ADD	HL,DE
+;;;	LD	A,(HLI)
+;;;	LD	E,A
+;;;	LD	D,(HL)
+;	LD	D,(HL)
+;	LD	E,$00
+;;;
+;	LD	A,$0D
+;	LD	($2100),A
+;S23
+;	LD	C,$20
+;	LD	HL,TOURBF  ;CHRRAM+$1100
+;EEW
+;	LD	B,%10000000
+;;
+;	LD	A,(DE)
+;	LD	(HL),A
+;	INC	HL
+;	INC	DE
+;	LD	A,(DE)
+;	LD	(HL),A
+;SSWW
+;	LD	A,(HL)
+;	AND	B
+;	JR	NZ,SSSSA
+;;
+;	LD	A,(CHTRF2) ;TOURFG)
+;	CP	$5  ;01
+;	JR	Z,SSSSA
+;	CP	$6  ;02
+;	JR	NZ,DSS
+;;---HALF DARK-------------------------------
+;	DEC	HL
+;;
+;	LD	A,(HL)
+;	XOR	B
+;	LD	(HLI),A
+;;;;	INC	HL
+;;
+;	AND	B
+;	JR	NZ,SSSA2
+;;
+;	LD	A,(HL)
+;	OR	B
+;	LD	(HL),A
+;SSSA2
+;	JR	SSSSA
+;;---DARK-------------------------------
+;DSS
+;	LD	A,(HL)
+;	OR	B
+;	LD	(HLD),A
+;;
+;;;	DEC	HL
+;;
+;	LD	A,(HL)
+;	XOR	B
+;	LD	(HLI),A
+;;;;	INC	HL
+;SSSSA
+;	SRL	B
+;	LD	A,B
+;	CP	%00
+;	JR	NZ,SSWW
+;;
+;	INC	HL
+;	INC	DE
+;	DEC	C
+;	JR	NZ,EEW
+;SEND
+;	CALL	PBRETN
+;	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				      %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;-----------------------------------------------
+LOVETR
+	LD	A,(VRAMD+1)
+	AND	A
+	RET	NZ
+;
+	LD	A,$10
+	LD	($2100),A
+;
+	LD	HL,CHRDAT+$2500
+	LD	DE,CHRRAM+$1500
+;
+	LD	A,(FRCNT)
+	AND	%00001111
+	JR	Z,LVTR10	
+	CP	$08
+	RET	NZ
+;
+;;	LD	HL,CHRDAT+$2540
+;;	LD	DE,CHRRAM+$1540
+	LD	L,$40
+	LD	E,L
+LVTR10
+	LD	A,(FRCNT)
+	AND	%00110000
+	LD	C,A
+	LD	B,$0
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	ADD	HL,BC
+;
+	LD	BC,$0040
+	JP	DATA_MOV
+
+ROUSAD
+TAKIAD
+	DB	$20,$60,$A0,$E0
+	DB	$E0,$E0,$A0,$60
+;
+PLCHTR
+	LD	A,(GMMODE)
+	CP	LOVED
+	JR	Z,LOVETR
+	CP	OPING
+	JR	NZ,PT8000	; Opening Demo?
+;
+;;	LD	A,(ITMODE)					; yes Nami TR.!
+;;	CP	$08
+;;	JR	NC,PT7000
+;
+	LD	A,(VRAMD+1)
+	AND	A
+	JP	NZ,PT7000
+;
+	LD	A,(FRCNT)
+	AND	$0F
+	CP	$04
+	JR	C,PT7000
+;
+	LD	A,$10
+	LD	($2100),A
+;
+	LD	A,(NMCH0L)
+	LD	L,A
+	LD	A,(NMCH0H)
+	LD	H,A
+	LD	A,(NMCH1L)
+	LD	E,A
+	LD	A,(NMCH1H)
+	LD	D,A
+;
+	LD	BC,$0020
+	CALL	DATA_MOV
+PT7000
+	RET
+;
+PT8000
+;
+;
+;
+;	LD	A,(SCRLFG)
+;	AND	A  ;OR	(HL)
+;	JR	NZ,PCTR02
+;;
+;	LD	A,(GMMODE)
+;	CP	GPLAY
+;	JR	C,PCTR02
+;;
+;	LD	HL,WNDFLG
+;;
+;	LD	A,(WNDSPD)
+;	AND	%10000000
+;	OR	(HL)
+;	JR	Z,PCTR08
+;PCTR02
+;	RET
+;;
+;PCTR08
+	LD	A,(GMMODE)
+	CP	ENDG
+	JR	NZ,PCTR558
+;;	JR	Z,PCTR560
+;
+	LD	A,(CHTRF2)
+	AND	A
+	JR	NZ,PCTR561
+;
+;	LD	A,(ITMODE)
+;	CP	$03
+;	JR	C,PCTR560
+	RET
+PCTR558
+	CP	GPLAY
+	JP	C,PLCSNOT
+;
+	LD	A,(WNDYPS)
+	CP	$80
+	JP	NZ,PLCSNOT
+;
+	LD	A,(WNDFLG)
+	AND	A
+	JP	NZ,PLTRNOT
+;
+	LD	HL,SCRLFG
+	LD	A,(VRAMD+1)
+;;	AND	A
+	OR	(HL)
+	JP	NZ,PLTRNOT  ;088 ;30
+;;	JR	NZ,PCTR088 ;30
+;
+	LD	A,(ONOFTM)
+	AND	A
+	JR	Z,PCTR560	; 凹凸ブロック作動 ?
+;				; Yes !
+	CALL	ONOFSUB
+	JP	PCTR30
+;
+PCTR560
+;;	LD	A,(TOURFG)
+	LD	A,(CHTRF2)
+	AND	A
+	JR	Z,PCTR088
+;
+PCTR561
+	CP	$01 ;F0
+	JP	Z,BDCHT1	; 大鳥の人間キャラクター転送!
+	CP	$02 ;F1
+	JP	Z,BDCHT2
+	CP	$03 ;F2
+	JP	Z,SWCHTR1	; 乗るスイッチ ON !
+	CP	$04 ;F3
+	JP	Z,SWCHTR2	;      "       RETURN !
+	CP	$08
+	JP	Z,EGAKKIRV 	;F ;エンディング楽器もどす転送
+;;	JP	Z,RODTR		; Ken power chip -> Rod
+	CP	$09
+	JP	Z,GRKEY5TR	; Key "E" colect !!
+	CP	$0A
+	JP	Z,KINOKOTR	; きのこ !!
+	CP	$0B
+	JP	Z,MGPWDRTR	; 魔法の粉
+	CP	$0C
+	JP	Z,EGAKKITR 	;F ;エンディング楽器転送
+;;	JP	Z,OGAKKITR	; OBJ楽器(いまはない）
+	CP	$0D
+	JP	Z,MEGANETR	; わらしべアイテム！
+	CP	$0E
+	JR	Z,YMCLERS	;エンディング山消す！
+	CP	$0F
+	JP	Z,MARINTR1
+	CP	$10
+	JP	Z,MARINTR2
+;;	CP	$0E
+;;	JP	Z,ZZZTR	; おやじ ZZZ！
+;;	CP	$0F
+;;	JP	Z,ARIMOTOTR ;！
+;
+;;;	CALL	TOURSUB
+	JP	PCTR30
+;
+YMCLERS
+	LD	A,$17
+	LD	($2100),A
+	JP	YMCLER
+;================================
+PCTR088
+;	LD	A,(GMMODE)
+;	CP	ENDG
+;	RET	Z
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%   いろいろ キャラクター転送		 %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+; PLTROK  : プレイヤー転送＋OAM set OK !!
+; PLTRNOT : プレイヤー転送あかんけど OAM set OK !!
+; PLCSNOT : プレイヤーはいない！
+CHRTR
+;;	LD	HL,VRAMD+1
+;;	LD	A,(SCRLFG)
+;;	OR	(HL)
+;;	JP	NZ,PLTRNOT
+;
+;	LD	A,(GMMODE)
+;	CP	GPLAY
+;	JP	C,PLCSNOT
+;;
+;;	LD	HL,WNDFLG
+;;;
+;;	LD	A,(WNDSPD)
+;;	AND	%10000000
+;;	OR	(HL)
+;;	JP	NZ,PLCSNOT
+;	LD	A,(WNDYPS)
+;	CP	$80
+;	JP	NZ,PLCSNOT
+;
+;K	LD	A,(FRCNT)
+;K	ADD	A,$01
+;K	AND	$0F
+;K	JR	Z,CTR002	; いらんカウンターの為の転送
+;K	CP	$08
+;K	JR	Z,CTR003
+;;K
+;K	LD	A,(VRAMD+1)
+;K	AND	A
+;K	JP	NZ,PLTRNOT
+;K	JR	CTR010
+;K;=====================================================
+;KCTR002
+;K	LD	A,(DJFLAG)
+;K	AND	A
+;K	JR	Z,CTR008
+;;K
+;K	LD	A,(DNJNNO)
+;K	CP	$20
+;K	JR	C,CTR010
+;KCTR008	
+;K	LD	A,(GRKEY5)
+;K	CP	$05
+;K	JR	C,CTR010	; Max 5 -> kagi "E" ?
+;;K				; Yes !
+;K	LD	HL,CHRDAT+$0AE0	; Kagi E
+;K	LD	DE,CHRRAM+$0CA0
+;KCTRIRAN
+;K	LD	A,$0F
+;K	LD	($2100),A
+;;K
+;K	LD	BC,$0020
+;K	CALL	DATA_MOV
+;K
+;K	LD	A,$0C
+;K	LD	($2100),A
+;K	JP	PLTRNOT
+;K;-------------------------------
+;KCTR003
+;K	LD	A,(CLC20)
+;K	CP	$20
+;K	JR	C,CTR010	
+;;K
+;K	LD	HL,CHRDAT+$0AC0	; Rod
+;K	LD	DE,CHRRAM+$08C0
+;K	JR	CTRIRAN
+;===========================================
+CTR010
+	LD	A,(CHTRCT)
+	INC	A
+	LD	(CHTRCT),A	; Timing counter !
+;=================================================
+CHRTRSB
+	LD	A,(CHTRFG)
+	RST	0
+	DW	PLTROK 	;0
+	DW	MESTEST	;1 Message TEST No. display !
+	DW	GRSER2	;2 ;地上 波ぎわ
+	DW	GRSER1	;3 ;地上 滝＋深水＋浅水
+	DW	DJTOUR	;4 ;ダンジョン 燈篭＋ロウソク＋針
+	DW	YKTOUR	;5 ;横画面用
+	DW	BSYOUG	;6 ;溶岩ボス
+	DW	BELTTR	;7 ;ベルトコンベアー＋ロウソク
+	DW	RYUSATR	;8 ;流砂
+	DW	JYANTR	;9 ;ジャングル 水流
+	DW	JYANTR2	;A ;ジャングル 水流＋滝
+	DW	YAMASEA	;B ;山 遠景水
+	DW	DMIZUTR	;C ;ダンジョン水
+	DW	GAGETR	;D ;剣２もらう部屋
+	DW	HIMITR 	;E ;氷
+	DW	YYOGTR 	;F ;横溶岩！
+	DW	KAZATR 	;10 ;風見鳥!
+;-----------------------------------------------------
+;-----------------------------------------------------
+MESTEST
+	LD	A,(CHTRCT)
+	AND	$07
+	JP	NZ,PLTROK
+;
+	LD	A,$01
+	LD	($2100),A
+	CALL	MSGTEST
+	LD	A,$0C
+	LD	($2100),A
+	JP	PLTRNOT
+;=======================================
+CH4TR1
+	LD	L,A
+	JR	CH4TR
+;	LD	DE,CHRRAM+$16C0
+;	LD	BC,$0040
+;	CALL	DATA_MOV
+;	JP	PLTRNOT
+;-----------------------------------------------------
+GRSER2
+;	LD	A,(CHTRCT)
+;	AND	$0F
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;
+	LD	H,$6B
+	JR	CHTRF
+;-----------------------------------------------------
+GRSER1
+;	LD	A,(CHTRCT)
+;	AND	$0F
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;;
+	LD	H,$6C
+	JR	CHTRF
+;
+;	JR	CH4TR1
+;
+;
+;
+;;	LD	DE,CHRRAM+$16C0
+;;	LD	BC,$0040
+;;	CALL	DATA_MOV
+;;;
+;;	JP	PLTRNOT
+;=====================================
+DMIZUTR
+;	LD	A,(CHTRCT)
+;	AND	$0F
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;;
+	LD	H,$73
+	JR	CHTRF
+;;
+;	JP	CH4TR1
+;=====================================
+YAMASEA
+	LD	H,$6A
+CHTRF
+	LD	A,(CHTRCT)
+	AND	$0F
+	JP	NZ,PLTROK
+;
+	CALL	CC2INC
+;
+	JP	CH4TR1
+;-----------------------------------------------------
+DTTRTRD
+	DB	$00,$40,$80,$C0
+	DB	$C0,$C0,$80,$40
+;
+DJTOUR
+	LD	A,(CHTRCT)
+	AND	$07
+	JP	NZ,PLTROK
+;
+	LD	A,(CHTRCT)
+	RRA
+	RRA
+	RRA
+	AND	$07
+	LD	E,A
+	LD	D,$00
+	LD	HL,DTTRTRD
+	ADD	HL,DE
+;
+	LD	L,(HL)
+	LD	H,$6D
+;- - - - - - - - - - - - - -
+CH4TR
+	LD	DE,CHRRAM+$16C0
+CH4TR2
+	LD	BC,$0040
+	CALL	DATA_MOV
+;
+	JP	PLTRNOT
+;=====================================
+YKTOUR
+;	LD	A,(CHTRCT)
+;	AND	$0F
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;;
+	LD	H,$6E
+	JR	CHTRF
+;;
+;	JR	CH4TR1
+;=====================================
+BSYOUG
+	LD	A,(CHTRCT)
+	AND	$07
+	JP	NZ,PLTROK
+;
+	LD	A,(CHTRCT)
+	RRA
+	RRA
+	RRA
+	AND	$07
+	LD	E,A
+	LD	D,$00
+	LD	HL,DTTRTRD
+	ADD	HL,DE
+;
+	LD	L,(HL)
+	LD	H,$6F
+	JP	CH4TR
+;=====================================
+BELTTR
+	LD	A,(CHTRCT)
+	INC	A
+	AND	$03
+	JP	NZ,DJTOUR
+;
+	LD	HL,BELTBF
+	LD	DE,$90C0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+	JP	CH4TR2
+;
+;	LD	BC,$0040	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;	JP	PLTRNOT
+;-----------------------------------------------------
+;===================================
+RYUSATR
+	LD	H,$70
+;
+CHTR7
+	LD	A,(CHTRCT)
+	AND	$07
+	JP	NZ,PLTROK
+;
+;	LD	A,(CHTRC2)
+;	ADD	A,$40
+;	LD	(CHTRC2),A
+	CALL	CC2INC
+;
+;;	LD	H,$70
+;
+	JP	CH4TR1
+;===================================
+JYANTR
+	LD	H,$71
+CHTR3
+	LD	A,(CHTRCT)
+	AND	$03
+	JP	NZ,PLTROK
+;
+	CALL	CC2INC
+;
+	JP	CH4TR1
+;===================================
+JYANTR2
+;;	LD	A,(CHTRCT)
+;;	AND	$03
+;;	JP	NZ,PLTROK
+;
+;;	CALL	CC2INC
+;
+	LD	H,$72
+	JR	CHTR3
+;
+;;	JP	CH4TR1
+;=====================================
+CC2INC
+	LD	A,(CHTRC2)	; A bus adress chenge !
+	ADD	A,$40
+	LD	(CHTRC2),A
+	RET	
+;=====================================
+GAGETR
+;	LD	A,(CHTRCT)
+;	AND	$03
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;;
+	LD	H,$75
+	JR	CHTR3
+;
+;	JP	CH4TR1
+;=====================================
+YYOGTR
+	LD	H,$74
+	JR	CHTR7
+;=====================================
+KAZATR
+	LD	H,$77
+	JR	CHTR7
+;=====================================
+HIMITR
+;	LD	A,(CHTRCT)
+;	AND	$07
+;	JP	NZ,PLTROK
+;;
+;	CALL	CC2INC
+;;
+	LD	H,$76
+	JR	CHTR7
+;
+;	JP	CH4TR1
+;-----------------------------------------------------
+;
+;	LD	HL,WTBGCT
+;	INC	(HL)
+;
+;	LD	A,(HL)
+;	AND	$07
+;	JR	NZ,PCTR55
+;;
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	NZ,PCTR66
+;;
+;	LD	A,(WTBGCT)
+;	RRA
+;	RRA
+;	RRA
+;	AND	%00000011
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,TAKIAD
+;	ADD	HL,DE
+;	LD	L,(HL)
+;;
+;	LD	H,$6C	; Small rousoku !
+;
+;	LD	DE,$96E0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;	LD	BC,$0010	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;	JR	PCTR55
+;;
+;PCTR66
+;	LD	A,(TOGEFG)
+;	CP	$02
+;	JR	NZ,PCTR800	; Yogan TR. ?
+;;				; yes !
+;	LD	A,(WTBGC2)
+;	ADD	A,$20
+;	LD	L,A
+;	LD	H,$6F
+;;;	LD	DE,$96C0
+;	LD	DE,$96E0
+;	LD	BC,$20
+;	CALL	DATA_MOV
+;	JP	PCTR30
+;;
+;PCTR800
+;	LD	A,(WTBGCT)
+;	RRA
+;	RRA
+;	RRA
+;	AND	%00000111
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,ROUSAD
+;	ADD	HL,DE
+;	LD	L,(HL)
+;;
+;	LD	H,$6D	; Small rousoku !
+;;
+;	LD	DE,$96E0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;	LD	BC,$0010	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;;
+;PCTR55
+;	LD	A,(BELTFG)
+;	AND	A
+;	JR	Z,PCTR089	; Belt room ?
+;;				; yes !
+;	LD	A,(WTBGCT)	; Water BG chenge count set
+;	INC	A
+;	INC	A
+;	AND	$03
+;	JP	NZ,PCTR09
+;;
+;	LD	HL,BELTBF
+;	LD	DE,$9000	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;	LD	BC,$0040	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;;
+;	JP	PCTR30	
+;;
+;PCTR089
+;	LD	A,(WTBGCT)	; Water BG chenge count set
+;	INC	A
+;	AND	$7
+;	JP	NZ,PCTR09
+;;
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	Z,PCTR89
+;;
+;;	LD	A,(WTBGCT)
+;;	RRA
+;;	RRA
+;;	RRA
+;;	AND	%00000111
+;;	LD	E,A
+;;	LD	D,$0
+;;	LD	HL,ROUSAD
+;;	ADD	HL,DE
+;;	LD	L,(HL)
+;;;
+;;	LD	H,$6D	; Small rousoku !
+;;;
+;;	LD	DE,$96E0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;;	LD	BC,$0010	; 個数 
+;;	CALL	DATA_MOV	; キャラクタ 転送
+;;
+;	LD	A,(WTBGC2)
+;	ADD	A,$40
+;	LD	(WTBGC2),A
+;;
+;;;	ADD	A,$30
+;	LD	L,A
+;	LD	H,$6D
+;;
+;	LD	A,(YKFLAG)
+;	AND	A
+;	JR	Z,PCTR88
+;;
+;	LD	BC,$0110
+;	ADD	HL,BC
+;PCTR88				; Big tourou !
+;	LD	DE,$96C0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;	LD	BC,$0020	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;;	JP	PCTR30
+;PCTR89
+;	LD	A,(TOGEFG)
+;;; 	AND	A
+;;;	JR	Z,PCTR8A
+;	CP	$01
+;	JR	NZ,PCTR8A
+;;
+;	LD	A,(WTBGC2)	; Toge TR. !!
+;	ADD	A,$30
+;	LD	L,A
+;	LD	H,$6D
+;	LD	DE,$96F0
+;	LD	BC,$10
+;	CALL	DATA_MOV
+;	JP	PCTR30
+;PCTR8A
+;;-- 水 1-----
+;	LD	HL,$96F0
+;	LD	A,(YKFLAG)
+;	AND	A
+;	JR	NZ,PCTR899
+;;
+;	LD	HL,$95A0
+;PCTR899
+;	LD	E,$10
+;	LD	A,(WTBGCT)
+;PCTR99
+;;;	BIT	3,E
+;;;;;	BIT	0,A
+;;;	JR	Z,PCTR9A
+;;;	RLC	(HL)
+;;;	JR	PCTR9B
+;;;PCTR9A
+;	RRC	(HL)
+;PCTR9B
+;	INC	HL
+;;
+;	DEC	E
+;	JR	NZ,PCTR99
+;;
+;;-- 水 2-----
+;	LD	HL,$95B0
+;	LD	E,$10
+;	LD	A,(WTBGCT)
+;PCTRB9
+;	BIT	3,E
+;;;	BIT	0,A
+;	JR	Z,PCTRBA
+;	RLC	(HL)
+;	JR	PCTRBB
+;PCTRBA
+;	RRC	(HL)
+;PCTRBB
+;	INC	HL
+;;
+;	DEC	E
+;	JR	NZ,PCTRB9
+;
+;	LD	A,(WTBGC2)
+;	ADD	A,$40
+;	LD	(WTBGC2),A
+;;
+;	ADD	A,$30
+;	LD	L,A
+;	LD	H,$6C
+;;
+;	LD	DE,$96F0	; キャラクタ ＲＡＭ ($8000 - $97FF)
+;	LD	BC,$0010	; 個数 
+;	CALL	DATA_MOV	; キャラクタ 転送
+;	JP	PCTR30
+PCTR09
+;=============================================
+PLTROK
+;- - Player Character TR. - -
+;- - Left - -
+	LD	A,(PLCHPT)
+	CP	$FF
+	JP	Z,PCTR30
+;
+	LD	HL,PLCHNO
+	SLA	A
+	LD	C,A
+	LD	B,$0
+	ADD	HL,BC
+	LD	E,(HL)
+;
+	PUSH	HL
+;
+	LD	HL,PLFLPD
+	ADD	HL,BC
+	LD	A,(PLFLPL)
+	AND	%10011111
+	OR	(HL)
+;;	LD	A,(HLI)
+	LD	(PLFLPL),A
+;
+	INC	HL
+;
+	LD	A,(PLFLPR)
+	AND	%10011111
+	OR	(HL)
+;;	LD	A,(HLI)
+	LD	(PLFLPR),A
+;;	LD	A,(HL)
+;;	LD	(PLFLPR),A
+;
+	LD	D,$0
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	LD	HL,PLCHDT
+	ADD	HL,DE
+	PUSH	HL
+	POP	BC
+;
+	LD	HL,$8000
+;
+	LD	D,$20
+PCTR10
+	LD	A,(BC)
+	INC	BC
+	LD	(HLI),A
+	DEC	D
+	JR	NZ,PCTR10
+;- - Right - -
+;
+;;	LD	HL,PLCHNO
+;;	LD	A,(PLCHPT)
+;;	SLA	A
+;;	LD	C,A
+;;	LD	B,$0
+;;	INC	BC
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;;
+;;	LD	HL,PLFLPD
+;;	ADD	HL,BC
+;;;	LD	C,A
+;;	LD	A,(HL)
+;;	LD	(PLFLPR),A
+;
+	POP	HL
+	INC	HL
+	LD	E,(HL)
+;
+	LD	D,$0
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	LD	HL,PLCHDT
+	ADD	HL,DE
+	PUSH	HL
+	POP	BC
+;
+	LD	HL,$8020
+;
+	LD	D,$20
+PCTR20
+	LD	A,(BC)
+	INC	BC
+	LD	(HLI),A
+	DEC	D
+	JR	NZ,PCTR20
+PCTR30
+PLTRNOT
+;	JP	PLCSET	; OAM set !
+;****************************************
+;*       PLAYER	Character OAM set       *
+;****************************************
+PLCSET
+	LD	A,(PLCHPT)
+;;	CP	$FF
+	INC	A
+	JR	Z,PLCS70
+;
+;;	LD	A,(PLFLSH)
+;;	AND	$02
+;;	LD	HL,LIKEFG
+;;	OR	(HL)
+;	LD	A,(LIKEFG)
+;	AND	A
+;	JR	NZ,PLCS70
+;
+	LD	A,(PLFLSH)
+	RLA
+	RLA
+;;	RLA
+	AND	$10
+	LD	(PLPRIO),A
+;- LEFT -
+	LD	HL,POAM
+;
+	LD	A,(PLDSYD)
+	LD	C,A
+;
+	LD	A,(PLYPS2)
+;;	LD	A,(PLYPSL)
+	ADD	A,C
+;;	ADD	A,$10
+	CP	$88
+	JR	NC,PLCS70
+	PUSH	AF
+	LD	(HLI),A		; YPOS
+;
+	LD	A,(PLDSXD)
+	LD	C,A
+;;	LD	A,(TILTXD)
+;;	LD	B,A
+;
+	LD	A,(PLXPSL)
+	ADD	A,C
+;;	SUB	B
+;;	ADD	A,$08
+	LD	(HLI),A		; XPOS
+;
+	LD	A,$00
+	LD	(HLI),A		; CHR NO.
+;
+	LD	A,(PLPRIO)
+	LD	D,A
+	LD	A,(PLFLPL)
+	OR	D
+	LD	(HLI),A		; ATR.
+;- - - RIGHT - -
+;;	LD	A,(PLYPSL)
+;;	ADD	A,$10
+	POP 	AF
+	LD	(HLI),A		; YPOS
+;
+	LD	A,(PLXPSL)
+	ADD	A,C
+;;	SUB	B
+	ADD	A,$08  ;10
+	LD	(HLI),A		; XPOS
+;
+
+	LD	A,$02
+	LD	(HLI),A		; CHR NO.
+;
+;;	LD	A,(PLFLPR)
+;;	OR	D
+;;	LD	(HLI),A		; ATR.
+;
+	LD	A,(PLPRIO)
+	LD	D,A
+	LD	A,(PLFLPR)
+	OR	D
+	LD	(HLI),A		; ATR.
+;
+PLCS70
+PLCSNOT
+	RET
+;
+;======================================================
+; タリン ＺＺＺ 書き換え
+;======================================================
+;ZZZTR
+;	LD	A,$01
+;	LD	($2100),A
+;;
+;	LD	HL,ZZZDT       
+;	LD	DE,CHRRAM+$0500
+;	LD	BC,$0020
+;	JP	DTMOVS
+;======================================================
+MARINTR2
+	LD	HL,CHRDAT+$0F00       
+	LD	A,$0E
+	JR	MARINTRS
+;======================================================
+MARINTR1
+	LD	A,$12
+	LD	HL,CHRDAT+$2080       
+MARINTRS
+	LD	($2100),A
+	LD	DE,CHRRAM+$0400
+	LD	BC,$0040
+	JP	DTMOVS
+;======================================================
+;ARIMOTOTR
+;	LD	A,$01
+;	LD	($2100),A
+;;
+;	LD	HL,ARIMOTO       
+;	LD	DE,CHRRAM+$0480
+;	LD	BC,$0040
+;	JP	DTMOVS
+;======================================================
+; わらしべアイテム用
+;======================================================
+MEGANETR
+	LD	A,(MEGAF)
+	CP	$02
+	JP	C,DTMOVS2 ;PLCSNOTS	;0:なし 1:ヨッシー(はじめから持ってる！）
+;
+	SUB	$02
+	LD	D,A
+	LD	E,$00
+;
+	SRA	D
+	RR	E	
+	SRA	D
+	RR	E	
+;;	SRA	D
+;;	RR	E	
+;
+	LD	HL,CHRDAT+$0400
+	ADD	HL,DE
+	LD	DE,CHRRAM+$09A0
+	LD	BC,$0040
+;
+	LD	A,$0C
+	LD	($2100),A
+;
+	JP	DTMOVS
+;======================================================
+; 魔法の粉がきのこに変わる書き換え
+;======================================================
+KINOKOTR
+	LD	HL,CHRDAT+$28C0	; 
+;
+	LD	DE,CHRRAM+$08E0
+	JR	IRANSUB
+;======================================================
+;       OBJ 楽器 書き換え			      :
+;======================================================
+EGAKKITR
+	LD	A,$11
+	LD	($2100),A
+;
+	LD	A,(EDWRK0)
+	SWAP	A
+	AND	$F0
+	LD	E,A
+	LD	D,$00
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+;
+	LD	HL,CHRRAM+$0D00
+	ADD	HL,DE
+	PUSH	HL
+;
+	LD	HL,CHRDAT+$1000
+EGAKSUB
+	ADD	HL,DE
+	POP	DE
+
+	LD	BC,$0040
+	CALL	DATA_MOV
+;
+	XOR	A
+	LD	(CHTRF2),A
+;
+	LD	A,$0C
+	LD	($2100),A
+	RET
+;
+;======================================================
+;       OBJ 楽器 書き換え			      :
+;======================================================
+EGAKKIRV
+	LD	A,$13
+	LD	($2100),A
+;
+	LD	A,(EDWRK0)
+	SWAP	A
+	AND	$F0
+	LD	E,A
+	LD	D,$00
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+;
+	LD	HL,CHRRAM+$0D00
+	ADD	HL,DE
+	PUSH	HL
+;
+	LD	HL,CHRDAT+$0D00
+	JR	EGAKSUB
+;
+;OGAKKITR
+;	RET
+;	LD	A,$02
+;	LD	($2100),A
+;;
+;	LD	A,(DNJNNO)
+;	SLA	A
+;	LD	E,A
+;	LD	D,$00
+;	LD	HL,SPDMAPD
+;	ADD	HL,DE
+;	LD	A,(HLI)
+;	LD	H,(HL)
+;	LD	L,A
+;;
+;	LD	A,$0C
+;	LD	($2100),A
+;;
+;	LD	DE,CHRRAM+$0700
+;
+;	JP	CHR4TR
+;;	LD	BC,$0040	; 個数 
+;;	CALL	DATA_MOV	; キャラクタ 転送
+;;	RET
+;======================================================
+; きのこが魔法の粉に変わる書き換え
+;======================================================
+MGPWDRTR
+	LD	HL,CHRDAT+$08E0	; 
+;
+	LD	DE,CHRRAM+$08E0
+;
+	LD	A,$0C
+	LD	($2100),A
+;
+	LD	BC,$0020
+	JP	DTMOVS
+;======================================================
+; いい剣をもらうために集めるやつがロッドに書き換え
+;======================================================
+;RODTR
+;	LD	HL,CHRDAT+$0AC0	; Rod
+;	LD	DE,CHRRAM+$08C0
+;	JR	IRANSUB
+;======================================================
+; 鍵５番をもらうために集めるやつが鍵５番に書き換え
+;======================================================
+GRKEY5TR
+	LD	HL,CHRDAT+$28E0	; Kagi E
+	LD	DE,CHRRAM+$0CA0
+;
+IRANSUB
+	LD	A,$0C
+	LD	($2100),A
+;
+	LD	BC,$0020
+	JP	DTMOVS
+;======================================================
+; 乗るスイッチ書き換え
+;======================================================
+SWCHTR1		; ON !
+	LD	HL,CHRDAT+$3F00
+	LD	A,$12
+	JR	SWTR10
+SWCHTR2		; Return !
+	LD	HL,CHRDAT+$0C40
+	LD	A,$0D
+SWTR10
+	LD	($2100),A
+;
+;;	LD	BC,$0040
+	LD	DE,CHRRAM+$1140
+;
+	JP	CHR4TR
+;;	JP	PCTR30
+;======================================================
+ONOFA11
+ONOFA21
+	DW	$6840
+	DW	$6840
+ONOFA12
+	DW	$6800
+;;;	DW	$6880
+ONOFA22
+	DW	$6880
+	DW	$6800
+;- - - - - - - - - - - - - - - - - - - - - -
+;	水晶スイッチ ブロック凹凸
+;- - - - - - - - - - - - - - - - - - - - - -
+ONOFSUB		; On off block character chenge !
+	LD	HL,$2100
+	LD	(HL),$0C
+;
+	LD	HL,PLSTOP
+	LD	(HL),$01
+;
+	LD	HL,ONOFFG
+	LD	E,(HL)
+	LD	D,$00
+;
+	INC	A
+	CP	$03
+	JR	NZ,ONOFS10
+;
+	PUSH	AF
+	LD	A,(ONOFFG)
+	XOR	%00000010
+	LD	(ONOFFG),A
+	POP	AF
+;
+;;	XOR	A
+ONOFS10
+	LD	(ONOFTM),A
+;
+	CP	$04
+	JR	NZ,ONOFS20
+;
+	LD	HL,ONOFA11
+	JR	OFSUB1
+ONOFS20
+	CP	$08
+	JR	NZ,ONOFS30
+;
+	LD	HL,ONOFA12
+OFSUB1
+	ADD	HL,DE
+	LD	DE,$9040
+;
+	JR	OFSUB3
+;
+ONOFS30
+	CP	$06
+	JR	NZ,ONOFS40
+;
+	LD	HL,ONOFA21
+	JR	OFSUB2
+ONOFS40
+	CP	$0A
+	JR	NZ,ONOFS50
+;
+	XOR	A
+	LD	(ONOFTM),A
+;
+	LD	HL,ONOFA22
+OFSUB2
+	ADD	HL,DE
+	LD	DE,$9080
+OFSUB3
+	LD	BC,$0040
+	LD	A,(HLI)
+	LD	H,(HL)
+	LD	L,A
+	JP  	DATA_MOV
+ONOFS50
+	JP	PLCSET
+;;	RET
+;
+;======================================================
+;TOURSUB
+;	LD	HL,TOURBF
+;	LD	DE,CHRRAM+$1100
+CHR4TR
+	LD	BC,$0040
+DTMOVS
+	CALL	DATA_MOV
+;
+DTMOVS2
+	XOR	A
+	LD	(CHTRF2),A
+;;	LD	(TOURFG),A
+;
+	LD	A,$0C
+	LD	($2100),A
+;
+	JP	PLCSET
+;;	RET
+;=====================================
+;	JR	TREND
+;S23
+;	LD	C,$20
+;	LD	HL,CHRRAM+$1100
+;EEW
+;	LD	B,%10000000
+;;
+;	LD	A,(DE)
+;	LD	(HL),A
+;	INC	HL
+;	INC	DE
+;	LD	A,(DE)
+;	LD	(HL),A
+;SSWW
+;	LD	A,(HL)
+;	AND	B
+;	JR	NZ,SSSSA
+;;
+;	LD	A,(TOURFG)
+;	CP	$02
+;	JR	NZ,DSS
+;;---HALF DARK-------------------------------
+;	DEC	HL
+;;
+;	LD	A,(HL)
+;	XOR	B
+;	LD	(HLI),A
+;;;;	INC	HL
+;;
+;	AND	B
+;	JR	NZ,SSSA2
+;;
+;	LD	A,(HL)
+;	OR	B
+;	LD	(HL),A
+;SSSA2
+;	JR	SSSSA
+;;---DARK-------------------------------
+;DSS
+;	LD	A,(HL)
+;	OR	B
+;	LD	(HLD),A
+;;
+;;;	DEC	HL
+;;
+;	LD	A,(HL)
+;	XOR	B
+;	LD	(HLI),A
+;;;;	INC	HL
+;SSSSA
+;	SRL	B
+;	LD	A,B
+;	CP	%00
+;	JR	NZ,SSWW
+;;
+;	INC	HL
+;	INC	DE
+;	DEC	C
+;	JR	NZ,EEW
+;;
+;TREND
+;	XOR	A
+;	LD	(TOURFG),A
+;	LD	A,$0C
+;	LD	($2100),A
+;;
+;	RET
+;
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	1 Unit BG chenge  		     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;PLCBXD
+;	DB	$06,$09
+;	DB	$0B,$0B
+;	DB	$06,$09
+;	DB	$04,$04
+;
+;PLCBYD
+;	DB	$06,$06
+;	DB	$09,$0C
+;	DB	$0F,$0F
+;	DB	$09,$0C
+BGCAXD
+	DB	$0C,$03,$08,$08
+BGCAYD
+	DB	$0A,$0A,$05,$10
+PLHKC0
+	DB	$36,$38,$3A,$3C
+PLHKCK
+	DB	%00000010
+	DB	%00000001
+	DB	%00001000
+	DB	%00000100
+PLHKXD
+	DB	$FC,$04,0,0
+PLHKYD
+	DB	$00,$00,$04,$00
+;----------------------------------
+BGCACH
+	CALL	BGCACHS
+;
+	LD	A,$02
+	JP	PBSET
+;
+BGCACHS
+;	LD	A,(YKFLAG)
+;	AND	A
+;	JP	NZ,PLHK10
+;
+	LD	HL,DUSHFG
+	LD	A,(PLCAMD)
+	OR	(HL)
+	LD	HL,PLZPSL
+	OR	(HL)
+	LD	HL,PLMODE
+	OR	(HL)
+	JP	NZ,UNCG90
+;
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$00
+;
+	LD	HL,BGCAXD
+	ADD	HL,DE
+	LD	A,(PLXPSL)
+	ADD	A,(HL)
+	SUB	$08
+	AND	$F0
+	LD	(OBJXP),A
+;
+	SWAP	A
+	LD	C,A
+;
+	LD	HL,BGCAYD
+	ADD	HL,DE
+	LD	A,(PLYPSL)
+	ADD	A,(HL)
+	SUB	$10
+	AND	$F0
+	LD	(OBJYP),A
+;
+	OR	C
+	LD	E,A
+	LD	(WORK1),A
+	LD	HL,BGUNDT+$11
+	ADD	HL,DE
+	LD	A,H
+	CP	$D7
+	JP	NZ,PLHK20
+	LD	A,(HL)
+	LD	(WORK0),A
+	LD	E,A
+;;;	LD	D,$0
+;
+	LD	A,(DJFLAG)
+	LD	D,A
+;
+;;	LD	HL,GRBGCR
+;;	ADD	HL,DE
+	CALL	BGCRRD
+	LD	(WORK5),A
+;
+	LD	A,(WORK0)
+	CP	DHTN1		; タンス？
+;;	CP	KNBAN
+	JR	Z,PLHK211
+;
+	LD	A,(WORK5) ;HL)
+;;	CP	$01
+;;	INC	A
+;;	CP	HITBG+1
+;;	JR	NZ,PLHK20	; Hit BG ?
+;;;				; yes !
+;;	LD	A,(WORK0)
+	CP	$00  
+	JP	Z,PLHK20	; door etc
+	CP	$01
+	JR	Z,PLHK11
+	CP	$50
+	JP	Z,PLHK20
+	CP	$51
+	JP	Z,PLHK20
+;;	CP	$02  ;ANA00+1
+;;	JP	Z,PLHK20	; door etc
+;;	CP	$03  ;ANA00+1
+;;	JP	Z,PLHK20	; door etc
+;;	CP	$10  ;GAK2D+1
+;;	JP	Z,PLHK20	; Tobiori
+	CP	$10+1  ;GAK2D+1
+	JP	C,PLHK20	; Tobiori
+	CP	$D3+1
+	JP	NC,PLHK20
+	CP	$D0
+	JR	NC,PLHK11
+;;	CP	$90
+	CP	$7C
+	JP	NC,PLHK20
+;;	JR	C,PLHK11
+;;	CP	$84
+;;	JR	C,PLHK20	; Half door !!
+;
+PLHK11
+	LD	A,(WORK0)
+	LD	E,A
+	CP	FUKRO		; ふくろう像
+	JR	Z,PLHK211T
+	CP	KAZA1		; 風見鳥！
+	JR	Z,PLHK211T
+	CP	KNBAN		; 看板？
+	JP	NZ,PLHK222
+;
+PLHK211T
+	LD	A,(DJFLAG)
+	AND	A
+	LD	A,E
+	JP	NZ,PLHK222
+;
+PLHK211
+	LD	E,A
+	LD	A,(PLCMKI)
+	CP	02
+	JP	NZ,UNR510
+;
+	LD	A,$02
+;;	LD	A,$01
+	LD	(MSCRFG),A	; Not item set !
+;
+	LD	A,(KEYA2)
+	AND	%00110000
+	JP	Z,UNR510
+;
+	LD	A,E
+	CP	KAZA1
+	LD	A,$8E
+	JR	Z,PLHK2321
+	LD	A,E
+	CP	FUKRO
+	JR	Z,PLHK212	;
+	CP	KNBAN
+	JR	Z,PLHK212	;タンス メッセージ ?
+;				; YES !
+	LD	A,(MARINFG)
+	AND	A
+	JR	Z,PLTANS
+;
+	LD	A,$78
+	CALL	MSGCH3
+	JP	UNR510
+;
+PLTANS
+	LD	A,(KENLEV)
+	AND	A
+	LD	A,(GRNDPT)
+	JR	NZ,PLHK216
+;
+;;	LD	A,(GRNDPT)
+;
+	LD	E,$FF	;てい！そんなこと、どこでおぼえた？
+;
+	CP	$A3	;タリンの家？
+	JR	Z,PLHK2322
+PLHK216
+	LD	E,$FC	
+	CP	$FA	;図書館？
+	JR	Z,PLHK2322	
+;
+	LD	E,$FD	;あああああは、タンスをしらべた、、、
+PLHK2322
+	LD	A,E
+	JR	PLHK232
+PLHK212
+;;	LD	A,$01
+	LD	A,(GRNDPT)
+	LD	E,A
+	LD	D,$00
+	LD	A,$14 ;$01
+	LD	($2100),A
+	LD	HL,KNBNMSD
+	ADD	HL,DE
+	LD	A,(ONPUFG)
+	LD	E,A
+	LD	A,(HL)
+	CP	$A9
+	JR	NZ,PLHK123
+;
+	BIT	0,E
+	JR	Z,PLHK123	;カエルの唄を覚えた？
+;				; YES !
+	LD	A,$AF
+;;	JR	HKKN10
+PLHK123
+	CP	$AF
+	JR	NZ,HKKN10	;秘密看板？
+;
+	BIT	0,E
+	JR	NZ,HKKN10	;カエルの唄を覚えた？
+;				; YES !
+	LD	A,(OBJXP)
+	SWAP	A
+	AND	$0F
+	LD	E,A
+	LD	A,(OBJYP)
+	AND	$F0
+	OR	E				;YES !
+;;;	LD	A,$01
+	LD	(KHIMIFG),A	;チェック！
+	JP	UNR510
+HKKN10
+	CP	$83
+	JR	Z,PLHK232
+PLHK2321
+	CALL	MSGCH2
+	JP	UNR510
+PLHK232
+	CALL	MSGCHK
+	JR	UNR510
+PLHK222
+	CP	DTRE0
+	JR	NZ,UNR510	; Takara box ?
+;				; yes !
+	LD	A,(NAZOFG)
+	AND	%00011111
+	CP	$0D
+	JR	Z,UNR510
+;
+	LD	A,(PLCMKI)
+	CP	$02
+	JR	NZ,UNR510
+;
+;;	LD	A,$02
+	LD	(MSCRFG),A	; Not item set !
+;
+	LD	A,(KEYA2)
+	AND	%00110000
+	JR	Z,UNR510
+;
+	LD	A,(YKFLAG)
+	AND	A
+	JR	NZ,PLHK13
+;
+	LD	A,(PLCMKI)
+	CP	$2
+	JR	NZ,UNR510	; Ue muki ?
+;
+PLHK13
+	LD	A,$14
+;;	LD	A,$A
+	LD	($2100),A
+;;	CALL	PBSET
+;
+;
+	LD	A,(GRNDPT)
+	LD	E,A
+;
+	LD	A,(DJFLAG)
+	LD	D,A
+;
+	LD	A,(DNJNNO)
+	CP	DJROOM2 ;$20
+	JR	NC,TRC010
+	CP	DJROOM ;$20
+	JR	C,TRC010
+	INC	D
+TRC010
+	LD	HL,DJTKDT
+	ADD	HL,DE
+	LD	A,(HL)
+	CP	KAI
+	JR	NZ,TRC011
+;
+	LD	A,(KENLEV)
+	CP	$02
+	LD	A,KAI
+	JR	C,TRC011	;剣２取ったら貝殻はいらん！
+;
+	LD	A,C02
+TRC011
+	LD	(WORK8),A	; Takara No. !
+;;
+;
+;	LD	HL,DJTKDT
+;	LD	A,(GRNDPT)
+;TRC010
+;	CP	(HL)
+;	JR	Z,TRC020		
+;	INC	HL
+;	INC	HL
+;	JR	TRC010
+;TRC020
+;	INC	HL
+;	LD	A,(HL)
+;	LD	(WORK8),A	; Takara No. !
+;
+	LD	A,$2
+	LD	($2100),A
+;;	CALL	PBSET
+;
+	CALL	TAKARST		; open set !
+UNR510
+	LD	A,(ITEMB)
+	CP	PBULE
+	JR	NZ,BCA900	; Bulesret check !
+;
+	LD	A,(KEYA1)
+	AND	%00100000
+	JR	NZ,BCA910
+	RET
+BCA900
+	LD	A,(ITEMA)
+	CP	PBULE
+	JP	NZ,UNCG90
+;
+	LD	A,(KEYA1)
+	AND	%00010000
+	JP	Z,UNCG90
+;
+BCA910
+	LD	A,$02
+	LD	($2100),A
+	CALL	PCUTED		; cutting clear !
+;
+	LD	A,$01
+	LD	(PLSTOP),A
+;;	INC	(HL)
+;
+	LD	A,(PLCMKI)
+	LD	E,A
+	LD	D,$0
+	LD	HL,PLHKC0
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLCHPT),A
+;
+	LD	HL,PLHKCK
+	ADD	HL,DE
+;;	LD	A,(HL)
+;;	LD	C,A
+	LD	A,(KEYA1)
+	AND	(HL) ;C
+	JR	Z,PLHK20
+;
+	LD	HL,PLHKXD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLDSXD),A
+;
+	LD	HL,PLHKYD
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	(PLDSYD),A
+;
+	LD	HL,PLCHPT
+	INC	(HL)
+;
+	LD	E,$08
+	LD	A,(POWRFG)
+;;	AND	A
+	CP	$01
+	JR	NZ,PLHK09
+;
+	LD	E,$03
+PLHK09
+	LD	HL,PLHKCT
+	INC	(HL)
+	LD	A,(HL)
+	CP	E  ;$08
+	JR	C,PLHK10
+;
+	XOR	A
+	LD	(WORKE),A
+;
+	LD	A,(WORK0)
+	CP	STUBO
+	JR	Z,PLHKTBO ;50
+	CP	IWA00
+	JR	Z,PLHKTBO ;50
+;;	CP	IWA01
+;;	JR	Z,PLHK50
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JR	NZ,PLHK10
+;
+	LD	A,(WORK0)
+	CP	FLW00
+	JR	Z,PLHK58
+PLHK10
+	RET
+PLHK20
+	XOR	A
+	LD	(PLHKCT),A
+	RET
+;
+;
+PLHKTBO
+	CALL	PLHK50
+;
+	LD	A,$14
+;;	LD	A,$02
+	LD	($2100),A
+;
+	CALL	TUBOITEM ;壷内部アイテムセットチェック
+;
+	JP  	PBRETN
+;
+;;;
+;;	CP	IWA00
+;;	JR	NZ,UNCG90
+PLHK58
+	LD	A,$01
+	LD	(WORKE),A
+PLHK50
+	LD	A,(WORK1)
+	LD	E,A
+	LD	A,(WORK0)
+	LD	(UNITNO),A
+	CALL	BG1CHG
+;
+	LD	A,(PLCMKI)
+	LD	(PLCAMK),A
+;
+	CALL	KTOSET
+UNCG90
+	RET
+;=============================
+BG1CHG
+	LD	A,$14
+;;	LD	A,$02
+	LD	($2100),A
+;
+	CALL	BG1CHGSB
+;
+	JP	PBRETN
+;========================================
+KTOSET
+	LD	A,KTOBJ
+	CALL	PLSHST
+	JR	C,KOS090
+;
+	LD	A,$02
+	LD	(SOUND2),A	;(S)
+;
+;	LD	HL,ENXPSL
+;	ADD	HL,DE
+;	LD	A,(OBJXP)
+;	LD	(HL),A
+;;
+;	LD	HL,ENYPSL
+;	ADD	HL,DE
+;	LD	A,(OBJYP)
+;	LD	(HL),A
+;
+	LD	HL,ENMODE
+	ADD	HL,DE
+;;	LD	A,ECACH
+	LD	(HL),ECACH  ;A
+;
+	LD	HL,ENCHPT
+	ADD	HL,DE
+;;	XOR	A
+	LD	A,(WORKE)
+	LD	(HL),A
+;
+	PUSH	DE
+	POP	BC
+	LD	E,$1
+	LD	A,$03
+;;	LD	($2100),A
+;;;	LD	($21FF),A
+	CALL	PBSET
+;
+	CALL	ENCAPS
+;;	LD	A,$01
+;;	LD	($2100),A
+;;	LD	($21FF),A
+KOS090
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	Move calc			     %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MVCALC
+	LD	A,(WNDFLG)
+	AND	A
+	RET	NZ
+;
+;	LD	A,(KEYA1)
+;	BIT	5,A		; 'B' KEY > SPEEDx2
+;	JR	Z,MVC008
+;;
+;	LD	A,(FRCNT)
+;	AND	%00000001
+;	JR	NZ,MVC008
+;	RET
+;MVC008
+	LD	C,$1
+	CALL	XCALC
+PLXCLC
+	LD	C,$0
+	LD	(WORK0),A
+;-----------------------------------------
+XCALC	
+	LD	B,$0		;INDEX (H)
+;
+	LD	HL,PLXSPD
+	ADD	HL,BC 
+;
+	LD	A,(HL)
+	PUSH	AF
+	SWAP	A
+	AND	$F0
+	LD	HL,PLXSDR
+	ADD	HL,BC 
+	ADD	A,(HL)
+	LD	(HL),A
+	RL	D
+;
+	LD	HL,PLXPSL
+	ADD	HL,BC 
+;
+	POP	AF
+;
+	LD	E,$0
+	BIT	7,A
+	JR	Z,XC00
+	LD	E,$F0
+XC00
+	SWAP	A
+	AND	$0F
+	OR	E
+	RR	D
+	ADC	A,(HL)
+	LD	(HL),A
+	RET
+;-----------------------------------------
+;-----------------------------------------
+PLZCLC	
+	LD	A,(PLZSPD)
+	PUSH	AF
+	SWAP	A
+	AND	$F0
+	LD	HL,PLZSDR
+	ADD	A,(HL)
+	LD	(HL),A
+	RL	D
+;
+	LD	HL,PLZPSL
+;
+	POP	AF
+;
+	LD	E,$0
+	BIT	7,A
+	JR	Z,ZC00
+	LD	E,$F0
+ZC00
+	SWAP	A
+	AND	$0F
+	OR	E
+	RR	D
+	ADC	A,(HL)
+	LD	(HL),A
+	RET
+;
+;XCALC	
+;	LD	HL,PLXSDR
+;	LD	A,(PLXSPD)
+;	PUSH	AF
+;	SWAP	A
+;	AND	$F0
+;	ADD	A,(HL)
+;	LD	(HL),A
+;	RL	B
+;;
+;	LD	HL,PLXPSL
+;;
+;	POP	AF
+;;
+;	LD	C,$0
+;	BIT	7,A
+;	JR	Z,XC00
+;	LD	C,$F0
+;XC00
+;	SWAP	A
+;	AND	$0F
+;	OR	C
+;	RR	B
+;	ADC	A,(HL)
+;	LD	(HL),A
+;	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%				       %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MESEGE
+	LD	A,(MSGEFG)
+	AND	A
+	RET	Z
+;;	JR	Z,MSG090
+;
+	LD	E,A
+;
+	LD	A,(GMMODE)
+	CP	ENDG
+	LD	A,$7E
+	JR	NZ,MJBI010
+;
+	LD	A,$7F
+MJBI010
+	LD	(ENHELP),A	;べた No.
+;
+	LD	A,(MJSTCTH)
+	AND	A
+	LD	A,(MJSTCT)
+	JR	NZ,MJBI18
+;
+	CP	$20
+	JR	C,MJBI20
+MJBI18
+	AND	$0F
+	OR	$10
+MJBI20
+	LD	(MJSTCT2),A
+;
+	LD	A,E
+	AND	%01111111
+	DEC	A
+	RST	0
+	DW	MSOKCK	; Vram check !S
+;
+	DW	MSVRSV2	;Vram save 1
+	DW	MSVRSV2 ;2
+	DW	MSVRSV2 ;3
+	DW	MSMASKS ;Window BG set
+;
+MJSA	DW	MJBGIT
+	DW	MJBGST
+	DW	MJCHST
+;
+MSCC1	DW	MSSCR1	; Mesege scroll 1
+MSCC2	DW	MSSCR2	;
+MSCC3	DW	MSSCR3	;
+;
+MSK	DW	MSRWIT	; Return key in check (TEST)
+MQE	DW	MSQUES	; Question check 
+;
+MBR	DW	MSRETN	;BG return
+	DW	MSGEND
+;
+MJST	EQU	$5+1
+MSSC1	EQU	$8+1
+MSSC2	EQU	$9+1
+MSSC3	EQU	$A+1
+MSKYW	EQU	$B+1
+MSQUE	EQU	$C+1
+MSBGR	EQU	$D+1
+;--------------------------------------------------
+MSOKCK
+	LD	A,$14
+	LD	($2100),A
+;
+	JP  	MSOKCKL
+;---メッセージナンバーが１００をこえる場合---------------
+MSGCH2
+	CALL	MSGCHK
+	LD	A,$01
+	LD	(MSGENOH),A
+	RET
+;---メッセージナンバーが２００をこえる場合---------------
+MSGCH3
+	CALL	MSGCHK
+	LD	A,$02
+	LD	(MSGENOH),A
+	RET
+;------------------------------------
+MSGCHK
+	PUSH	AF
+;
+	XOR	A
+	LD	(MSANSR),A
+;
+	POP	AF
+MSGCHK2
+	LD	(MSGENO),A
+;
+	XOR	A
+	LD	(MSSTCT),A
+	LD	(MJSTCT),A
+	LD	(MJSTCTH),A
+	LD	(NMSTCT),A
+	LD	(MSGENOH),A	; MSXX or M1XX
+;;	LD	(MJSTCT3),A
+;
+	LD	A,$0F
+	LD	(FKMSFG),A	;話 音！
+;
+	LD	A,(PLYPSL)
+	CP	$48
+	RRA
+	AND	%10000000
+	OR	$1
+	LD	(MSGEFG),A
+;;DGG
+	RET
+;=====================================================
+MSVRSV2
+;;	CALL	MSVRSV	; In V_blanking !!
+	RET	
+;=====================================================
+MSGEND
+	XOR	A
+	LD	(MSGEFG),A
+;
+	LD	A,$18
+	LD	(MSOFTM),A	;メッセージ連続防止タイム！
+;;	LD	A,$0C
+;;	LD	(CHTRF2),A	;OBJ 楽器転送！
+	RET
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%	柴原 サブるうちん　２	    %
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MSBGAD
+	DB	00,36,72
+	DB	00,36,72
+MSVRAH
+	DB	$98,$98,$98
+	DB	$99,$99,$99
+MSVRAL
+	DB	$21,$61,$A1
+	DB	$41,$81,$C1
+;--------------------------------------
+MSVRSV
+	LD	A,(MSGEFG)
+	BIT	7,A
+	JR	Z,MVS010
+;
+	AND	%01111111
+	ADD	A,$3
+MVS010
+	LD	E,A
+	LD	D,$0
+;
+	LD	HL,MSBGAD-1-1
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	C,A
+	LD	B,$0
+	LD	HL,MSBGBF
+	ADD	HL,BC
+	PUSH	HL
+	POP	BC
+;
+	LD	HL,MSVRAL-1-1
+	ADD	HL,DE
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	LD	L,A
+	LD	(WORK0),A
+;
+	LD	HL,MSVRAH-1-1
+	ADD	HL,DE
+	LD	A,(SCVRMH)
+	ADD	A,(HL)
+	LD	H,A
+	LD	A,(WORK0)
+	LD	L,A
+;
+	XOR	A
+	LD	E,A
+	LD	D,A
+MSV02
+	LD	A,(HL)
+	LD	(BC),A
+	INC	BC
+;
+	LD	A,L
+	ADD	A,$01
+	AND	$1F
+	JR	NZ,LSTA
+;
+	LD	A,L
+	AND	$E0
+	LD	L,A
+	JR	RSTA
+;
+LSTA
+	INC	L
+RSTA
+	INC	E
+	LD	A,E
+	CP	$12
+	JR	NZ,MSV02
+;
+	LD	E,$00
+	LD	A,(WORK0)
+	ADD	A,$20
+	LD	(WORK0),A
+	JR	NC,HSORT
+;
+	INC	H
+HSORT
+	LD	L,A
+	INC	D
+	LD	A,D
+	CP	$02  ;05
+	JR	NZ,MSV02
+;
+	RET
+;=====================================================
+;=====================================================
+;-----------------------------------------------------------
+;=====================================================
+KWDTL
+	DB	$61,$41,$81,$21,$A1	;上の人
+	DB	$81,$61,$A1,$41,$C1	;下の人
+KWDTH
+	DB	$98,$98,$98,$98,$98	;
+	DB	$99,$99,$99,$99,$99	;
+;
+MSMASKS
+;	LD	A,(VRAMD+1)
+;	AND	A
+;	JR	NZ,MSRET
+;
+	LD	A,(MSGEFG)
+	LD	C,A
+;
+	LD	A,(MSSTCT)
+	CP	$05
+	JR	Z,MSFIN
+;
+	BIT	7,C
+	JR	Z,MSUP
+;
+	ADD	A,$05
+MSUP
+	LD	C,A
+	LD	B,$0
+;
+	LD	E,$01
+	LD	D,$00
+;
+	LD	A,(SCVRMH)
+	LD	HL,KWDTH
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,VRAMD
+	ADD	HL,DE	
+	LD	(HLI),A
+	PUSH	HL
+;
+	LD	A,(SCVRML)
+	LD	HL,KWDTL
+	ADD	HL,BC
+	ADD	A,(HL)
+	POP	HL
+;
+	LD	(HLI),A
+;
+	LD	A,$51
+	LD	(HLI),A
+;
+	LD	A,(ENHELP) ;$7E
+	LD	(HLI),A
+;
+;;	XOR	A
+	LD	(HL),$00 ;A
+;
+	LD	HL,MSSTCT
+	INC	(HL)
+	RET
+;---------------------
+MSFIN
+;;	NOP
+;
+MSNEXT
+	LD	HL,MSGEFG
+	INC	(HL)
+MSRET
+	RET
+;=====================================================
+MSRWIT
+;	LD	A,(MSSDWT)
+;	AND	A
+;	JR	Z,MSRWI10
+;;
+;	LD	A,($D369)
+;	AND	A
+;	JR	NZ,MSRW10
+;;
+;	XOR	A
+;	LD	(MSSDWT),A
+;MSRWI10
+	LD	A,(MSKYOF)
+	AND	A
+	JR	NZ,MSRW10	; Key check ok ?
+;				; yes !
+	LD	A,(KEYA2)
+	AND	%00110000
+	JR	Z,MSRW10
+;
+;;	CALL	MSNEXT
+BGRSET
+	XOR	A
+	LD	(MSSTCT),A
+;
+	LD	A,(MSGEFG)
+	AND	$F0
+	OR	MSBGR	; Game BG return
+	LD	(MSGEFG),A
+MSRW10
+	RET
+;=====================================================
+;=====================================================
+;=====================================================
+;	
+REDL
+	DB	$A1,$21,$81,$41,$61	;上の人
+	DB	$C1,$41,$A1,$61,$81	;下の人
+REDH
+	DB	$98,$98,$98,$98,$98	;
+	DB	$99,$99,$99,$99,$99	;
+MSGZDT
+	DB	$48,$00,$36,$12,$24
+	DB	$48,$00,$36,$12,$24
+
+;
+MSRETN
+	LD	A,(MSGEFG)
+	LD	C,A
+;
+	LD	A,(MSSTCT)
+	CP	$05
+	JR	Z,MSFIN
+;
+	BIT	7,C
+	JR	Z,MSRUP
+;
+	ADD	A,$05
+MSRUP
+	LD	C,A
+	LD	B,$0
+;
+	LD	E,$01
+	LD	D,$00
+;
+	LD	A,(SCVRMH)
+	LD	HL,REDH
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,VRAMD
+	ADD	HL,DE	
+	LD	(HLI),A
+	PUSH	HL
+;
+	LD	A,(SCVRML)
+	LD	HL,REDL
+	ADD	HL,BC
+	ADD	A,(HL)
+	POP	HL
+;
+	LD	(HLI),A
+;
+	LD	A,$11
+	LD	(HLI),A
+;
+	PUSH	HL
+;
+	LD	HL,MSGZDT
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	C,A
+	LD	B,$00
+	LD	HL,MSBGBF
+	ADD	HL,BC
+	PUSH	HL
+	POP	BC
+;
+	POP	HL
+	LD	E,$12	
+;
+MRITA
+	LD	A,(BC)
+	INC	BC
+	LD	(HLI),A
+	DEC	E
+	JR	NZ,MRITA
+;
+;;	XOR	A
+	LD	(HL),$00 ;A
+;
+	LD	HL,MSSTCT
+	INC	(HL)
+	RET
+;=====================================================
+;-----------------------------------------------------	
+MJBGIT
+	LD	A,$1C
+	LD	($2100),A
+;
+	LD	A,(MJSTTM)
+	AND	A
+	JR	Z,MJBI10
+;
+	DEC	A
+	LD	(MJSTTM),A
+	RET
+MJBI10
+	LD	A,(MJSTCT)
+	AND	$1F
+	LD	E,A
+	LD	D,0
+;
+	LD	C,$01
+	LD	B,$00
+;
+	LD	HL,MJ1DTH
+	ADD	HL,DE
+	LD	A,(HL)
+	LD	HL,VRAMD
+	ADD	HL,BC
+	LD	(HLI),A
+;
+	PUSH	HL
+	LD	HL,MJ1DTL
+	ADD	HL,DE
+	LD	A,(HL)
+	POP	HL
+;
+	LD	(HLI),A
+;
+	LD	A,$4F
+	LD	(HLI),A	
+;
+	LD	A,$FF	; Beta 3
+	LD	(HLI),A
+;
+;;	XOR	A
+	LD	(HL),$00 ;A
+;
+	JP  	MSNEXT
+;RET
+;=====================================================
+;;(2)
+;MJ2DT
+;	DB	$D0,$D1,$D2,$D3,$D4,$D5,$D6,$D7
+;	DB	$D8,$D9,$DA,$DB,$DC,$DD,$DE,$DF
+;	DB	$E0,$E1,$E2,$E3,$E4,$E5,$E6,$E7
+;	DB	$E8,$E9,$EA,$EB,$EC,$ED,$EE,$EF
+;;	DB	$D0,$D1,$D2,$D3,$D4,$D5,$D6,$D7
+;;	DB	$D8,$D9,$DA,$DB,$DC,$DD,$DE,$DF
+;;	DB	$E0,$E1,$E2,$E3,$E4,$E5,$E6,$E7
+;;	DB	$E8,$E9,$EA,$EB,$EC,$ED,$EE,$EF
+;;
+;MJ2DTH
+;	DB	$98,$98,$98,$98,$98,$98,$98,$98
+;	DB	$98,$98,$98,$98,$98,$98,$98,$98
+;	DB	$98,$98,$98,$98,$98,$98,$98,$98
+;	DB	$98,$98,$98,$98,$98,$98,$98,$98
+;	DB	$99,$99,$99,$99,$99,$99,$99,$99
+;	DB	$99,$99,$99,$99,$99,$99,$99,$99
+;	DB	$99,$99,$99,$99,$99,$99,$99,$99
+;	DB	$99,$99,$99,$99,$99,$99,$99,$99
+;;
+;MJ2DTL
+;	DB	$42,$43,$44,$45,$46,$47,$48,$49
+;	DB	$4A,$4B,$4C,$4D,$4E,$4F,$50,$51
+;	DB	$82,$83,$84,$85,$86,$87,$88,$89
+;	DB	$8A,$8B,$8C,$8D,$8E,$8F,$90,$91
+;	DB	$62,$63,$64,$65,$66,$67,$68,$69
+;	DB	$6A,$6B,$6C,$6D,$6E,$6F,$70,$71
+;	DB	$A2,$A3,$A4,$A5,$A6,$A7,$A8,$A9
+;	DB	$AA,$AB,$AC,$AD,$AE,$AF,$B0,$B1
+;;--------------------------------------------------
+MJBGST
+	LD	A,$1C
+	LD	($2100),A
+;
+	LD	A,(MSGEFG)
+	LD	C,A
+;
+	LD	A,(MJSTCT2)
+	BIT	7,C
+	JR	Z,MJ2UP
+;
+	ADD	A,$20
+MJ2UP
+	LD	C,A
+	LD	B,$0
+;
+	LD	E,$01
+	LD	D,$00
+;
+	LD	A,(SCVRMH)
+	LD	HL,MJ2DTH
+	ADD	HL,BC
+	ADD	A,(HL)
+	LD	HL,VRAMD
+	ADD	HL,DE
+	LD	(HLI),A
+	LD	(MSVRMH),A
+;
+	PUSH	HL
+;
+	LD	HL,MJ2DTL
+	ADD	HL,BC
+	LD	A,(HL)
+	AND	$E0
+	ADD	A,$20
+	LD	E,A
+;
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	LD	D,A
+	CP	E
+	JR	C,MJ2010
+;
+	LD	A,D
+	SUB	$20
+	LD	D,A
+MJ2010
+	LD	A,D
+	LD	(MSVRML),A
+	POP	HL
+;
+	LD	(HLI),A
+	XOR	A
+	LD	(HLI),A
+;
+	PUSH	HL
+;
+	LD	A,(MJSTCT)
+	AND	$1F
+	LD	C,A
+	LD	HL,MJ2DT
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	POP	HL
+;
+	LD	(HLI),A
+;;	XOR	A
+;;	LD	(HLI),A
+;
+	CALL	MSNEXT
+;;	RET
+	JP	MJCHST
+;=====================================================
+;(3)
+;MJ3DTL
+;	DB	$00,$10,$20,$30,$40,$50,$60,$70
+;	DB	$80,$90,$A0,$B0,$C0,$D0,$E0,$F0
+;	DB	$00,$10,$20,$30,$40,$50,$60,$70
+;	DB	$80,$90,$A0,$B0,$C0,$D0,$E0,$F0
+;	DB	$00,$10,$20,$30,$40,$50,$60,$70
+;	DB	$80,$90,$A0,$B0,$C0,$D0,$E0,$F0
+;	DB	$00,$10,$20,$30,$40,$50,$60,$70
+;	DB	$80,$90,$A0,$B0,$C0,$D0,$E0,$F0
+;;
+;MJ3DTH
+;	DB	$00,$00,$00,$00,$00,$00,$00,$00
+;	DB	$00,$00,$00,$00,$00,$00,$00,$00
+;	DB	$01,$01,$01,$01,$01,$01,$01,$01
+;	DB	$01,$01,$01,$01,$01,$01,$01,$01
+;	DB	$02,$02,$02,$02,$02,$02,$02,$02
+;	DB	$02,$02,$02,$02,$02,$02,$02,$02
+;	DB	$03,$03,$03,$03,$03,$03,$03,$03
+;	DB	$03,$03,$03,$03,$03,$03,$03,$03
+;-----------------------------------------------------
+;=================================
+MJCHST
+	LD	A,$1C
+	LD	($2100),A
+;
+;	LD	HL,WORK0
+;	LD	A,%00000000
+;	LD	E,$10
+;MJCS00
+;	LD	(HLI),A
+;	DEC	E
+;	JR	NZ,MJCS00
+;
+	LD	A,(MJSTCT) ;3)
+	AND	$1F
+;
+	LD	C,A
+	LD	B,0
+;
+	LD	E,$05  ;1
+	LD	D,$00
+;
+	LD	HL,MJ1DTH
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	HL,VRAMD
+	ADD	HL,DE
+	LD	(HLI),A
+;
+	PUSH	HL
+	LD	HL,MJ1DTL
+	ADD	HL,BC
+	LD	A,(HL)
+;
+	POP	HL
+	LD	(HLI),A
+;
+	LD	A,$0F
+	LD	(HLI),A
+;
+	PUSH	HL
+;
+	LD	A,(MSGENOH)
+	LD	D,A
+;
+	LD	A,(MSGENO)
+	LD	E,A
+	SLA	E
+	RL	D
+;
+	LD	HL,MSGEAD
+	ADD	HL,DE
+	LD	A,(HLI)
+	LD	E,A
+	LD	D,(HL)
+	PUSH	DE
+;;	POP	HL
+;
+	LD	A,(MSGENO)
+	LD	E,A
+	LD	A,(MSGENOH)
+	LD	D,A
+	LD	HL,MSCANC
+	ADD	HL,DE
+	LD	A,(HL)
+	AND	%00011111
+	LD	($2100),A
+;
+	POP	HL
+;
+;;	LD	A,(HL)
+;	LD	E,$1C
+;	LD	A,(MSGENOH)
+;	AND	A
+;	JR	Z,MSBKSSS
+;;
+;	LD	E,$1D
+;	CP	$01
+;	JR	Z,MSBKSSS
+;;
+;	LD	E,$14
+;MSBKSSS
+;	LD	A,E
+;	LD	($2100),A
+;
+;	LD	A,(MSGENO)
+;	CP	$3C
+;	JR	NZ,SBS
+;;
+;	LD	HL,MW3BCC
+;SBS
+	LD	A,(MJSTCT) ;3)
+	LD	E,A
+	LD	A,(MJSTCTH)
+	LD	D,A  ;$0
+	ADD	HL,DE
+	LD	A,(HLI)
+;
+	LD	E,A
+	LD	A,(HL)
+	LD	(MSNXMJ),A	;次の文字 No. 
+;
+;;	LD	A,$0D
+;;	LD	($2100),A
+	CALL	PBRETN
+	LD	A,E
+;
+	LD	(WORK0),A
+	CP	WE2
+	JR	NZ,MJCS06	; Question check ?
+;				; yes !
+	POP	HL
+	XOR	A
+	LD	(VRAMD+1),A
+;
+MSQUESS
+	LD	A,(MSGEFG)
+	AND	$F0
+	OR	MSQUE
+	LD	(MSGEFG),A
+;---------------------------------------
+YASDST
+	LD	A,$15
+	LD	(SOUND1),A	;(S)矢印音
+	RET
+;-------------------------------------
+MJCS06
+	CP	WED
+	JR	NZ,MJCS08
+;
+	POP	HL
+;
+	XOR	A
+	LD	(VRAMD+1),A
+;
+MSENDS
+;	LD	A,(MSGENO)
+;	INC	A
+;	CP	$02
+;	JR	NZ,MJCS07
+;	XOR	A
+;MJCS07
+;	LD	(MSGENO),A	; Test 4of mesege rotation!
+;
+	LD	A,(MSGEFG)
+	AND	$F0
+	OR	MSKYW
+	LD	(MSGEFG),A
+	RET
+;;;	JP	MSNEXT
+;========================================
+DOROBOU
+	DB	$55,$49,$4A,$46,$47
+;;	DB	$3D,$2B,$42,$A3,$00
+;
+MJCS08
+;	CP	WLF
+;	JR	NZ,MJCS0808
+;;
+;	LD	A,(MJSTCT)
+;	ADD	A,$0F
+;	AND	$10
+;	LD	(MJSTCT),A
+;;
+;	LD	A,(MJSTCT3)
+;	INC	A
+;	LD	(MJSTCT3),A
+;;
+;	XOR	A
+;	LD	(VRAMD+1),A
+;	JP	MSNEXT
+;;	RET
+;MJCS0808
+	CP	XX
+	JR	Z,MJCS081
+;
+	PUSH	AF
+;
+	LD	A,(FKMSFG)
+	LD	D,A
+	LD	E,$01
+	CP	$0F
+	JR	Z,MJCS0808
+;
+	LD	E,$07
+	CP	$19	;フクロウ！
+	JR	Z,MJCS0808
+	LD	E,$03
+;
+;	LD	E,$01
+;	LD	D,$0F
+;;
+;	LD	A,(MSGENOH)
+;;;	AND	A
+;	CP	$01
+;	JR	NZ,MJCS0808	
+;;
+;	LD	A,(MSGENO)
+;	CP	$60
+;	JR	Z,MJCS0807
+;	CP	$61
+;	JR	Z,MJCS0807
+;	CP	$62
+;	JR	Z,MJCS0807
+;	CP	$63
+;	JR	Z,MJCS0807
+;	CP	$65
+;	JR	NZ,MJCS0808
+;;
+;MJCS0807
+;	LD	D,$14
+;	LD	E,$03
+MJCS0808
+	LD	A,(MJSTCT)
+	ADD	A,$04
+	AND	E
+	JR	NZ,MJCS080A
+;
+	LD	A,D
+	LD	(SOUND2),A	;(S)
+MJCS080A
+	POP	AF
+MJCS081
+;;	LD	(WORK1),A
+;;	AND	%00111111
+;
+	LD	D,$00
+;;	CP	$C0
+	CP	NM   ;E   ;NM1
+	JR	NZ,NMCK10	; Name ?
+;				; yes !
+;;	SUB	$C0
+	LD	A,(NMSTCT)
+	LD	E,A
+	INC	A
+	CP	$05
+	JR	NZ,NMCK0D
+;
+	XOR	A
+NMCK0D
+	LD	(NMSTCT),A
+;
+;;	LD	D,$00
+;
+	LD	HL,NAME
+	LD	A,(MANBICT)
+	AND	A
+	JR	Z,NMCK0E
+;
+	LD	HL,DOROBOU
+NMCK0E
+	ADD	HL,DE
+	LD	A,(HL)
+	DEC	A
+	CP	$FF
+	JR	NZ,NMCK10
+;
+	LD	A,XX
+NMCK10
+	LD	(WORK1),A
+	LD	E,A
+;
+;	SLA	E
+;	RL	D
+;	SLA	E
+;	RL	D
+;	SLA	E
+;	RL	D
+;	SLA	E
+;	RL	D
+;
+	LD	A,$1C
+	LD	($2100),A
+;
+	LD	HL,MSCHNO
+	ADD	HL,DE
+	LD	E,(HL)
+	LD	D,$00
+;
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+	SLA	E
+	RL	D
+;
+	CALL	PBRETN
+;
+	LD	HL,$5000
+;;	LD	HL,$6C00
+;	LD	A,(WORK1)
+;	CP	$C0
+;	JR	C,MJCS0B
+;	CP	$CA
+;	JR	NC,MJCS0B	; Number ?
+;;				; yes !
+;	LD	HL,$4B00 ;-$0010
+;;
+;	LD	A,$C
+;	LD	($2100),A
+;MJCS0B
+	ADD	HL,DE
+	PUSH	HL
+	POP	BC
+;
+	POP	HL
+;
+	LD	E,$10
+MJCS0C
+;	LD	A,(WORK1)
+;	CP	$C0
+;	JR	C,MJCS0D
+;	CP	$CA
+;	JR	NC,MJCS0D	; Number ?
+;;				; yes ! Bit hanten
+;	LD	A,(BC)
+;	XOR	$FF
+;	JR	MJCS0E
+;MJCS0D
+	LD	A,(BC)
+;MJCS0E
+	LD	(HLI),A
+;
+	INC	BC
+;
+	DEC	E
+	JR	NZ,MJCS0C
+;
+;;	LD	A,(PBANK)
+;;	LD	($2100),A
+;
+;;	XOR 	A
+	LD	(HL),$00 ;A
+;
+	PUSH	HL
+;
+	LD	A,$1C
+	LD	($2100),A
+;
+	LD	A,(WORK1)
+	LD	E,A
+	LD	D,$00
+;;	LD	HL,MSCHN2	;濁点？
+;;	ADD	HL,DE
+;;;
+;;	LD	A,(HL)
+	XOR	A	; $00
+	POP	HL
+	AND	A
+;
+;
+;
+;
+;;;	LD	A,(WORK0)
+;;;	AND	%11000000
+	JR	Z,MJCS88	; Dakuten ?
+;;;	CP	%11000000
+;;;	JR	Z,MJCS88	; Dakuten ?
+;				; yes !
+	LD	E,A
+;
+	LD	A,(MSVRMH)
+	LD	(HLI),A
+	LD	A,(MSVRML)
+	SUB	$20
+	LD	(HLI),A
+	LD	A,$00
+	LD	(HLI),A
+	LD	A,$C9	; Tenten
+	RR	E
+;;	RL	E
+	JR	C,MJCS80
+	DEC	A	; Maru
+MJCS80
+	LD	(HLI),A
+;;	LD	A,$00
+	LD	(HL),$00 ;A
+MJCS88
+;	CALL	MSNEXT
+;	RET
+;=====================================================
+;;MJCHST
+	LD	A,(MJSTCT)
+	ADD	A,$01 ;	INC	A
+	LD	(MJSTCT),A
+	LD	A,(MJSTCTH)
+	ADC	A,$00
+	LD	(MJSTCTH),A
+;
+	XOR	A
+	LD	(MJSDON),A
+;
+;	LD	A,(MJSTCT3)
+;	INC	A
+;	LD	(MJSTCT3),A
+;
+	LD	A,(MJSTCT2)
+	CP	$1F
+	JR	Z,MJCS10
+;
+MJAGAN
+	LD	A,(MSGEFG)
+	AND	$F0
+	OR	MJST
+	LD	(MSGEFG),A
+;
+	LD	A,$0
+	LD	(MJSTTM),A
+	RET
+;
+MJCS10
+	JP  	MSNEXT
+;=====================================================
+MSSC1L
+	DB	$22,$42
+MSSC1H
+	DB	$98,$99
+MSSCR1
+	LD	A,(MJSTCT)
+	AND	$1F
+	JR	NZ,MSCR080	; 1 page end ?
+;				; yes ! key wait !
+	LD	A,(MSNXMJ)  ;WORK2)
+	CP	WED
+	JP	Z,MSENDS	;先読み！
+	CP	WE2
+	JP	Z,MSQUESS
+;
+	LD	A,(MJSDON)
+	AND	A
+	JR	NZ,MSSCR101
+;
+	INC	A
+	LD	(MJSDON),A
+;
+;;	LD	A,$15
+;;	LD	(SOUND1),A	;(S)矢印音
+	CALL	YASDST	;(S)
+MSSCR101
+	CALL	YAOBJST
+;
+	LD	A,(KEYA2)
+	BIT	4,A  ;	AND	%00100000
+	JR	NZ,MSSCST
+;
+	BIT	5,A
+	JR	Z,MSCR150
+;
+	LD	A,$1C
+	LD	($2100),A
+;
+	LD	A,(GMMODE)
+	CP	GMAP
+	JP	Z,QBGRSET	;マップ上はキャンセル出来る！
+;
+	LD	A,(MSGENO)
+	LD	E,A
+	LD	A,(MSGENOH)
+	LD	D,A
+	LD	HL,MSCANC
+	ADD	HL,DE
+;;	LD	A,(HL)
+;;	AND	A
+	BIT	7,(HL)
+	JP	Z,QBGRSET	; Cansel Not ?
+;;;				; yes !
+;;	JP	NZ,QBGRSET
+;
+;;	AND	%00110000
+;;	JR	Z,MSCR150
+;
+;-------------------------------------
+MSSCST
+MSCR080
+	LD	E,$00
+	LD	A,(MSGEFG)
+	AND	%10000000
+	JR	Z,MSCR100
+	INC	E
+MSCR100
+	LD	D,$00
+;
+	LD	HL,MSSC1H
+	ADD	HL,DE
+	LD	A,(SCVRMH)
+	ADD	A,(HL)
+	LD	(VRAMD+1),A
+;
+	LD	HL,MSSC1L
+	ADD	HL,DE
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	LD	(VRAMD+2),A
+;
+	LD	A,$4F
+	LD	(VRAMD+3),A
+	LD	A,(ENHELP) ;$7E
+	LD	(VRAMD+4),A
+	XOR	A
+	LD	(VRAMD+5),A
+;
+	CALL	MSNEXT
+MSCR150
+;RET
+;=====================================================
+MSSCR2
+;;;	IN V BLANKING !!!
+	RET
+;=====================================================
+MSSC2L
+	DB	$62,$82
+MSSC2H
+	DB	$98,$99
+MSSCR2S
+	LD	E,$00
+	LD	A,(MSGEFG)
+	AND	%10000000
+	JR	Z,MSCR200
+	INC	E
+MSCR200
+	LD	D,$00
+;
+	LD	HL,MSSC2H
+	ADD	HL,DE
+	LD	A,(SCVRMH)
+	ADD	A,(HL)
+	LD	B,A
+	LD	HL,MSSC2L
+;----------------------------------
+MSCRSUB
+	ADD	HL,DE
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	LD	C,A
+;
+	LD	E,$10
+MSCR210
+	LD	A,C
+	SUB	$20
+	LD	L,A
+	LD	H,B
+;
+	LD	A,(BC)
+	LD	(HL),A
+	PUSH	BC
+;
+	LD	A,C
+	ADD	A,$20
+	LD	C,A
+	LD	A,L
+	ADD	A,$20
+	LD	L,A
+;
+	LD	A,(BC)
+	LD	(HL),A
+;
+	LD	A,L
+	ADD	A,$20
+	LD	L,A
+;
+;;	LD	A,$7E
+	LD	A,(ENHELP)
+	LD	(HL),A  ;$7E ;A
+;
+	POP	BC
+;
+	INC	BC
+	LD	A,C
+	AND	$1F
+	JR	NZ,MSCR220
+	LD	A,C
+	SUB	$20
+	LD	C,A
+MSCR220
+	DEC	E
+	JR	NZ,MSCR210
+;
+	LD	A,$08
+	LD	(MJSTTM),A
+;
+	JP  	MSNEXT
+;=====================================================
+MSSCR3
+;;;	IN V BLANKING !!!
+	RET
+;=====================================================
+MSSC3L
+	DB	$42,$62
+MSSC3H
+	DB	$98,$99
+MSSCR3S
+	LD	E,$00
+	LD	A,(MSGEFG)
+	AND	%10000000
+	JR	Z,MSCR300
+	INC	E
+MSCR300
+	LD	D,$00
+;
+	LD	HL,MSSC3H
+	ADD	HL,DE
+	LD	A,(SCVRMH)
+	ADD	A,(HL)
+	LD	B,A
+	LD	HL,MSSC3L
+;
+	CALL	MSCRSUB
+	JP	MJAGAN
+;=====================================================
+QBGRSET
+	LD	A,$2
+	LD	(MSANSR),A
+	JP	BGRSET
+;
+MSQUES
+	LD	A,(KEYA2)
+	BIT	5,A
+	JR	NZ,QBGRSET
+;
+	AND	%00010000
+	JP	NZ,MSQ080
+;
+	LD	A,(KEYA2)
+	AND	%01000011
+	JR	Z,MSQ008
+;
+	LD	HL,MSANSR
+	LD	A,(HL)
+	INC	A
+	AND	$1
+	LD	(HL),A
+;
+	LD	A,$0A
+	LD	(SOUND1),A	;(S)
+MSQ008
+	LD	A,(FRCNT)
+	AND	$10
+	RET	Z
+;;	JR	NZ,MSQ030
+;
+	LD	A,$17
+	LD	($2100),A
+	JP	MSCURST
+;
+MSQ080
+;	LD	A,(MSGEFG)
+;	AND	$F0
+;	OR	MSSC1
+;	LD	(MSGEFG),A
+;;
+;	LD	HL,MSGENO
+;	INC	(HL)
+;;
+;;;	LD	HL,MJSTCT
+;;;	INC	(HL)
+;;
+;	LD	A,$00
+;	LD	(MJSTCT),A
+;;
+	CALL	BGRSET
+;
+	RET
+;
+;	LD	A,(MSGEFG)
+;	AND	$F0
+;	OR	MJST
+;	LD	(MSGEFG),A
+;	RET
+;=====================================================
+YAOBJST
+	LD	A,$17
+	LD	($2100),A
+	JP  	YAOBJSTS
+;	
+;=====================================================
+;=====================================================
+;=====================================================
+;****************************************
+;*      Scroll                          *
+;****************************************
+SCROLL
+	LD	A,$02
+	CALL	PBSET
+;
+	CALL	SCROLLS
+;
+;;	CALL	PBRETN
+	RET
+;
+;========================================
+SCVRAL
+	DB	$01,$01,$20,$20
+SCVRAT
+	DB	$93,$93,$13,$13
+SCNXUN
+	DB	$10,$10,$01,$01
+SCRCD11
+	DB	$08,$08,$0A,$0A		; Set unit count 
+SCNLUN
+	DB	$01,$FF,$F0,$10
+SCNLAH
+	DB	$00,$00,$03,$00
+SCNLAL
+	DB	$02,$1E,$C0,$40
+;- - - - - - - - - - - - - - - - - - - - - - - - 
+SCRMV1S
+	LD	A,$8
+	LD	($2100),A
+;
+	CALL	SCRMV1SS
+	CALL	PBRETN
+	RET
+;===============================
+SCRMV1SS
+;;	CALL	PBSET
+;
+	LD	A,(SCRLTM)
+	CP	$0
+	JR	Z,SCM100	; Scroll speed wait !
+;
+	DEC	A
+	LD	(SCRLTM),A
+	RET
+SCM100
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	A,$01
+	LD	(SCRLTM),A
+;
+	LD	A,(SCUNTA)
+	LD	(WORK2),A
+;
+	LD	HL,SCVRAL
+	ADD	HL,BC
+;;;	LD	E,(HL)
+;
+	LD	A,(SCRADL)
+	LD	(VRAMD+2),A
+	ADD	A,(HL) ;E
+	RL	D		; PUSH CY
+	LD	(VRAMD+$19),A
+;
+	LD	A,(SCRADH)
+	OR	$98
+	LD	(VRAMD+1),A
+	RR	D		; POP CY
+	ADC	A,$00
+	LD	(VRAMD+$18),A
+;
+	LD	HL,SCVRAT
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(VRAMD+3),A
+	LD	(VRAMD+$1A),A
+;
+	LD	A,$00
+	LD	(VRAMD+$2F),A
+	LD	A,$EE  ;FE 	; FE:Not write  for yoko scroll !
+	LD	(VRAMD+$14),A
+	LD	(VRAMD+$15),A
+	LD	(VRAMD+$16),A
+	LD	(VRAMD+$17),A
+	LD	(VRAMD+$2B),A
+	LD	(VRAMD+$2C),A
+	LD	(VRAMD+$2D),A
+	LD	(VRAMD+$2E),A
+;
+	LD	B,>VRAMD+4
+	LD	C,<VRAMD+4
+;
+	LD	D,>VRAMD+$1B
+	LD	E,<VRAMD+$1B
+SI2100
+	PUSH	BC
+	PUSH	DE
+;
+;;	LD	A,(WORK0)
+;;	OR	$98
+;;	LD	D,A
+;;	LD	A,(WORK1)
+;;	LD	E,A
+;
+	LD	A,(WORK2)
+	LD	C,A
+	LD	B,$0
+	LD	HL,BGUNDT+$11
+	ADD	HL,BC
+	LD	B,$0
+	LD	C,(HL)		; Unit NO.
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	LD	HL,BGUNCH
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,SI2101
+	LD	HL,DJUNCH
+SI2101
+	ADD	HL,BC
+;
+	POP	DE
+	POP	BC
+;
+	LD	A,(SCRLMK)
+	AND	%00000010
+	JR	Z,SI2118
+;--Tate scroll-------------------------------
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	INC	BC
+	LD	A,(HLI)
+	LD	(BC),A
+	INC	BC
+;
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(DE),A
+	INC	DE
+	LD	A,(HL)
+	LD	(DE),A
+	INC	DE
+	JR	SI2130
+;--Yoko scroll-------------------------------
+SI2118
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	LD	A,(HLI)
+	LD	(DE),A
+;
+	INC	BC
+	INC	DE
+;
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	LD	A,(HL)
+	LD	(DE),A
+;
+	INC	BC
+	INC	DE
+SI2130
+;- - Next unit adress set - - 
+	PUSH	BC
+;;	PUSH	DE
+;
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	HL,SCNXUN
+	ADD	HL,BC
+	LD	A,(WORK2)
+	ADD	A,(HL)  ;E
+	LD	(WORK2),A	; Next load address set !
+;
+;	LD	HL,SCNXAL
+;	ADD	HL,BC
+;	LD	A,(WORK1)
+;	ADD	A,(HL)  ;E
+;	RR	D		; PUSH C
+;	AND	%11011111
+;	LD	(WORK1),A
+;;
+;	LD	A,(WORK0)
+;	RL	D		; POP C
+;	ADC	A,$00
+;	LD	(WORK0),A
+;;
+;;	POP	DE
+	POP	BC
+;
+	LD	A,(SCRLC1)
+	DEC	A
+	LD	(SCRLC1),A
+	JR	NZ,SI2100	; 1 line end ?
+;				; yes !
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	HL,SCRCD11	; Next count set !
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SCRLC1),A
+;- - Next Line adress set - - 
+;;	LD	A,(SCRLMK)
+;;	LD	C,A
+;;	LD	B,$00
+;
+	LD	HL,SCNLUN
+	ADD	HL,BC
+;;;	LD	E,(HL)
+	LD	A,(SCUNTA)
+	ADD	A,(HL)  ;E
+	LD	(SCUNTA),A	; Next load address set !
+;
+	LD	HL,SCNLAL
+	ADD	HL,BC
+;;;;	LD	E,(HL)
+	LD	A,(SCRADL)
+	ADD	A,(HL)  ;E
+	RR	D		; PUSH C
+	AND	%11011111
+	LD	(SCRADL),A
+;
+	LD	HL,SCNLAH
+	ADD	HL,BC
+;;	LD	E,(HL)
+	LD	A,(SCRADH)
+	RL	D		; POP C
+	ADC	A,(HL)  ;E
+	AND	$03
+	LD	(SCRADH),A
+;
+;	LD	A,(SCRADL)
+;	AND	%11011111
+;	LD	(SCRADL),A
+;
+	LD	A,(SCRLC2)
+	DEC	A
+	LD	(SCRLC2),A
+	JR	NZ,SI2120	; All clear ?
+;				; yes !
+;;	XOR	A
+;;	LD	(SCRLFG),A
+	JP	SCRNXT2
+SI2120
+	RET
+SCRNXT2
+	LD	A,(SCRLFG)
+	INC	A
+	LD	(SCRLFG),A
+	RET
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+	END
+;****************************************
+;*      Scroll                          *
+;****************************************
+;
+SCPLMX
+	DB	$C6,$3A,$00,$00
+;	DB	$C8,$38,$00,$00
+SCPLMY
+	DB	$00,$00,$3A,$C6
+;	DB	$00,$00,$37,$C9
+SCRLMH
+	DB	$04,$FC,$00,$00
+SCRLMV
+	DB	$00,$00,$FC,$04
+;---------------------------------------------
+SCROLL
+	LD	A,(SCRLFG)
+	CP	$0
+	JP	Z,SCRRET
+;
+	PUSH	AF
+;
+	CP	$03
+	JP	C,SC0000
+;
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$0
+;- - Player position move - - 
+	LD	HL,SCPLMX
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(PLXSPD),A
+;
+	LD	HL,SCPLMY
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(PLYSPD),A
+;
+	PUSH	BC
+	CALL	MVCALC
+	POP	BC
+;- - Scroll counter move --
+	LD	HL,SCRLMH
+	ADD	HL,BC
+	LD	A,(SCCH)
+	ADD	A,(HL)
+	LD	(SCCH),A
+;
+	LD	HL,SCRLMV
+	ADD	HL,BC
+	LD	A,(SCCV)
+	ADD	A,(HL)
+	LD	(SCCV),A
+;
+	LD	HL,SCCVNX
+	CP	(HL)
+	JR	NZ,SC0000
+;
+	LD	A,(SCCH)
+	LD	HL,SCCHNX
+	CP	(HL)
+	JR	NZ,SC0000	; scroll end ?
+;				; yes !
+	POP	AF
+;
+	CALL	PLSDCL
+	LD	(PLZSPD),A
+	LD	(SCRLFG),A
+;
+	LD	A,(PLXPSL)
+	LD	(PLITXS),A
+	LD	A,(PLYPSL)
+	LD	(PLITYS),A
+;
+	LD	A,(SCRLMK)
+	CP	$03
+	JR	NZ,SCEDRT	; Muki down ?
+;				; yes !
+	LD	A,$01
+	LD	(PLYSPD),A
+	LD	A,$02
+	CALL	PBSET
+	CALL	PLBGC0
+	LD	A,(PLCBFG)
+	AND	A
+	JR	Z,SCEDRT	; Scroll end BG on => Tobiori continue.
+;
+	LD	A,(BGCKOF)
+	AND	A
+	JR	NZ,SCEDRT
+;
+	LD	A,PTOBI
+	LD	(PLMODE),A
+	XOR	A
+	LD	(PLSTAT),A
+;
+	CALL	DUSHCL
+SCEDRT
+;	LD	A,(GRNDPT)
+;	CP	$06
+;	JR	Z,SCE099
+;	CP	$08
+;	JR	Z,SCE099
+;	CP	$09
+;	JR	Z,SCE099
+;	LD	A,$1
+;	JR	SCE09A
+;SCE099
+;	LD	A,$18
+;SCE09A
+;	LD	(LYC),A
+	RET
+;-------------------------------------
+SC0000
+	POP	AF
+	DEC	A
+	RST	0
+	DEFW	SCRIT0
+	DEFW	SCRIT11
+	DEFW	SCRIT1
+	DEFW	SCRMV1
+	DEFW	SCRMV2
+SCRRET
+	RET
+;---------------------------------
+;SCBGWT
+;	DEC	A
+;	RST	0
+;	DEFW	SCRIT0
+;	DEFW	SCRIT1
+;	DEFW	SCRIT2
+;=============================================
+SCRIT0
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$0
+;
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,SRI010
+;
+	LD	A,(DNJNNO)
+;;	AND	A
+;;	JR	NZ,SRI010
+	CP	DJROOM ;$20
+	JR	NC,SRI010	; Normal danjyon ?
+;				; yes !
+	LD	HL,DJPTAD
+	ADD	HL,BC
+;
+	LD	A,(HL)
+	LD	HL,DNJNPT
+;;	ADD	A,(HL)
+;;	LD	(HL),A
+;
+	JR	SRI020
+;
+SRI010
+	LD	HL,GRPTAD
+	ADD	HL,BC
+;
+	LD	A,(HL)
+	LD	HL,GRNDPT
+SRI020
+	ADD	A,(HL)
+	LD	(HL),A
+;
+;;	LD	A,(GRNDPT)
+;;	ADD	A,(HL)
+;;	LD	(GRNDPT),A	; Next ground pointer set
+;---------------------------------------
+;;;	CALL	SVBFST		; Save on off data buffer set !
+;---------------------------------------
+	CALL	BGDTST		; BG data set
+;
+	CALL	ENDTST
+;
+;;	CALL	TOURCK
+;
+	CALL	PLCSET
+	CALL	PLWPCS
+;;;;	BG DATA -> UNIT NO SET
+SCRNXT
+	LD	A,(SCRLFG)
+	INC	A
+	LD	(SCRLFG),A
+	RET
+;---------------------------------------
+;SVBFST
+;	LD	A,(GRNDPT)
+;	LD	E,A
+;	LD	D,$0
+;	LD	HL,GRRMSV
+;	LD	A,(DJFLAG)
+;	AND	A
+;	JR	Z,SVS010
+;	LD	HL,DJRMSV
+;SVS010
+;	ADD	HL,DE
+;	LD	A,(HL)
+;;;;;	LD	A,%00000000
+;	LD	(DJSVBF),A	; Save data buffer set !
+;	RET
+;-------------------------------------
+SCRIT11
+;	LD	A,$06
+;	LD	(BKCHNO),A
+;	LD	(BKCHFG),A
+;
+	CALL	BGBKST
+;
+	JP	SCRNXT
+;===========================================
+SCVRDH
+	DB	$00,$00,$02,$02		; Next room vram base addr H
+SCVRDL
+	DB	$14,$0C,$00,$00		; L
+;
+SCADDH
+	DB	$00,$00,$03,$02	    ; Next room vram write start addr H
+SCADDL
+	DB	$14,$1E,$C0,$00		; L
+SCRCD1
+	DB	$08,$08,$0A,$0A		; Set unit count 
+SCRCD2
+	DB	$0A,$0A,$08,$08		; Set line count
+BUNTAL
+	DB	$00,$09,$70,$00
+;Unit chenge data
+SCNXUN
+	DB	$10,$10,$01,$01
+;;SCNXAH
+;;	DB	$00,$00,$00,$00
+SCNXAL
+	DB	$40,$40,$02,$02
+;Line chenge data
+SCNLUN
+	DB	$01,$FF,$F0,$10
+SCNLAH
+	DB	$00,$00,$03,$00
+SCNLAL
+	DB	$02,$1E,$C0,$40
+SCHNXD
+	DB	$A0,$60,$00,$00
+SCVNXD
+	DB	$00,$00,$80,$80
+GRPTAD
+	DB	$01,$FF,$F0,$10
+DJPTAD
+	DB	$01,$FF,$F8,$08
+;-------------------------------------------
+SCRIT1
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$0
+;
+	LD	HL,SCHNXD
+	ADD	HL,BC
+	LD	A,(SCCHNX)
+	ADD	A,(HL)
+	LD	(SCCHNX),A
+;
+	LD	HL,SCVNXD
+	ADD	HL,BC
+	LD	A,(SCCVNX)
+	ADD	A,(HL)
+	LD	(SCCVNX),A
+;
+	LD	HL,SCADDL
+	ADD	HL,BC
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	RL	D		; PUSH CY
+	AND	%11011111
+	LD	(SCRADL),A	;    "  for calc 
+;
+	LD	HL,SCADDH
+	ADD	HL,BC
+	LD	A,(SCVRMH)
+	RR	D		; POP CY
+	ADC	A,(HL)
+	AND	$03
+	LD	(SCRADH),A
+;
+	LD	HL,SCVRDL
+	ADD	HL,BC
+	LD	A,(SCVRML)
+	ADD	A,(HL)
+	RL	D		; PUSH CY
+	AND	%11011111
+	LD	(SCVRML),A	; Next room vram adress
+;
+	LD	HL,SCVRDH
+	ADD	HL,BC
+	LD	A,(SCVRMH)
+	RR	D		; POP CY
+	ADC	A,(HL)
+	AND	$03
+	LD	(SCVRMH),A
+;--
+;;	LD	HL,SCADDH
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	LD	(SCRADH),A
+;;;
+;;	LD	HL,SCADDL
+;;	ADD	HL,BC
+;;	LD	A,(HL)
+;;	LD	(SCRADL),A
+;
+	LD	HL,SCRCD1
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SCRLC1),A
+;
+	LD	HL,SCRCD2
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SCRLC2),A
+;
+	LD	HL,BUNTAL
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SCUNTA),A
+;
+	XOR	A
+	LD	(SCRLTM),A
+;
+	JP	SCRNXT
+;-------------------------------------------
+SCVRAL
+	DB	$01,$01,$20,$20
+SCVRAT
+	DB	$93,$93,$13,$13
+SCNXUN
+	DB	$10,$10,$01,$01
+;- - - - - - - - - - - - - - - - - - - - - - - - 
+SCRMV1
+	LD	A,$8
+	CALL	PBSET
+;
+	LD	A,(SCRLTM)
+	CP	$0
+	JR	Z,SCM100	; Scroll speed wait !
+;
+	DEC	A
+	LD	(SCRLTM),A
+	RET
+SCM100
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	A,$01
+	LD	(SCRLTM),A
+;
+	LD	A,(SCUNTA)
+	LD	(WORK2),A
+;
+	LD	HL,SCVRAL
+	ADD	HL,BC
+;;;	LD	E,(HL)
+;
+	LD	A,(SCRADL)
+	LD	(VRAMD+2),A
+	ADD	A,(HL) ;E
+	RL	D		; PUSH CY
+	LD	(VRAMD+$19),A
+;
+	LD	A,(SCRADH)
+	OR	$98
+	LD	(VRAMD+1),A
+	RR	D		; POP CY
+	ADC	A,$00
+	LD	(VRAMD+$18),A
+;
+	LD	HL,SCVRAT
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(VRAMD+3),A
+	LD	(VRAMD+$1A),A
+;
+	LD	A,$00
+	LD	(VRAMD+$2F),A
+	LD	A,$EE  ;FE 	; FE:Not write  for yoko scroll !
+	LD	(VRAMD+$14),A
+	LD	(VRAMD+$15),A
+	LD	(VRAMD+$16),A
+	LD	(VRAMD+$17),A
+	LD	(VRAMD+$2B),A
+	LD	(VRAMD+$2C),A
+	LD	(VRAMD+$2D),A
+	LD	(VRAMD+$2E),A
+;
+	LD	B,>VRAMD+4
+	LD	C,<VRAMD+4
+;
+	LD	D,>VRAMD+$1B
+	LD	E,<VRAMD+$1B
+SI2100
+	PUSH	BC
+	PUSH	DE
+;
+;;	LD	A,(WORK0)
+;;	OR	$98
+;;	LD	D,A
+;;	LD	A,(WORK1)
+;;	LD	E,A
+;
+	LD	A,(WORK2)
+	LD	C,A
+	LD	B,$0
+	LD	HL,BGUNDT+$11
+	ADD	HL,BC
+	LD	B,$0
+	LD	C,(HL)		; Unit NO.
+	SLA	C
+	RL	B
+	SLA	C
+	RL	B
+;
+	LD	HL,BGUNCH
+	LD	A,(DJFLAG)
+	AND	A
+	JR	Z,SI2101
+	LD	HL,DJUNCH
+SI2101
+	ADD	HL,BC
+;
+	POP	DE
+	POP	BC
+;
+	LD	A,(SCRLMK)
+	AND	%00000010
+	JR	Z,SI2118
+;--Tate scroll-------------------------------
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	INC	BC
+	LD	A,(HLI)
+	LD	(BC),A
+	INC	BC
+;
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(DE),A
+	INC	DE
+	LD	A,(HL)
+	LD	(DE),A
+	INC	DE
+	JR	SI2130
+;--Yoko scroll-------------------------------
+SI2118
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	LD	A,(HLI)
+	LD	(DE),A
+;
+	INC	BC
+	INC	DE
+;
+	LD	A,(HLI)		; Unit NO -> 4x4 Character
+	LD	(BC),A
+	LD	A,(HL)
+	LD	(DE),A
+;
+	INC	BC
+	INC	DE
+SI2130
+;- - Next unit adress set - - 
+	PUSH	BC
+;;	PUSH	DE
+;
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	HL,SCNXUN
+	ADD	HL,BC
+	LD	A,(WORK2)
+	ADD	A,(HL)  ;E
+	LD	(WORK2),A	; Next load address set !
+;
+;	LD	HL,SCNXAL
+;	ADD	HL,BC
+;	LD	A,(WORK1)
+;	ADD	A,(HL)  ;E
+;	RR	D		; PUSH C
+;	AND	%11011111
+;	LD	(WORK1),A
+;;
+;	LD	A,(WORK0)
+;	RL	D		; POP C
+;	ADC	A,$00
+;	LD	(WORK0),A
+;;
+;;	POP	DE
+	POP	BC
+;
+	LD	A,(SCRLC1)
+	DEC	A
+	LD	(SCRLC1),A
+	JR	NZ,SI2100	; 1 line end ?
+;				; yes !
+	LD	A,(SCRLMK)
+	LD	C,A
+	LD	B,$00
+;
+	LD	HL,SCRCD1	; Next count set !
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(SCRLC1),A
+;- - Next Line adress set - - 
+;;	LD	A,(SCRLMK)
+;;	LD	C,A
+;;	LD	B,$00
+;
+	LD	HL,SCNLUN
+	ADD	HL,BC
+;;;	LD	E,(HL)
+	LD	A,(SCUNTA)
+	ADD	A,(HL)  ;E
+	LD	(SCUNTA),A	; Next load address set !
+;
+	LD	HL,SCNLAL
+	ADD	HL,BC
+;;;;	LD	E,(HL)
+	LD	A,(SCRADL)
+	ADD	A,(HL)  ;E
+	RR	D		; PUSH C
+	AND	%11011111
+	LD	(SCRADL),A
+;
+	LD	HL,SCNLAH
+	ADD	HL,BC
+;;	LD	E,(HL)
+	LD	A,(SCRADH)
+	RL	D		; POP C
+	ADC	A,(HL)  ;E
+	AND	$03
+	LD	(SCRADH),A
+;
+;	LD	A,(SCRADL)
+;	AND	%11011111
+;	LD	(SCRADL),A
+;
+	LD	A,(SCRLC2)
+	DEC	A
+	LD	(SCRLC2),A
+	JR	NZ,SI2120	; All clear ?
+;				; yes !
+;;	XOR	A
+;;	LD	(SCRLFG),A
+	JP	SCRNXT
+SI2120
+	RET
+;- - - - - - - - - - - - - - - - - - - - - - - - 
+SCRMV2
+;;	XOR	A
+;;	LD	(SCRLFG),A
+	RET
+;=====================================================
+;SCBGDT
+;	DB	$98,$00,$53,$99,$00
+;SCROLL	
+;;--- BG write test --
+;	LD	A,(KEYA2)
+;	BIT	4,A
+;	JR	Z,SC0000
+;;
+;	LD	BC,SCBGDT
+;	LD	HL,VRAMD+1
+;	LD	D,$5
+;SC0F00	
+;	LD	A,(BC)
+;	INC	BC
+;	LD	(HLI),A
+;	DEC	D
+;	JR	NZ,SC0F00
+;
+;	LD	A,(FRCNT)
+;	AND	$3F
+;	ADD	A,$00
+;	LD	(VRAMD+4),A
+;;
+;	LD	A,(WORKE)
+;	LD	(VRAMD+2),A
+;	ADD	A,$20
+;	LD	(WORKE),A
+;;
+;	LD	A,(WORKF)
+;	LD	(VRAMD+1),A
+;	ADC	A,$00
+;	LD	(WORKF),A
+;	CP	$9B
+;	JR	NZ,SC0F80
+;	LD	A,$98
+;	LD	(WORKF),A
+;SC0F80
+;SC0000
+;	RET
+;
+;	LD	A,(FRCNT)
+;	AND	$1
+;	JR	NZ,SCR010
+;
+;	LD	A,(SCCH)
+;	INC	A
+;	LD	(SCCH),A
+;
+;SCR010
+;	LD	A,(FRCNT)
+;	AND	$3
+;	JR	NZ,SCR020
+;
+;	LD	A,(SCCV)
+;	INC	A
+;	LD	(SCCV),A
+;SCR020
+;	RET
+;
+;
+;===================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+	END
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;=====================================================
+;-- SCROLL --
+	LD	A,(SCRLFG)
+	JR	Z,SCRRTS
+;
+	DEC	A
+	LD	(WORK0),A
+	LD	A,(SCRLMD)
+	RST	0
+	DEFW	SCRIT0
+	DEFW	SCRIT1
+	DEFW	SCRMV0
+	DEFW	SCRMV1
+	DEFW	SCRMV2
+SCRRTS
+	RET
+;=========================================
+SCNXAH	
+	DB	$00,$00,$02,$03
+SCNXAL	
+	DB	$14,$1F,$00,$A0
+SCRIT0
+	LD	A,(SCBGAH)
+SCNEXT
+	LD	A,(SCRLMD)
+	INC	A
+	LD	(SCRLMD),A
+	RET
+;=========================================
+SCRIT1
+	JP	SCNEXT
+;=========================================
+SCRMV0
+	JP	SCNEXT
+;=========================================
+SCRMV1
+	JP	SCNEXT
+;=========================================
+SCRMV2
+	JP	SCNEXT
+;
+;
+;
+;
+
