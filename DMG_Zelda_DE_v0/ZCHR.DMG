@@ -1,0 +1,67 @@
+;***************************************************************
+;*							       *
+;*		 サウンド	      		               *
+;* 		        				       *
+;***************************************************************
+BANK1B		GROUP	$1b
+		ORG	$4000
+		binset	$0,$37ff
+		libbin	BGM_1G.BIN
+
+BANK1E		GROUP	$1e
+		ORG	$4000
+		binset	$0,$4000
+		libbin	BGM_2.BIN
+
+BANK1F		GROUP	$1f
+		ORG	$4000
+		binset	$0,$3bff
+		libbin	SE.BIN
+
+
+;***************************************************************
+;*							       *
+;*		 キャラクター	      		               *
+;* 		        				       *
+;***************************************************************
+BANKC		GROUP	$0c
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C1.CHR
+
+BANKD		GROUP	$0d
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C2.CHR
+
+BANKE		GROUP	$0e
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C3.CHR
+
+BANKF 		GROUP	$0f
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C4.CHR
+
+BANK10		GROUP	$10
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C5.CHR
+
+BANK11		GROUP	$11
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C6.CHR
+
+BANK12		GROUP	$12
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C7.CHR
+
+BANK13		GROUP	$13
+		ORG	$4000
+		binset	$0,$4000
+		libbin	C8.CHR
+;====================================================================
+        END
