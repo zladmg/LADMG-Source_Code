@@ -29,7 +29,20 @@ using the following command: ```objcopy -I ihex -O binary --gap-fill 0xFF file.h
 "file" being the name of what you're converting (File names: bgm_1 / bgm_1F / bgm_1G.bin, bgm_2.bin, se.bin).
 After doing as such, pad the files to 16.0 KB (or 16,384 bytes) in a hex editor with 0xFF until you reach
 the end of offset **00003FF0**. The default Hex files have been converted already for your convenience but if
-you want to change the sound data, this is how you would convert. 
+you want to change the sound data, this is how you would convert.
+
+
+## Debug Build
+
+You can make debug builds of each ROM by editing *line 42* in ZMA.DMG from ``DB	$00`` to ``DB	$01``.
+See the [**Cutting Room Floor article**](https://tcrf.net/The_Legend_of_Zelda:_Link%27s_Awakening#Debug_Utilities) for more infomation on how to use each function. 
+
+If done correctly, you should have ROMs with the following hashes:
+
+- us_v2.gb `sha1: 76a0487834866da3a4d06ddca37c395391560664`
+- jp_v1.gb `sha1: 3d6e652dc431e9e5746352a09f24e95627f7836f`
+- de_v0.gb `sha1: c2bb60f11645979dc43a1ff88a35a88cfb818b23`
+- fr_v0.gb `sha1: 0d503a09e4fcf21709ba93b9a24ed44900efab9e`
 
 
 ## Other File Types
